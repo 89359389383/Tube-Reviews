@@ -1,0 +1,16 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: "サンプル動画1"
+  url: "http://example.com/sample1"
+  description: "サンプル動画1の説明"
+
+two:
+  title: "キーワードを含むサンプル動画"
+  url: "http://example.com/sample2"
+  description: "キーワードを含むサンプル動画の説明"
+
+three:
+  title: "サンプル動画3"
+  url: "http://example.com/sample3"
+  description: "サンプル動画3の説明"

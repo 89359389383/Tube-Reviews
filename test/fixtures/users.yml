@@ -1,11 +1,15 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# test/fixtures/users.yml
 
-# This model initially had no columns defined. If you add columns to the
-# model remove the "{}" from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-# column: value
+one:
+  name: "Test User One"
+  email: "testuser1@example.com"
+  password: "plaintext_password"
+  password_confirmation: "plaintext_password"
+  # 他の特定のカラムが必要な場合は追加します
+
+two:
+  name: "Test User Two"
+  email: "testuser2@example.com"
+  password: "plaintext_password2"
+  password_confirmation: "plaintext_password2"
+  # 他の特定のカラムが必要な場合は追加します

@@ -1,0 +1,45 @@
+<!-- 動画のタイトルを表示 -->
+<h1><%= @video_details.title %></h1>
+
+<!-- 動画の説明文を表示 -->
+<p>
+  <strong>Description:</strong>
+  <%= @video_details.description %>
+</p>
+
+<!-- 動画の埋め込み表示 -->
+<iframe width="560" height="315" src="https://www.youtube.com/embed/<%= @video_details.video_id %>" frameborder="0" allowfullscreen></iframe>
+
+<!-- 感想入力フォームの直前にエラーメッセージを表示 -->
+<% if @review&.errors&.any? %>
+  <ul>
+    <% @review.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<!-- 感想入力フォームの追加 -->
+<h2>あなたの感想</h2>
+<%= form_for [@video, Review.new] do |f| %>
+  <%= f.hidden_field :video_id, value: @video.id %>
+  <%= f.text_area :content, rows: 5, placeholder: "ここに感想を入力してください" %>
+  <div class="submit-button">
+    <%= f.submit "感想を投稿する", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<!-- 感想の一覧表示 -->
+<h2>感想一覧</h2>
+<% @reviews.each do |review| %>
+  <div class="review">
+    <p><%= review.content %></p>
+    <small>Posted on <%= review.created_at.strftime('%Y-%m-%d %H:%M:%S') %></small>
+  </div>
+<% end %>
+
+<!-- 動画一覧ページへ戻るリンクを表示 -->
+<p>
+  <%= link_to 'Back to All Videos', videos_path %>
+</p>
+
