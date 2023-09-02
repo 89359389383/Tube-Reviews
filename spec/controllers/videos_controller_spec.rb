@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe VideosController, type: :controller do
+  before :each do
+    @user = FactoryBot.create(:user)
+    sign_in @user
+  end
+  
   describe "GET #index" do
     it "assigns all videos to @videos" do
       video1 = FactoryBot.create(:video)
@@ -17,12 +22,24 @@ RSpec.describe VideosController, type: :controller do
 
   describe "GET #search" do
     context "with valid search query" do
-      # ここでYouTube APIのモックを追加するか、実際のビデオデータをデータベースに追加して検索結果をテストする
-      
-      it "assigns the search results to @videos" do
+      it "assigns the search results to @videos when videos are found in the database" do
         video = FactoryBot.create(:video, title: "Test Video")
         get :search, params: { search_query: "Test" }
         expect(assigns(:videos)).to eq([video])
+      end
+
+      it "calls the Video.search_from_youtube method when no videos are found in the database" do
+        allow(Video).to receive(:search).and_return([])
+        expect(Video).to receive(:search_from_youtube)
+        get :search, params: { search_query: "Test" }
+      end
+
+      it "assigns the search results to @videos when videos are not found in the database but found in YouTube API" do
+        mock_video = FactoryBot.build(:video)
+        allow(Video).to receive(:search).and_return([])
+        allow(Video).to receive(:search_from_youtube).and_return([mock_video])
+        get :search, params: { search_query: "Test" }
+        expect(assigns(:videos)).to eq([mock_video])
       end
 
       it "renders the :index template" do
@@ -57,3 +74,5 @@ RSpec.describe VideosController, type: :controller do
     end
   end
 end
+
+

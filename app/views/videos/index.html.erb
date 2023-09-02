@@ -4,6 +4,7 @@
 <%= render 'search_form' %>
 
 <% if @videos.any? %>
+  <!-- データが Video オブジェクトの場合 -->
   <% if @videos.first.is_a?(Video) %>
     <!-- データベースからの動画情報の表示 -->
     <ul>
@@ -13,21 +14,37 @@
           <strong>Description:</strong> <%= video.description %><br>
           <%= link_to 'View Details', video_path(video) %>
         </li>
+        <!-- デバッグ用：video.inspect の内容を表示 -->
+        <p><%= video.inspect %></p>
       <% end %>
     </ul>
   <% elsif @videos.first&.key?("snippet") %> <!-- YouTube APIからの検索結果の表示 -->
-    <% @videos.each do |video| %>
-      <div class="video-item">
-        <%= image_tag video["snippet"]["thumbnails"]["medium"]["url"], alt: video["snippet"]["title"] %>
-        <h3><%= video["snippet"]["title"] %></h3>
-        <p><%= video["snippet"]["description"] %></p>
-        <p>Published at: <%= video["snippet"]["publishedAt"].to_time.strftime("%B %d, %Y") %></p>
-        <%= link_to '再生する', video_path(id: video["id"]["videoId"]), class: 'play-link' %>
-      </div>
-    <% end %>
+    <!-- デバッグ用：@videos の内容を表示 -->
+    <p><%= @videos.inspect %></p>
+
+    <div class="video-list">
+      <% @videos.each do |video| %>
+        <div class="video-item">
+          <!-- 他の表示コード -->
+          <%= image_tag video["snippet"]["thumbnails"]["medium"]["url"], alt: video["snippet"]["title"] %>
+          <h3><%= video["snippet"]["title"] %></h3>
+          <p><%= video["snippet"]["description"] %></p>
+          <p>Published at: <%= video["snippet"]["publishedAt"].to_time.strftime("%B %d, %Y") %></p>
+          <%= link_to '再生する', video_path(id: video["id"]["videoId"]), class: 'play-link' %>
+        </div>
+      <% end %>
+    </div>
   <% end %>
 <% else %>
   <p>No videos found.</p>
 <% end %>
 
+<% logger.debug @videos.inspect %>
+
 <%= link_to 'Add New Video', new_video_path %>
+
+<!-- JavaScriptコードでのデバッグ出力 -->
+<script>
+  console.log(<%= raw @videos.to_json %>);
+</script>
+

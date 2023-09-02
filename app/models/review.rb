@@ -3,6 +3,9 @@ class Review < ApplicationRecord
   belongs_to :video
   
   # Validations
-  validates :content, presence: true, length: { maximum: 500 } # 感想の内容が存在し、500文字以下であることのバリデーション
+  validates :title, presence: true, length: { maximum: 100 } # タイトルのバリデーションを追加
+  validates :body, presence: true, length: { maximum: 500 } # :contentを:bodyに変更
+  
   # 必要に応じて他のバリデーションを追加
 end
+

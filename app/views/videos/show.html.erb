@@ -23,7 +23,7 @@
 <h2>あなたの感想</h2>
 <%= form_for [@video, Review.new] do |f| %>
   <%= f.hidden_field :video_id, value: @video.id %>
-  <%= f.text_area :content, rows: 5, placeholder: "ここに感想を入力してください" %>
+  <%= f.text_area :body, rows: 5, placeholder: "ここに感想を入力してください" %>
   <div class="submit-button">
     <%= f.submit "感想を投稿する", class: "btn btn-primary" %>
   </div>
@@ -33,7 +33,12 @@
 <h2>感想一覧</h2>
 <% @reviews.each do |review| %>
   <div class="review">
-    <p><%= review.content %></p>
+    <p><%= review.body %></p>
+    <% if current_user == review.user %>
+      <p>
+        <%= link_to 'Edit', edit_video_review_path(@video, review) %> |
+      </p>
+    <% end %>
     <small>Posted on <%= review.created_at.strftime('%Y-%m-%d %H:%M:%S') %></small>
   </div>
 <% end %>

@@ -10,4 +10,4 @@ class User < ApplicationRecord
   validates :name, presence: true, uniqueness: true, length: { in: 3..15 }
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, length: { minimum: 6 }, if: -> { new_record? || !password.nil? }
-end 
+end

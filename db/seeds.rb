@@ -9,6 +9,6 @@ video1 = Video.create!(title: 'Video Sample 1', url: 'https://example.com/video1
 video2 = Video.create!(title: 'Video Sample 2', url: 'https://example.com/video2', description: 'Another sample video description.')
 
 # レビューサンプルデータ
-Review.create!(comment: 'Great video!', user: user1, video: video1)
-Review.create!(comment: 'Not bad.', user: user1, video: video2)
-Review.create!(comment: 'I liked this one.', user: user2, video: video1)
+Review.create!(content: 'Great video!', user: user1, video: video1)
+Review.create!(content: 'Not bad.', user: user1, video: video2)
+Review.create!(content: 'I liked this one.', user: user2, video: video1)

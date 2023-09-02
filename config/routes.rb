@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   # ビデオとレビューのリソースルート
   resources :videos do
-    resources :reviews, only: [:create, :destroy]
+    resources :reviews, except: [:index, :new, :destroy, :confirm_destroy]
   end
 
   # 一時的にコメントアウト
@@ -21,5 +21,4 @@ Rails.application.routes.draw do
   # デフォルトのルートを一時的に設定
   root 'videos#index'
 end
-
 

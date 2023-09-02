@@ -20,6 +20,9 @@ end
 RSpec.configure do |config|
   # Include FactoryBot Methods
   config.include FactoryBot::Syntax::Methods
+  
+  # Include Devise Test Helpers
+  config.include Devise::Test::ControllerHelpers, type: :controller
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -56,4 +59,4 @@ Shoulda::Matchers.configure do |config|
     with.test_framework :rspec
     with.library :rails
   end
-end
+end 

@@ -1,4 +1,3 @@
-# app/controllers/videos_controller.rb
 class VideosController < ApplicationController
   before_action :authenticate_user!
   before_action :set_video, only: [:show]
@@ -12,9 +11,12 @@ class VideosController < ApplicationController
     query = params[:search_query] || params[:keyword]
     
     if query.present?
+      Rails.logger.debug "Search query: #{query}"  # デバッグログ: 検索クエリを出力
+
       @videos = Video.search(query)
       if @videos.empty?
-        youtube_search(query)
+        Rails.logger.debug "No videos found in the database. Searching YouTube API..."  # デバッグログ: データベースにビデオが見つからなかった場合
+        @videos = Video.search_from_youtube(query)
         @from_database = false
       else
         @from_database = true
@@ -43,9 +45,9 @@ class VideosController < ApplicationController
       video_data = youtube_video_details(params[:id])
       if video_data
         @video = Video.new(
-          title: video_data["snippet"]["title"],
-          description: video_data["snippet"]["description"],
-          url: "https://www.youtube.com/watch?v=#{video_data['id']}"
+          title: video_data[:title],
+          description: video_data[:description],
+          url: video_data[:url]
         )
         @video.save
       end
@@ -56,41 +58,31 @@ class VideosController < ApplicationController
     params.require(:video).permit(:title, :url, :description)
   end
 
-  def youtube_search(query)
-    begin
-      response = HTTParty.get("https://www.googleapis.com/youtube/v3/search?part=snippet&q=#{query}&key=#{ENV['YOUTUBE_API_KEY']}")
-      @videos = response["items"] || []
-    rescue HTTParty::Error => e
-      logger.error("HTTParty error: #{e.message}")
-      @videos = []
-    rescue StandardError => e
-      logger.error("General error: #{e.message}")
-      @videos = []
-    end
-  end
-
   def youtube_video_details(video_id)
-    begin
-      response = HTTParty.get("https://www.googleapis.com/youtube/v3/videos?id=#{video_id}&part=snippet,contentDetails&key=#{ENV['YOUTUBE_API_KEY']}")
-      return response["items"].first
-    rescue HTTParty::Error => e
-      logger.error("HTTParty error: #{e.message}")
-      return nil
-    rescue StandardError => e
-      logger.error("General error: #{e.message}")
+    video_response = YOUTUBE_SERVICE.list_videos('snippet,contentDetails', id: video_id, max_results: 1)
+    Rails.logger.debug video_response.to_json
+
+    # Check if the response contains an error
+    if video_response.error?
+      Rails.logger.error "YouTube API Error: #{video_response.error_message}"  # デバッグログ: YouTube API エラーの場合
       return nil
     end
+
+    video = video_response.items.first
+    return nil unless video
+
+    {
+      title: video.snippet.title,
+      description: video.snippet.description,
+      url: "https://www.youtube.com/watch?v=#{video.id}"
+    }
   end
   
   def fetch_video_details(video_id)
     video_data = youtube_video_details(video_id)
     return nil unless video_data
 
-    Video.new(
-      title: video_data["snippet"]["title"],
-      description: video_data["snippet"]["description"],
-      url: "https://www.youtube.com/watch?v=#{video_data['id']}"
-    )
+    Video.new(video_data)
   end
 end
 

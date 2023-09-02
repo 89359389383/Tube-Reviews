@@ -16,6 +16,7 @@ gem "bootsnap", require: false
 gem 'devise'
 gem 'httparty'
 gem 'youtube_embed'
+gem 'google-apis-youtube_v3'
 
 group :development, :test do
   # Debugging
@@ -46,4 +47,5 @@ group :test do
   gem "webdrivers"
   gem 'shoulda-matchers', '~> 4.0' 
   gem 'database_cleaner'
+  gem 'rails-controller-testing'
 end

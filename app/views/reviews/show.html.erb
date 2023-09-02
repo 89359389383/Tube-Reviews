@@ -1,0 +1,9 @@
+<h1>Review Details</h1>
+
+<p>
+  <strong>Content:</strong>
+  <%= @review.body %>
+</p>
+
+<%= link_to 'Edit', edit_video_review_path(@video, @review) %> |
+<%= link_to 'Back', video_reviews_path(@video) %>

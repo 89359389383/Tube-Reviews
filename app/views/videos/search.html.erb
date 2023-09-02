@@ -9,8 +9,11 @@
   <ul>
     <% @videos.each do |video| %>
       <li>
-        <%= link_to video.title, video_path(video) %>
-        <!-- video_path(video)は各動画の詳細ページへのリンクとして想定 -->
+        <%= link_to video[:title], video_path(video[:url].split("v=").last) %> 
+        <div>
+          <img src="<%= video[:thumbnail_url] %>" alt="<%= video[:title] %>のサムネイル"> 
+        </div>
+        <p><%= video[:description].truncate(100) %> </p>
       </li>
     <% end %>
   </ul>

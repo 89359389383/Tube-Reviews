@@ -1,15 +1,4 @@
-# test/fixtures/users.yml
-
 one:
-  name: "Test User One"
-  email: "testuser1@example.com"
-  password: "plaintext_password"
-  password_confirmation: "plaintext_password"
-  # 他の特定のカラムが必要な場合は追加します
-
-two:
-  name: "Test User Two"
-  email: "testuser2@example.com"
-  password: "plaintext_password2"
-  password_confirmation: "plaintext_password2"
-  # 他の特定のカラムが必要な場合は追加します
+  name: Test User
+  email: testuser@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>

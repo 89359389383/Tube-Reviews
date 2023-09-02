@@ -1,9 +1,9 @@
 FactoryBot.define do
   factory :user do
-    username { "sample_user" }
-    email { "sample@example.com" }
-    password { "password123" }
-    password_confirmation { "password123" }
+    name { "John Doe" }
+    email { "test@example.com" }
+    password { "password" }
+    password_confirmation { "password" }
     # 必要に応じて他の属性も追加できます
   end
 end
