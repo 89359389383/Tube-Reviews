@@ -1,0 +1,48 @@
+<%# ページのタイトル %>
+<h1>感想一覧</h1>
+
+<%# ナビゲーションリンク %>
+<%= link_to '動画検索', search_videos_path %>
+<%= link_to '動画検索ページへ戻る', videos_path %>
+
+<%# 検索フォーム %>
+<%= form_with url: reviews_path, method: :get, local: true do %>
+  <div>
+    <%= label_tag :search, 'タイトル' %>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag '検索' %>
+  </div>
+<% end %>
+
+<%# 並べ替えフォーム %>
+<%= form_with url: reviews_path, method: :get, local: true do %>
+  <div>
+    <%= label_tag :sort, '並べ替え' %>
+    <%= select_tag :sort, options_for_select([['降順', 'created_at DESC'], ['昇順', 'created_at ASC']], params[:sort]) %>
+    <%= submit_tag '適用' %>
+  </div>
+<% end %>
+
+<%# 感想の一覧表示 %>
+<table>
+  <tr>
+    <th><%= sortable "動画タイトル", "videos.title" %></th>
+    <th><%= sortable "感想タイトル", "title" %></th>
+    <th><%= sortable "投稿日時", "created_at" %></th>
+    <th>操作</th>
+  </tr>
+  <% @reviews.each do |review| %>
+    <tr>
+      <td><%= link_to review.video.title, video_path(review.video) %></td>
+      <td><%= review.title %></td>
+      <td><%= review.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
+      <td>
+        <%= link_to '編集', edit_review_path(review) %>
+        <%= link_to '削除', review_path(review), method: :delete, data: { confirm: '本当に削除しますか？' } %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+
+<%# ページネーション %>
+<%= paginate @reviews %>

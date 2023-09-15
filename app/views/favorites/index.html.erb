@@ -1,0 +1,10 @@
+<h1>Your Favorites</h1>
+
+<ul>
+  <% @favorites.each do |favorite| %>
+    <li>
+      <img src="<%= favorite.video.thumbnail_url %>" alt="<%= favorite.video.title %> thumbnail">
+      <a href="<%= video_path(favorite.video) %>"><%= favorite.video.title %></a>
+    </li>
+  <% end %>
+</ul>

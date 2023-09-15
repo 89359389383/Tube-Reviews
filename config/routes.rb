@@ -1,15 +1,27 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  # ビデオ検索のルート
   get 'videos/search', to: 'videos#search', as: 'search_videos'
 
-  # ビデオとレビューのリソースルート
   resources :videos do
-    resources :reviews, except: [:index, :new, :destroy, :confirm_destroy]
+    resources :reviews, except: [:index, :new, :destroy]
+    
+    # お気に入りの追加・削除をするためのルーティングを追加
+    resource :favorite, only: [:create, :destroy]
+
+    # お気に入り動画の一覧表示のためのルーティングを追加
+    collection do
+      get :favorites
+    end
   end
 
-  # 一時的にコメントアウト
+  resources :reviews, only: [:index, :new, :create, :edit, :update, :destroy]
+
+  # お気に入り動画の一覧表示のルーティングを追加
+  get 'favorites', to: 'favorites#index', as: 'favorites'
+
+  # authenticatedとunauthenticatedのルート設定をコメントアウトしています。
+  # 必要に応じてコメントアウトを外し、適切なルートへ変更してください。
   # authenticated :user do
   #   root 'videos#index', as: :authenticated_root
   # end
@@ -18,7 +30,7 @@ Rails.application.routes.draw do
   #   root to: "devise/sessions#new"
   # end
 
-  # デフォルトのルートを一時的に設定
+  # 現在のデフォルトのルート設定
   root 'videos#index'
-end
+end 
 

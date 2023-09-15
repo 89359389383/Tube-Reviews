@@ -25,4 +25,20 @@ RSpec.describe Review, type: :model do
   it "belongs to a video" do
     should belong_to(:video)
   end
+
+  # 並び替えとフィルタリングのテスト
+  describe "filter_by_title" do
+    before(:each) do
+      @review1 = create(:review, title: "Title1")
+      @review2 = create(:review, title: "Title2")
+    end
+
+    context "when a 'Title1' title pattern is sent" do
+      it "returns the review1 with title 'Title1'" do
+        expect(Review.filter_by_title("Title1")).to include(@review1)
+        expect(Review.filter_by_title("Title1")).not_to include(@review2)
+      end
+    end
+  end
 end
+

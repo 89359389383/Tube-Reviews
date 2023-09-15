@@ -7,5 +7,7 @@ class Review < ApplicationRecord
   validates :body, presence: true, length: { maximum: 500 } # :contentを:bodyに変更
   
   # 必要に応じて他のバリデーションを追加
-end
 
+  # 追加: レビューを作成した日時でソートするスコープ
+  scope :recent, -> { order(created_at: :desc) }
+end

@@ -4,7 +4,6 @@
 <%= render 'search_form' %>
 
 <% if @videos.any? %>
-  <!-- データが Video オブジェクトの場合 -->
   <% if @videos.first.is_a?(Video) %>
     <!-- データベースからの動画情報の表示 -->
     <ul>
@@ -12,39 +11,47 @@
         <li>
           <strong>Title:</strong> <%= video.title %><br>
           <strong>Description:</strong> <%= video.description %><br>
-          <%= link_to 'View Details', video_path(video) %>
+          <%= link_to 'View Details', video_path(video) %><br>
+
+          <!-- お気に入りボタンの追加 -->
+          <% if user_signed_in? %>
+            <% if current_user.favorited?(video) %>
+              <%= link_to 'Remove from Favorites', video_favorite_path(video_id: video.id), method: :delete, class: 'btn btn-danger' %>
+            <% else %>
+              <%= link_to 'Add to Favorites', video_favorite_path(video_id: video.id), method: :post, class: 'btn btn-primary' %>
+            <% end %>
+          <% end %>
         </li>
-        <!-- デバッグ用：video.inspect の内容を表示 -->
         <p><%= video.inspect %></p>
       <% end %>
     </ul>
-  <% elsif @videos.first&.key?("snippet") %> <!-- YouTube APIからの検索結果の表示 -->
-    <!-- デバッグ用：@videos の内容を表示 -->
-    <p><%= @videos.inspect %></p>
-
+  <% elsif @videos.first&.key?("snippet") %>
     <div class="video-list">
       <% @videos.each do |video| %>
         <div class="video-item">
-          <!-- 他の表示コード -->
           <%= image_tag video["snippet"]["thumbnails"]["medium"]["url"], alt: video["snippet"]["title"] %>
           <h3><%= video["snippet"]["title"] %></h3>
           <p><%= video["snippet"]["description"] %></p>
           <p>Published at: <%= video["snippet"]["publishedAt"].to_time.strftime("%B %d, %Y") %></p>
-          <%= link_to '再生する', video_path(id: video["id"]["videoId"]), class: 'play-link' %>
+
+          <!-- 注意: この部分のお気に入りの動作は、APIのデータを利用して実際のデータベースに動画が存在しているか確認が必要です -->
+          <% if user_signed_in? && Video.find_by(api_video_id: video["id"]["videoId"]) %>
+            <% current_video = Video.find_by(api_video_id: video["id"]["videoId"]) %>
+            <% if current_user.favorited?(current_video) %>
+              <%= link_to 'Remove from Favorites', video_favorite_path(video_id: current_video.id), method: :delete, class: 'btn btn-danger' %>
+            <% else %>
+              <%= link_to 'Add to Favorites', video_favorite_path(video_id: current_video.id), method: :post, class: 'btn btn-primary' %>
+            <% end %>
+          <% elsif user_signed_in? %>
+            <span class="btn btn-secondary disabled">Add to Favorites</span>
+          <% end %>
+
+          <p><%= link_to 'Details', video_path(id: video["id"]["videoId"]) %></p>
         </div>
       <% end %>
     </div>
   <% end %>
 <% else %>
-  <p>No videos found.</p>
+  <p>No videos found</p>
 <% end %>
-
-<% logger.debug @videos.inspect %>
-
-<%= link_to 'Add New Video', new_video_path %>
-
-<!-- JavaScriptコードでのデバッグ出力 -->
-<script>
-  console.log(<%= raw @videos.to_json %>);
-</script>
 

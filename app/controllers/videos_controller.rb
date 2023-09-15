@@ -17,6 +17,16 @@ class VideosController < ApplicationController
       if @videos.empty?
         Rails.logger.debug "No videos found in the database. Searching YouTube API..."  # デバッグログ: データベースにビデオが見つからなかった場合
         @videos = Video.search_from_youtube(query)
+        if @videos.present?
+          @videos.each do |video|
+            _video=Video.where(url: video[:url]).last
+            if _video.nil?
+            p "========== video from youtube API"
+            p video
+              Video.create!(title: video[:title], description: video[:description], url: video[:url])
+            end  
+          end
+        end
         @from_database = false
       else
         @from_database = true
@@ -34,6 +44,10 @@ class VideosController < ApplicationController
     video_id = params[:id]
     @video_details = @video || fetch_video_details(video_id)
     @reviews = @video.reviews.order(created_at: :desc) if @video&.reviews
+  end
+  
+  def favorites
+    @favorites = current_user.favorites.includes(:video)
   end
 
   private

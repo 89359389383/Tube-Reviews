@@ -1,6 +1,9 @@
+# spec/factories/reviews.rb
+
 FactoryBot.define do
   factory :review do
-    content { "This video was amazing!" }
+    title { "Sample Review Title" }
+    body { "This video was amazing!" }
     association :user
     association :video
   end
