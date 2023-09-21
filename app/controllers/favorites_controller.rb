@@ -1,3 +1,5 @@
+# app/controllers/favorites_controller.rb
+
 class FavoritesController < ApplicationController
   # ログインしているユーザーのみアクセス可能とする
   before_action :authenticate_user!
@@ -31,5 +33,20 @@ class FavoritesController < ApplicationController
   # お気に入り動画一覧
   def index
     @favorites = current_user.favorites.includes(:video).order(created_at: :desc)
+  end
+
+  # save_memoアクションの定義 (新規追加)
+  def save_memo
+    video_id = params[:video_id]
+    new_memo = params[:memo]
+    
+    favorite = Favorite.find_by(video_id: video_id, user_id: current_user.id)
+
+    if favorite
+      favorite.update(memo: new_memo)
+      render json: { success: true }
+    else
+      render json: { success: false }, status: :not_found
+    end
   end
 end

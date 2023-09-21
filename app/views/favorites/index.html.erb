@@ -1,10 +1,103 @@
 <h1>Your Favorites</h1>
 
-<ul>
-  <% @favorites.each do |favorite| %>
-    <li>
-      <img src="<%= favorite.video.thumbnail_url %>" alt="<%= favorite.video.title %> thumbnail">
-      <a href="<%= video_path(favorite.video) %>"><%= favorite.video.title %></a>
-    </li>
-  <% end %>
-</ul>
+<!-- ソートオプションのドロップダウンメニューを追加 -->
+<div id="sort-container">
+  <label for="sort-options">Sort by:</label>
+  <select id="sort-options">
+    <option value="uploaded-date">アップロード日</option>
+    <option value="favorite-date">お気に入り登録日</option>
+  </select>
+</div>
+
+<!-- お気に入り動画のリスト -->
+<ul id="video-list"></ul>
+
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      const response = await fetch('/api/favorites');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      let favorites = await response.json();
+      favorites.forEach(renderFavorite);
+
+      document.getElementById('sort-options').addEventListener('change', (event) => {
+        const sortOption = event.target.value;
+        const sortedFavorites = sortFavorites(favorites, sortOption);
+        const videoListContainer = document.getElementById('video-list');
+        videoListContainer.innerHTML = '';
+        sortedFavorites.forEach(renderFavorite);
+      });
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+    }
+
+    const saveButtons = document.querySelectorAll('.save-button');
+    saveButtons.forEach((button) => {
+      button.addEventListener('click', function() {
+        const memoInput = this.previousElementSibling;
+        const newMemo = memoInput.value;
+        const videoId = this.parentElement.dataset.videoId;
+
+        saveMemo(videoId, newMemo);
+      });
+    });
+  });
+
+  function sortFavorites(favorites, sortOption) {
+    // ...（ソート処理は変わりません）
+  }
+
+  function renderFavorite(favorite) {
+    const videoListContainer = document.getElementById('video-list');
+    const videoItem = document.createElement('li');
+    videoItem.dataset.videoId = favorite.video.id;
+
+    const thumbnail = document.createElement('img');
+    thumbnail.src = favorite.video.thumbnail_url;
+    thumbnail.alt = `${favorite.video.title} thumbnail`;
+    videoItem.appendChild(thumbnail);
+
+    const titleLink = document.createElement('a');
+    titleLink.href = `/videos/${favorite.video.id}`;
+    titleLink.textContent = favorite.video.title;
+    videoItem.appendChild(titleLink);
+
+    const memoInput = document.createElement('input');
+    memoInput.type = 'text';
+    memoInput.className = 'memo-input';
+    memoInput.placeholder = 'メモを入力';
+    memoInput.value = favorite.memo || '';
+    videoItem.appendChild(memoInput);
+
+    const saveButton = document.createElement('button');
+    saveButton.textContent = '保存';
+    saveButton.className = 'save-button';
+    videoItem.appendChild(saveButton);
+
+    videoListContainer.appendChild(videoItem);
+  }
+
+  function saveMemo(videoId, newMemo) {
+    fetch('/api/save-memo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ videoId, newMemo }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        alert('メモが保存されました！');
+      } else {
+        alert('エラーが発生しました。再試行してください。');
+      }
+    })
+    .catch((error) => {
+      alert('通信エラーが発生しました。');
+    });
+  }
+</script>

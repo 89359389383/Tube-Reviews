@@ -1,3 +1,5 @@
+# config/routes.rb
+
 Rails.application.routes.draw do
   devise_for :users
 
@@ -5,21 +7,21 @@ Rails.application.routes.draw do
 
   resources :videos do
     resources :reviews, except: [:index, :new, :destroy]
-    
-    # お気に入りの追加・削除をするためのルーティングを追加
     resource :favorite, only: [:create, :destroy]
-
-    # お気に入り動画の一覧表示のためのルーティングを追加
     collection do
       get :favorites
     end
   end
 
   resources :reviews, only: [:index, :new, :create, :edit, :update, :destroy]
-
-  # お気に入り動画の一覧表示のルーティングを追加
+  
   get 'favorites', to: 'favorites#index', as: 'favorites'
 
+  namespace :api do
+    resources :favorites, only: [:index]
+    post 'save_memo', to: 'favorites#save_memo'  # 追加
+  end
+  
   # authenticatedとunauthenticatedのルート設定をコメントアウトしています。
   # 必要に応じてコメントアウトを外し、適切なルートへ変更してください。
   # authenticated :user do
@@ -32,5 +34,4 @@ Rails.application.routes.draw do
 
   # 現在のデフォルトのルート設定
   root 'videos#index'
-end 
-
+end

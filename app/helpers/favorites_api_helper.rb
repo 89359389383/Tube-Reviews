@@ -1,0 +1,2 @@
+module FavoritesApiHelper
+end
