@@ -13,13 +13,23 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :favorite_videos do # この部分を追加
+    member do
+      delete 'delete'
+    end
+  end
+
   resources :reviews, only: [:index, :new, :create, :edit, :update, :destroy]
   
   get 'favorites', to: 'favorites#index', as: 'favorites'
 
   namespace :api do
-    resources :favorites, only: [:index]
-    post 'save_memo', to: 'favorites#save_memo'  # 追加
+    resources :favorites, only: [:index] do
+      collection do
+        get 'search' # この行を追加
+      end
+    end
+    post 'save_memo', to: 'favorites#save_memo' # 追加
   end
   
   # authenticatedとunauthenticatedのルート設定をコメントアウトしています。

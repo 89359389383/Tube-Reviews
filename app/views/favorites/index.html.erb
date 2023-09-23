@@ -1,5 +1,11 @@
 <h1>Your Favorites</h1>
 
+<!-- 検索フォームを追加 -->
+<form id="search-form">
+  <input type="text" id="search-keyword" placeholder="Search...">
+  <button type="submit">Search</button>
+</form>
+
 <!-- ソートオプションのドロップダウンメニューを追加 -->
 <div id="sort-container">
   <label for="sort-options">Sort by:</label>
@@ -14,14 +20,21 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', async () => {
-    try {
-      const response = await fetch('/api/favorites');
+    let favorites;
+
+    async function fetchFavorites(keyword = '') {
+      const response = await fetch(`/api/favorites/search?keyword=${keyword}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
-      let favorites = await response.json();
+      favorites = await response.json();
+      const videoListContainer = document.getElementById('video-list');
+      videoListContainer.innerHTML = '';
       favorites.forEach(renderFavorite);
+    }
+
+    try {
+      await fetchFavorites();
 
       document.getElementById('sort-options').addEventListener('change', (event) => {
         const sortOption = event.target.value;
@@ -30,24 +43,26 @@
         videoListContainer.innerHTML = '';
         sortedFavorites.forEach(renderFavorite);
       });
+
+      const form = document.getElementById("search-form");
+      form.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const keyword = document.getElementById("search-keyword").value;
+        await fetchFavorites(keyword);
+      });
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
     }
-
-    const saveButtons = document.querySelectorAll('.save-button');
-    saveButtons.forEach((button) => {
-      button.addEventListener('click', function() {
-        const memoInput = this.previousElementSibling;
-        const newMemo = memoInput.value;
-        const videoId = this.parentElement.dataset.videoId;
-
-        saveMemo(videoId, newMemo);
-      });
-    });
   });
 
   function sortFavorites(favorites, sortOption) {
-    // ...（ソート処理は変わりません）
+    if(sortOption === 'uploaded-date') {
+      return favorites.sort((a, b) => new Date(b.video.uploaded_date) - new Date(a.video.uploaded_date));
+    }
+    if(sortOption === 'favorite-date') {
+      return favorites.sort((a, b) => new Date(b.favorite_date) - new Date(a.favorite_date));
+    }
+    return favorites;
   }
 
   function renderFavorite(favorite) {
@@ -61,9 +76,9 @@
     videoItem.appendChild(thumbnail);
 
     const titleLink = document.createElement('a');
-    titleLink.href = `/videos/${favorite.video.id}`;
+    titleLink.href = `/videos/${favorite.video.id}`; // 追加された部分
     titleLink.textContent = favorite.video.title;
-    videoItem.appendChild(titleLink);
+    videoItem.appendChild(titleLink); // 追加された部分
 
     const memoInput = document.createElement('input');
     memoInput.type = 'text';
@@ -76,6 +91,29 @@
     saveButton.textContent = '保存';
     saveButton.className = 'save-button';
     videoItem.appendChild(saveButton);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = '削除';
+    deleteButton.className = 'delete-button';
+    deleteButton.addEventListener('click', function() {
+      if (window.confirm('この動画をお気に入りから削除してよろしいですか？')) {
+        fetch(`/favorite_videos/${favorite.video.id}/delete`, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Content-Type': 'application/json',
+          }
+        })
+        .then((response) => {
+          if (response.ok) {
+            videoItem.remove();
+          } else {
+            alert('削除に失敗しました');
+          }
+        });
+      }
+    });
+    videoItem.appendChild(deleteButton);
 
     videoListContainer.appendChild(videoItem);
   }
