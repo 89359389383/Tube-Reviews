@@ -1,10 +1,11 @@
+# spec/factories/users.rb
+
 FactoryBot.define do
   factory :user do
-    name { "John Doe" }
-    email { "test@example.com" }
-    password { "password" }
-    password_confirmation { "password" }
-    # 必要に応じて他の属性も追加できます
+    sequence(:name) { |n| "User #{n}" }
+    sequence(:email) { |n| "test#{n}@example.com" }
+    password { 'password123' }
+    password_confirmation { 'password123' }
+    # 追加で他の属性が必要な場合は、こちらに追加してください
   end
 end
-

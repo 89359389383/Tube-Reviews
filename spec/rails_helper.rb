@@ -2,6 +2,11 @@
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
+require 'rspec/rails'
+
+# Capybaraの設定を追加
+require 'capybara/rails'
+require 'capybara/rspec'
 
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
