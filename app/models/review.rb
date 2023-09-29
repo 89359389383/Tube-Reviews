@@ -3,11 +3,9 @@ class Review < ApplicationRecord
   belongs_to :video
   
   # Validations
-  validates :title, presence: true, length: { maximum: 100 } # タイトルのバリデーションを追加
-  validates :body, presence: true, length: { maximum: 500 } # :contentを:bodyに変更
+  validates :title, presence: true, length: { maximum: 100 } # タイトルの存在性と最大文字数
+  validates :body, presence: true, length: { minimum: 5, maximum: 500 } # 本文の存在性と文字数の制限
   
-  # 必要に応じて他のバリデーションを追加
-
-  # 追加: レビューを作成した日時でソートするスコープ
+  # スコープ: レビューを作成した日時でソート
   scope :recent, -> { order(created_at: :desc) }
 end

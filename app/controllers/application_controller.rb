@@ -13,6 +13,19 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:account_update, keys: [:name])
   end
 
+  def set_resource(resource_name)
+    instance_variable_set("@#{resource_name}", resource_name.capitalize.constantize.find_by(id: params[:id]))
+    unless instance_variable_get("@#{resource_name}")
+      redirect_to send("#{resource_name.pluralize}_path"), alert: "指定された#{resource_name}は存在しません。"
+    end
+  end
+
+  def authorize_resource!(resource)
+    unless instance_variable_get("@#{resource}").user == current_user
+      redirect_to send("#{resource.pluralize}_path"), alert: '権限がありません。'
+    end
+  end
+
   private
 
   def render_404
@@ -25,3 +38,4 @@ class ApplicationController < ActionController::Base
     render template: "errors/500", status: 500
   end
 end
+

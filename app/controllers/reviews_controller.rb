@@ -9,11 +9,19 @@ class ReviewsController < ApplicationController
   }
 
   def index
-    @reviews = fetch_reviews
+    if params[:rating].present?
+      if (1..5).include?(params[:rating].to_i)
+        @reviews = Review.where(rating: params[:rating])
+      else
+        flash.now[:alert] = '無効な評価値です'
+        @reviews = Review.all
+      end
+    else
+      @reviews = fetch_reviews
+    end
   end
 
   def show
-    # ここで特定のレビューを表示するためのコード
   end
 
   def new
@@ -24,7 +32,7 @@ class ReviewsController < ApplicationController
     @review = current_user.reviews.build(review_params)
 
     if @review.save
-      redirect_to reviews_path, notice: 'Review successfully created.'
+      redirect_to reviews_path, notice: '感想を投稿しました'
     else
       flash.now[:alert] = @review.errors.full_messages.to_sentence
       render :new
@@ -36,8 +44,9 @@ class ReviewsController < ApplicationController
 
   def update
     if @review.update(review_params)
-      redirect_to reviews_path, notice: 'Review was successfully updated.'
+      redirect_to reviews_path, notice: '感想を更新しました'
     else
+      flash.now[:alert] = @review.errors.full_messages.to_sentence
       render :edit
     end
   end
@@ -52,17 +61,18 @@ class ReviewsController < ApplicationController
   def fetch_reviews
     reviews = current_user.reviews.includes(:video)
 
-    # 検索
-    reviews = reviews.joins(:video).where("videos.title LIKE ?", "%#{params[:search]}%") if params[:search].present?
+    if params[:search].present?
+      reviews = reviews.joins(:video).where("videos.title LIKE ?", "%#{params[:search]}%")
+    end
 
-    # ソート
     if params[:sort].present? && SORT_MAPPINGS.keys.include?(params[:sort])
       sort_column = SORT_MAPPINGS[params[:sort]]
       direction = (params[:direction] == "desc" ? "DESC" : "ASC")
       reviews = reviews.order("#{sort_column} #{direction}")
+    else
+      reviews = reviews.order("reviews.created_at DESC")
     end
 
-    # ページネーションの適用
     reviews.page(params[:page]).per(10)
   end
 
@@ -71,11 +81,15 @@ class ReviewsController < ApplicationController
   end
 
   def set_review
-    @review = Review.find(params[:id])
+    @review = Review.find_by(id: params[:id])
+    unless @review
+      redirect_to reviews_path, alert: '指定された感想は存在しません。'
+    end
   end
 
   def authorize_user!
-    redirect_to root_path, alert: 'Not authorized.' unless current_user == @review.user
+    unless @review.user == current_user
+      redirect_to reviews_path, alert: '他のユーザーの感想を編集・削除する権限がありません。'
+    end
   end
 end
-
