@@ -10,12 +10,8 @@ require 'capybara/rspec'
 
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
-require 'rspec/rails'
-
-# Add additional requires below this line. Rails is not loaded until this point!
 
 # Checks for pending migrations and applies them before tests are run.
-# If you are not using ActiveRecord, you can remove these lines.
 begin
   ActiveRecord::Migration.maintain_test_schema!
 rescue ActiveRecord::PendingMigrationError => e
@@ -26,9 +22,10 @@ RSpec.configure do |config|
   # Include FactoryBot Methods
   config.include FactoryBot::Syntax::Methods
   
-  # Include Devise Test Helpers
+  # Include Devise Test Helpers for Controllers and Requests
   config.include Devise::Test::ControllerHelpers, type: :controller
-
+  config.include Devise::Test::IntegrationHelpers, type: :request
+  
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
@@ -36,8 +33,6 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   # RSpec Rails can automatically mix in different behaviours to your tests
-  # based on their file location, for example enabling you to call `get` and
-  # `post` in specs under `spec/controllers`.
   config.infer_spec_type_from_file_location!
 
   # Filter lines from Rails gems in backtraces.
@@ -62,4 +57,4 @@ Shoulda::Matchers.configure do |config|
     with.test_framework :rspec
     with.library :rails
   end
-end
+end 
