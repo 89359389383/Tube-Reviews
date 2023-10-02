@@ -52,8 +52,12 @@ class ReviewsController < ApplicationController
   end
 
   def destroy
-    @review.destroy
-    redirect_to reviews_path, notice: 'Review was successfully deleted.'
+    if @review && @review.user == current_user
+      @review.destroy
+      redirect_to reviews_path, notice: '感想が正常に削除されました'
+    else
+      redirect_to reviews_path, alert: '感想の削除に失敗しました'
+    end
   end
 
   private

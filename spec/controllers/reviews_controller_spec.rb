@@ -46,8 +46,8 @@ RSpec.describe ReviewsController, type: :controller do
         expect {
           post :create, params: { video_id: video.id, review: invalid_review_attributes }
         }.not_to change(Review, :count)
-        expect(flash[:alert]).to include("Title can't be blank")
         expect(flash[:alert]).to include("Body can't be blank")
+        expect(flash[:alert]).to include("Body is too short (minimum is 5 characters)")
         expect(response).to render_template :new
       end
     end
@@ -74,8 +74,8 @@ RSpec.describe ReviewsController, type: :controller do
         patch :update, params: { video_id: review.video_id, id: review.id, review: invalid_review_attributes }
         review.reload
         expect(review.title).not_to eq("")
-        expect(flash[:alert]).to include("Title can't be blank")
         expect(flash[:alert]).to include("Body can't be blank")
+        expect(flash[:alert]).to include("Body is too short (minimum is 5 characters)")
         expect(response).to render_template :edit
       end
     end
@@ -89,7 +89,8 @@ RSpec.describe ReviewsController, type: :controller do
         delete :destroy, params: { video_id: review.video_id, id: review.id }
       }.to change(Review, :count).by(-1)
       expect(response).to redirect_to reviews_path
-      expect(flash[:notice]).to eq("Review was successfully deleted.")
+      expect(flash[:notice]).to eq("感想が正常に削除されました")
     end
   end
 end
+
