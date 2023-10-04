@@ -1,3 +1,5 @@
+# app/controllers/videos_controller.rb
+
 class VideosController < ApplicationController
   before_action :authenticate_user!
   before_action :set_video, only: [:show]
@@ -11,22 +13,20 @@ class VideosController < ApplicationController
     query = params[:search_query] || params[:keyword]
     
     if query.present?
-      Rails.logger.debug "Search query: #{query}"  # デバッグログ: 検索クエリを出力
+      Rails.logger.debug "Search query: #{query}" 
 
       @videos = Video.search(query)
       if @videos.empty?
-        Rails.logger.debug "No videos found in the database. Searching YouTube API..."  # デバッグログ: データベースにビデオが見つからなかった場合
-        @videos = Video.search_from_youtube(query)
-        if @videos.present?
-          @videos.each do |video|
-            _video=Video.where(url: video[:url]).last
-            if _video.nil?
-            p "========== video from youtube API"
-            p video
-              Video.create!(title: video[:title], description: video[:description], url: video[:url])
-            end  
-          end
+        Rails.logger.debug "No videos found in the database. Searching YouTube API..." 
+        search_results = Video.search_from_youtube(query)
+        
+        search_results.each do |video_data|
+          video = Video.find_or_initialize_by(url: video_data[:url])
+          video.assign_attributes(title: video_data[:title], description: video_data[:description])
+          video.save if video.changed?
         end
+        
+        @videos = Video.where(url: search_results.map { |data| data[:url] })
         @from_database = false
       else
         @from_database = true
@@ -34,8 +34,6 @@ class VideosController < ApplicationController
     else
       @videos = []
     end
-
-    @videos ||= []
 
     render 'index'
   end
@@ -45,7 +43,7 @@ class VideosController < ApplicationController
     @video_details = @video || fetch_video_details(video_id)
     @reviews = @video.reviews.order(created_at: :desc) if @video&.reviews
   end
-  
+
   def favorites
     @favorites = current_user.favorites.includes(:video)
   end
@@ -56,13 +54,9 @@ class VideosController < ApplicationController
     @video = Video.find_by(id: params[:id])
     
     unless @video
-      video_data = youtube_video_details(params[:id])
+      video_data = YoutubeService.fetch_video_details_by_id(params[:id])
       if video_data
-        @video = Video.new(
-          title: video_data[:title],
-          description: video_data[:description],
-          url: video_data[:url]
-        )
+        @video = Video.new(video_data)
         @video.save
       end
     end
@@ -72,31 +66,10 @@ class VideosController < ApplicationController
     params.require(:video).permit(:title, :url, :description)
   end
 
-  def youtube_video_details(video_id)
-    video_response = YOUTUBE_SERVICE.list_videos('snippet,contentDetails', id: video_id, max_results: 1)
-    Rails.logger.debug video_response.to_json
-
-    # Check if the response contains an error
-    if video_response.error?
-      Rails.logger.error "YouTube API Error: #{video_response.error_message}"  # デバッグログ: YouTube API エラーの場合
-      return nil
-    end
-
-    video = video_response.items.first
-    return nil unless video
-
-    {
-      title: video.snippet.title,
-      description: video.snippet.description,
-      url: "https://www.youtube.com/watch?v=#{video.id}"
-    }
-  end
-  
   def fetch_video_details(video_id)
-    video_data = youtube_video_details(video_id)
+    video_data = YoutubeService.fetch_video_details_by_id(video_id)
     return nil unless video_data
 
     Video.new(video_data)
   end
 end
-

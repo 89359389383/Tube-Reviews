@@ -9,7 +9,7 @@ class Video < ApplicationRecord
   validates :title, presence: true
   
   # Callbacks
-  before_save :extract_video_id
+  before_save :extract_video_id  # この行はそのままで良い場合
   
   # Class methods
   def self.search(keyword)
@@ -23,8 +23,10 @@ class Video < ApplicationRecord
       search_results.map do |item|
         {
           title: item[:title],
-          description: item[:description], # この部分は `YoutubeService.search_videos` で提供される情報に依存します。必要に応じて修正してください。
-          url: "https://www.youtube.com/watch?v=#{item[:video_id]}"
+          description: item[:description],
+          url: "https://www.youtube.com/watch?v=#{item[:video_id]}",
+          thumbnail_url: item[:thumbnail_url],
+          published_at: item[:published_at]
         }
       end
     rescue => e
@@ -38,8 +40,6 @@ class Video < ApplicationRecord
 
   def extract_video_id
     match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/)
-    p "===== extract video id"
-    p match
     self.video_id = match[1] if match && match[1]
   end
-end 
+end

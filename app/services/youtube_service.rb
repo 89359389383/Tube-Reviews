@@ -1,5 +1,3 @@
-# app/services/youtube_service.rb
-
 require 'httparty'
 
 class YoutubeService
@@ -15,22 +13,23 @@ class YoutubeService
     })
 
     if response.success?
-      # 応答から必要な部分を抽出し、アプリケーションで利用しやすい形式に変換
       response.parsed_response["items"].map do |item|
+        video_details = fetch_video_details_by_id(item["id"]["videoId"])
         {
           title: item["snippet"]["title"],
           video_id: item["id"]["videoId"],
-          thumbnail_url: item["snippet"]["thumbnails"]["default"]["url"]
+          thumbnail_url: item["snippet"]["thumbnails"]["default"]["url"],
+          description: video_details[:description],  # 追加
+          published_at: video_details[:published_at] # 追加
         }
       end
     else
-      # エラーレスポンスの場合、空の配列またはエラーメッセージを返すなどの処理を追加
       []
     end
   end
 
   # 指定した動画IDを使用してYouTube APIから動画の詳細情報を取得する
-  def self.fetch_video_details(video_id)
+  def self.fetch_video_details_by_id(video_id)
     response = HTTParty.get("#{BASE_URL}/videos", query: {
       part: 'snippet',
       id: video_id,
@@ -38,12 +37,16 @@ class YoutubeService
     })
 
     if response.success?
-      # 応答から動画の詳細情報を抽出するロジックをここに書く
-      # この例では、最初の動画の詳細情報を直接返していますが、実際の要件に合わせて調整してください
-      response.parsed_response["items"].first
+      video = response.parsed_response["items"].first
+      {
+        title: video["snippet"]["title"],
+        description: video["snippet"]["description"],
+        published_at: video["snippet"]["publishedAt"], # 追加
+        url: "https://www.youtube.com/watch?v=#{video["id"]}"
+      }
     else
-      # エラーレスポンスの場合、nilやエラーメッセージを返すなどの処理を追加
       nil
     end
   end
 end
+

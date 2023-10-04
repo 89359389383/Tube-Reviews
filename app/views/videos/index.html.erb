@@ -1,57 +1,35 @@
 <h1>All Videos</h1>
-
-<!-- パーシャル化した検索フォームを読み込む -->
 <%= render 'search_form' %>
 
 <% if @videos.any? %>
-  <% if @videos.first.is_a?(Video) %>
-    <!-- データベースからの動画情報の表示 -->
-    <ul>
-      <% @videos.each do |video| %>
-        <li>
-          <strong>Title:</strong> <%= video.title %><br>
-          <strong>Description:</strong> <%= video.description %><br>
-          <%= link_to 'View Details', video_path(video) %><br>
+  <div class="video-list">
+    <% @videos.each do |video| %>
+      <div class="video-item">
+        <% if video.thumbnail_url.present? %>
+          <%= image_tag video.thumbnail_url, alt: video.title %>
+        <% end %>
+        <h3><%= video.title %></h3>
+        <p><%= video.description %></p>
+        <!-- 以下が修正部分です -->
+        <p>Published at: <%= video.published_at ? video.published_at.to_time.strftime("%B %d, %Y") : "Not available" %></p>
 
-          <!-- お気に入りボタンの追加 -->
-          <% if user_signed_in? %>
-            <% if current_user.favorited?(video) %>
-              <%= link_to 'Remove from Favorites', video_favorite_path(video_id: video.id), method: :delete, class: 'btn btn-danger' %>
-            <% else %>
-              <%= link_to 'Add to Favorites', video_favorite_path(video_id: video.id), method: :post, class: 'btn btn-primary' %>
-            <% end %>
-          <% end %>
-        </li>
-        <p><%= video.inspect %></p>
-      <% end %>
-    </ul>
-  <% elsif @videos.first&.key?("snippet") %>
-    <div class="video-list">
-      <% @videos.each do |video| %>
-        <div class="video-item">
-          <%= image_tag video["snippet"]["thumbnails"]["medium"]["url"], alt: video["snippet"]["title"] %>
-          <h3><%= video["snippet"]["title"] %></h3>
-          <p><%= video["snippet"]["description"] %></p>
-          <p>Published at: <%= video["snippet"]["publishedAt"].to_time.strftime("%B %d, %Y") %></p>
-
-          <!-- 注意: この部分のお気に入りの動作は、APIのデータを利用して実際のデータベースに動画が存在しているか確認が必要です -->
-          <% if user_signed_in? && Video.find_by(api_video_id: video["id"]["videoId"]) %>
-            <% current_video = Video.find_by(api_video_id: video["id"]["videoId"]) %>
-            <% if current_user.favorited?(current_video) %>
-              <%= link_to 'Remove from Favorites', video_favorite_path(video_id: current_video.id), method: :delete, class: 'btn btn-danger' %>
-            <% else %>
-              <%= link_to 'Add to Favorites', video_favorite_path(video_id: current_video.id), method: :post, class: 'btn btn-primary' %>
-            <% end %>
-          <% elsif user_signed_in? %>
+        <% if user_signed_in? %>
+          <% current_video = Video.find_by(video_id: video.id) %>
+　　　　　<% if current_video && current_user.favorited?(current_video) %>
+            <%= link_to 'Remove from Favorites', video_favorite_path(video_id: current_video.id), method: :delete, class: 'btn btn-danger' %>
+          <% elsif current_video %>
+            <%= link_to 'Add to Favorites', video_favorite_path(video_id: current_video.id), method: :post, class: 'btn btn-primary' %>
+          <% else %>
             <span class="btn btn-secondary disabled">Add to Favorites</span>
           <% end %>
+        <% end %>
 
-          <p><%= link_to 'Details', video_path(id: video["id"]["videoId"]) %></p>
-        </div>
-      <% end %>
-    </div>
-  <% end %>
+        <p><%= link_to 'Details', video_path(id: video.id) %></p>
+      </div>
+    <% end %>
+  </div>
 <% else %>
   <p>No videos found</p>
 <% end %>
+
 

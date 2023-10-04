@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_21_143948) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_04_120950) do
   create_table "favorites", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "video_id", null: false
@@ -55,6 +55,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_21_143948) do
     t.datetime "updated_at", null: false
     t.string "video_id"
     t.string "thumbnail_url"
+    t.datetime "published_at"
     t.index ["url"], name: "index_videos_on_url", unique: true
   end
 

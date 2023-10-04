@@ -1,22 +1,31 @@
 <h1>動画検索</h1>
-
-<!-- 検索フォームのパーシャルを利用 -->
 <%= render 'videos/search_form' %>
 
-<!-- 検索結果の表示 -->
 <% if @videos.present? %>
   <h2>検索結果</h2>
-  <ul>
+  <div class="video-list">
     <% @videos.each do |video| %>
-      <li>
-        <%= link_to video[:title], video_path(video[:url].split("v=").last) %> 
-        <div>
-          <img src="<%= video[:thumbnail_url] %>" alt="<%= video[:title] %>のサムネイル"> 
-        </div>
-        <p><%= video[:description].truncate(100) %> </p>
-      </li>
+      <div class="video-item">
+        <%= image_tag video[:thumbnail_url], alt: video[:title] %>
+        <h3><%= video[:title] %></h3>
+        <p><%= video[:description] %></p>
+        <p>Published at: <%= video[:published_at].to_time.strftime("%B %d, %Y") %></p>
+
+        <% if user_signed_in? %>
+          <% current_video = Video.find_by(api_video_id: video[:id]) %>
+          <% if current_video && current_user.favorited?(current_video) %>
+            <%= link_to 'Remove from Favorites', video_favorite_path(video_id: current_video.id), method: :delete, class: 'btn btn-danger' %>
+          <% elsif current_video %>
+            <%= link_to 'Add to Favorites', video_favorite_path(video_id: current_video.id), method: :post, class: 'btn btn-primary' %>
+          <% else %>
+            <span class="btn btn-secondary disabled">Add to Favorites</span>
+          <% end %>
+        <% end %>
+
+        <p><%= link_to 'Details', video_path(id: video[:id]) %></p>
+      </div>
     <% end %>
-  </ul>
+  </div>
 <% else %>
   <p>該当する動画はありません。</p>
 <% end %>
