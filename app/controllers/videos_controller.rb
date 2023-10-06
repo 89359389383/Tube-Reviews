@@ -1,5 +1,3 @@
-# app/controllers/videos_controller.rb
-
 class VideosController < ApplicationController
   before_action :authenticate_user!
   before_action :set_video, only: [:show]
@@ -14,8 +12,8 @@ class VideosController < ApplicationController
     
     if query.present?
       Rails.logger.debug "Search query: #{query}" 
-
       @videos = Video.search(query)
+      
       if @videos.empty?
         Rails.logger.debug "No videos found in the database. Searching YouTube API..." 
         search_results = Video.search_from_youtube(query)
@@ -35,6 +33,10 @@ class VideosController < ApplicationController
       @videos = []
     end
 
+    render :index
+  rescue YoutubeService::YoutubeAPIError => e
+    flash[:error] = e.message
+    @videos = []
     render 'index'
   end
 
@@ -54,10 +56,13 @@ class VideosController < ApplicationController
     @video = Video.find_by(id: params[:id])
     
     unless @video
-      video_data = YoutubeService.fetch_video_details_by_id(params[:id])
+      video_data = YoutubeService.fetch_video_details_by_id(params[:video_id] || params[:id])
       if video_data
         @video = Video.new(video_data)
         @video.save
+      else
+        flash[:alert] = "動画が見つかりませんでした。"
+        redirect_to videos_path
       end
     end
   end

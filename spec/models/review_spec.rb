@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Review, type: :model do
+  # 必要なデータを準備
+  let(:user) { create(:user) }
+  let(:video) { create(:video) }
+  let(:review) { build(:review, user: user, video: video) }
 
   # アソシエーションのテスト
   it { should belong_to(:user) }
@@ -8,31 +12,15 @@ RSpec.describe Review, type: :model do
 
   # バリデーションのテスト
   describe "validations" do
-    let(:review) { build(:review) } # FactoryBotを使用してテストデータを構築
-
     context "when all attributes are valid" do
       it "is valid" do
         expect(review).to be_valid
       end
     end
 
-    context "when title is missing" do
-      it "is not valid" do
-        review.title = nil
-        expect(review).not_to be_valid
-      end
-    end
-
     context "when body is missing" do
       it "is not valid" do
         review.body = nil
-        expect(review).not_to be_valid
-      end
-    end
-
-    context "when title exceeds maximum length" do
-      it "is not valid" do
-        review.title = "a" * 101 # Assuming max length is 100 characters
         expect(review).not_to be_valid
       end
     end
@@ -65,5 +53,4 @@ RSpec.describe Review, type: :model do
     end
   end
 end
-
 

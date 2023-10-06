@@ -1,5 +1,18 @@
 <h1>All Videos</h1>
+
 <%= render 'search_form' %>
+
+<% if flash[:error] %>
+  <div class="alert alert-danger">
+    <%= flash[:error] %>
+  </div>
+<% end %>
+
+<% if flash[:alert] %> <!-- 追加部分 -->
+  <div class="alert alert-danger">
+    <%= flash[:alert] %>
+  </div>
+<% end %> <!-- 追加部分終了 -->
 
 <% if @videos.any? %>
   <div class="video-list">
@@ -10,12 +23,11 @@
         <% end %>
         <h3><%= video.title %></h3>
         <p><%= video.description %></p>
-        <!-- 以下が修正部分です -->
         <p>Published at: <%= video.published_at ? video.published_at.to_time.strftime("%B %d, %Y") : "Not available" %></p>
 
         <% if user_signed_in? %>
           <% current_video = Video.find_by(video_id: video.id) %>
-　　　　　<% if current_video && current_user.favorited?(current_video) %>
+          <% if current_video && current_user.favorited?(current_video) %>
             <%= link_to 'Remove from Favorites', video_favorite_path(video_id: current_video.id), method: :delete, class: 'btn btn-danger' %>
           <% elsif current_video %>
             <%= link_to 'Add to Favorites', video_favorite_path(video_id: current_video.id), method: :post, class: 'btn btn-primary' %>
@@ -31,5 +43,3 @@
 <% else %>
   <p>No videos found</p>
 <% end %>
-
-

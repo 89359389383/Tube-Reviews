@@ -30,9 +30,11 @@ class ReviewsController < ApplicationController
 
   def create
     @review = current_user.reviews.build(review_params)
+    @video = Video.find(params[:video_id])
+    @review.video = @video
 
     if @review.save
-      redirect_to reviews_path, notice: '感想を投稿しました'
+      redirect_to @video, notice: '感想を投稿しました'
     else
       flash.now[:alert] = @review.errors.full_messages.to_sentence
       render :new
@@ -97,3 +99,4 @@ class ReviewsController < ApplicationController
     end
   end
 end
+

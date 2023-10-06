@@ -38,4 +38,3 @@ class ApplicationController < ActionController::Base
     render template: "errors/500", status: 500
   end
 end
-
