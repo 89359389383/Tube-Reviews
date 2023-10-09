@@ -199,6 +199,7 @@ GEM
       racc (~> 1.4)
     orm_adapter (0.5.0)
     os (1.1.4)
+    pg (1.5.4)
     public_suffix (5.0.3)
     puma (5.6.6)
       nio4r (~> 2.0)
@@ -298,7 +299,6 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    sqlite3 (1.6.3-x86_64-linux)
     stimulus-rails (1.2.1)
       railties (>= 6.0.0)
     thor (1.2.2)
@@ -354,6 +354,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kaminari
+  pg
   puma (~> 5.0)
   rails (= 7.0.6)
   rails-controller-testing
@@ -363,7 +364,6 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.1.0)
   sprockets-rails
-  sqlite3
   stimulus-rails
   turbo-rails
   tzinfo-data

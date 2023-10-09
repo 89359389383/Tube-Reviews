@@ -25,7 +25,7 @@ group :development, :test do
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
 
   # Database
-  gem 'sqlite3'
+  gem 'pg'
 
   # Environment variables
   gem 'dotenv-rails'
