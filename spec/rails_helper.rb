@@ -49,6 +49,11 @@ RSpec.configure do |config|
       example.run
     end
   end
+  
+  # ChromeDriverの設定
+  config.before(:each, type: :system) do
+    driven_by :selenium, using: :chrome, screen_size: [1400, 1400]
+  end
 end 
 
 # shoulda-matchersの設定を追加
@@ -57,4 +62,5 @@ Shoulda::Matchers.configure do |config|
     with.test_framework :rspec
     with.library :rails
   end
-end 
+end
+
