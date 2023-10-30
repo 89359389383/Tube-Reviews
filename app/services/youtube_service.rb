@@ -2,7 +2,7 @@ require 'httparty'
 
 class YoutubeService
   BASE_URL = 'https://www.googleapis.com/youtube/v3'
-  
+
   # カスタムエラークラスを定義
   class YoutubeAPIError < StandardError; end
 
@@ -25,7 +25,8 @@ class YoutubeService
         video_id: item["id"]["videoId"],
         thumbnail_url: item["snippet"]["thumbnails"]["default"]["url"],
         description: video_details[:description],
-        published_at: video_details[:published_at]
+        published_at: video_details[:published_at],
+        category_name: video_details[:category_name] # カテゴリ名を追加
       }
     end
   end
@@ -42,12 +43,41 @@ class YoutubeService
       items = response.parsed_response["items"]
       if items.any?
         video = items.first
+        category_id = video["snippet"]["categoryId"] # カテゴリIDを取得
+        category_name = get_category_name(category_id, ENV['YOUTUBE_API_KEY']) # カテゴリ名を取得
+        video_url = "https://www.youtube.com/watch?v=#{video["id"]}"
+        thumbnail_url = video["snippet"]["thumbnails"]["default"]["url"]
+        Video.save_category_info(video_url, category_name) # カテゴリ情報を保存
+        Video.save_thumbnail_info(video_url, thumbnail_url) # サムネイル情報を保存
         {
           title: video["snippet"]["title"],
           description: video["snippet"]["description"],
           published_at: video["snippet"]["publishedAt"],
-          url: "https://www.youtube.com/watch?v=#{video["id"]}"
+          url: video_url,
+          category_name: category_name # カテゴリ名を追加
         }
+      else
+        nil
+      end
+    else
+      nil
+    end
+  end
+
+  # カテゴリIDからカテゴリ名を取得する
+  def self.get_category_name(category_id, api_key)
+    response = HTTParty.get("#{BASE_URL}/videoCategories", query: {
+      part: 'snippet',
+      id: category_id,
+      regionCode: 'US',
+      key: api_key
+    })
+
+    if response.success?
+      items = response.parsed_response["items"]
+      if items.any?
+        category_name = items.first["snippet"]["title"]
+        return category_name
       else
         nil
       end

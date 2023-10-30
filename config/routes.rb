@@ -13,7 +13,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :favorite_videos do # この部分を追加
+  resources :favorite_videos do
     member do
       delete 'delete'
     end
@@ -32,8 +32,6 @@ Rails.application.routes.draw do
     post 'save_memo', to: 'favorites#save_memo' # 追加
   end
   
-  # authenticatedとunauthenticatedのルート設定をコメントアウトしています。
-  # 必要に応じてコメントアウトを外し、適切なルートへ変更してください。
   # authenticated :user do
   #   root 'videos#index', as: :authenticated_root
   # end
@@ -42,6 +40,7 @@ Rails.application.routes.draw do
   #   root to: "devise/sessions#new"
   # end
 
+  # 現在のデフォルトのルート設定 
   # 現在のデフォルトのルート設定
   root 'videos#index'
-end
+end 

@@ -9,21 +9,21 @@ class VideosController < ApplicationController
 
   def search
     query = params[:search_query] || params[:keyword]
-    
+
     if query.present?
-      Rails.logger.debug "Search query: #{query}" 
+      Rails.logger.debug "Search query: #{query}"
       @videos = Video.search(query)
-      
+
       if @videos.empty?
-        Rails.logger.debug "No videos found in the database. Searching YouTube API..." 
+        Rails.logger.debug "No videos found in the database. Searching YouTube API..."
         search_results = Video.search_from_youtube(query)
-        
+
         search_results.each do |video_data|
           video = Video.find_or_initialize_by(url: video_data[:url])
           video.assign_attributes(title: video_data[:title], description: video_data[:description])
           video.save if video.changed?
         end
-        
+
         @videos = Video.where(url: search_results.map { |data| data[:url] })
         @from_database = false
       else
@@ -41,9 +41,9 @@ class VideosController < ApplicationController
   end
 
   def show
-    video_id = params[:id]
-    @video_details = @video || fetch_video_details(video_id)
+    @video_details = @video || fetch_video_details(params[:id])
     @reviews = @video.reviews.order(created_at: :desc) if @video&.reviews
+    @recommended_videos = Video.recommended(@video)
   end
 
   def favorites
@@ -51,10 +51,10 @@ class VideosController < ApplicationController
   end
 
   private
-  
+
   def set_video
     @video = Video.find_by(id: params[:id])
-    
+
     unless @video
       video_data = YoutubeService.fetch_video_details_by_id(params[:video_id] || params[:id])
       if video_data

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_04_120950) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_28_205009) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -46,7 +46,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_04_120950) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "provider"
+    t.string "uid"
+    t.string "otp_secret"
+    t.integer "consumed_timestep"
+    t.boolean "otp_required_for_login"
+    t.string "otp_secret_key"
+    t.string "encrypted_otp_secret_key"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["encrypted_otp_secret_key"], name: "index_users_on_encrypted_otp_secret_key", unique: true
+    t.index ["otp_secret_key"], name: "index_users_on_otp_secret_key", unique: true
+    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
@@ -59,6 +69,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_04_120950) do
     t.string "video_id"
     t.string "thumbnail_url"
     t.datetime "published_at"
+    t.string "category"
     t.index ["url"], name: "index_videos_on_url", unique: true
   end
 

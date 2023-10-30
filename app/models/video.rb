@@ -9,7 +9,7 @@ class Video < ApplicationRecord
   validates :title, presence: true
   
   # Callbacks
-  before_save :extract_video_id  # この行はそのままで良い場合
+  before_save :extract_video_id
   
   # Class methods
   def self.search(keyword)
@@ -34,8 +34,28 @@ class Video < ApplicationRecord
       []
     end
   end
+  
+  def self.save_category_info(video_url, category_name)
+    video = find_by(url: video_url)
+    if video
+      video.update(category: category_name)
+    end
+  end
 
-  # Private methods
+  def self.save_thumbnail_info(video_url, thumbnail_url)
+    video = find_by(url: video_url)
+    if video
+      video.update(thumbnail: thumbnail_url)
+    else
+      create(url: video_url, thumbnail: thumbnail_url)
+    end
+  end
+
+  def self.recommended(video)
+    category = video.category
+    where(category: category).where.not(id: video.id).order("RANDOM()").limit(5)
+  end
+
   private
 
   def extract_video_id
@@ -43,3 +63,4 @@ class Video < ApplicationRecord
     self.video_id = match[1] if match && match[1]
   end
 end
+
