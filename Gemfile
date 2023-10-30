@@ -19,6 +19,7 @@ gem 'youtube_embed'
 gem 'google-apis-youtube_v3'
 gem 'kaminari'
 gem 'webpacker', '~> 6.0.0.rc.6'
+gem 'social-share-button'
 
 group :development, :test do
   # Debugging

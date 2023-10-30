@@ -26,6 +26,9 @@
 <!-- 動画の埋め込み表示 -->
 <iframe width="560" height="315" src="https://www.youtube.com/embed/<%= @video_details.video_id %>" frameborder="0" allowfullscreen></iframe>
 
+<!-- シェアボタンの表示 -->
+<%= social_share_button_tag('Share to social networks') %>
+
 <!-- おすすめの動画の表示 -->
 <div class="recommended-videos">
   <h3>おすすめの動画</h3>
