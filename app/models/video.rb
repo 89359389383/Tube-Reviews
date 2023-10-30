@@ -5,8 +5,8 @@ class Video < ApplicationRecord
   has_many :favorited_users, through: :favorites, source: :user
   
   # Validations
-  validates :url, presence: true, uniqueness: true
-  validates :title, presence: true
+  validates :url, presence: true, uniqueness: true, format: { with: URI::regexp(%w(http https)), message: 'is not a valid URL' }  # URLのフォーマットを検証
+  validates :title, presence: true, length: { maximum: 255, message: 'is too long (maximum is 255 characters)' }  # タイトルの長さを検証
   
   # Callbacks
   before_save :extract_video_id
@@ -63,4 +63,3 @@ class Video < ApplicationRecord
     self.video_id = match[1] if match && match[1]
   end
 end
-
