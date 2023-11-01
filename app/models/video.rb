@@ -54,6 +54,9 @@ class Video < ApplicationRecord
   def self.recommended(video)
     category = video.category
     where(category: category).where.not(id: video.id).order("RANDOM()").limit(5)
+  rescue => e
+    Rails.logger.error("Recommendation error: #{e.message}")
+    raise RecommendationError, "おすすめの動画の取得に失敗しました。"
   end
 
   private
@@ -63,3 +66,5 @@ class Video < ApplicationRecord
     self.video_id = match[1] if match && match[1]
   end
 end
+
+class RecommendationError < StandardError; end
