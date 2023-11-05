@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>TubeReviews</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+<head>
+  <title>TubeReviews</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= turbo_include_tags %>
-    <%= javascript_pack_tag 'application', 'data-turbo-track': 'reload' %>
-  </head>
+  <!-- Stylesheet pack tag for Webpacker -->
+  <%= stylesheet_pack_tag 'application', 'data-turbo-track': 'reload' %>
 
-  <body>
-    <% flash.each do |message_type, message| %>
-      <div class="<%= message_type %>"><%= message %></div>
-    <% end %>
+  <%= turbo_include_tags %>
+  <%= javascript_pack_tag 'application', 'data-turbo-track': 'reload' %>
+</head>
+<body>
+  <% flash.each do |message_type, message| %>
+    <div class="<%= message_type %>"><%= message %></div>
+  <% end %>
 
-    <% if user_signed_in? %>
-      <%= link_to "Logout", destroy_user_session_path, method: :delete %>
-    <% end %>
+  <% if user_signed_in? %>
+    <%= link_to "Logout", destroy_user_session_path, method: :delete %>
+  <% end %>
 
-    <%= yield %>
-  </body>
+  <%= yield %>
+</body>
 </html>

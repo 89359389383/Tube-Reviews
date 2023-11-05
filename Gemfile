@@ -52,3 +52,5 @@ group :test do
   gem 'database_cleaner'
   gem 'rails-controller-testing'
 end
+
+gem "cssbundling-rails", "~> 1.3"

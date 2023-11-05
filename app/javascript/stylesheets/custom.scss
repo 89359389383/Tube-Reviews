@@ -1,0 +1,33 @@
+// フォーム全体を中央に配置するためのコンテナ
+.centered-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; // 画面の高さ全体を使用
+}
+
+// フォーム自体を中央揃えにするための追加スタイル
+.centered-form {
+  margin: auto; // 自動的に上下左右のマージンを調整して中央揃えに
+}
+
+// カードのスタイル調整
+.card {
+  margin-top: -5rem; // カードの位置を上に調整する（必要に応じて）
+}
+
+// フォーム内の要素のスタイル
+.form-control {
+  margin-bottom: 1rem; // フォーム要素の間に適切なスペースを確保
+}
+
+// ボタンのスタイル
+.btn-primary {
+  width: 100%; // ボタンの幅をフル幅に
+  padding: 0.75rem 1rem; // パディングを調整してボタンのサイズを変更
+}
+
+// フォームのリンクを中央揃えにする
+.text-center {
+  text-align: center; // テキストを中央揃えに
+}

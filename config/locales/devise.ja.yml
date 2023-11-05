@@ -1,0 +1,29 @@
+ja:
+  devise:
+    sessions:
+      new:
+        sign_in: "ログイン"
+        email: "メールアドレス"
+        password: "パスワード"
+        remember_me: "ログイン状態を保持する"
+    registrations:
+      new:
+        sign_up: "登録する"
+    passwords:
+      new:
+        forgot_your_password: "パスワードを忘れた方はこちら"
+    confirmations:
+      new:
+        didnt_receive_confirmation_instructions: "確認メールが届いていない方はこちら"
+    unlocks:
+      new:
+        didnt_receive_unlock_instructions: "アンロックの指示が届いていない方はこちら"
+    omniauth_callbacks:
+      sign_in_with_provider: "%{provider}でサインイン"
+    failure:
+      unauthenticated: "ログインまたは登録が必要です。"
+      user:
+        unauthenticated: "ユーザーとしてログインする必要があります。"
+    # ここに他の devise 関連の翻訳を続けて追加します...
+
+

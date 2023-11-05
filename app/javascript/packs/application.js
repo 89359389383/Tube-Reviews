@@ -5,8 +5,14 @@ Rails.start();
 // jQueryをインポート
 import $ from 'jquery';
 
+// Bootstrapをインポート
+import "bootstrap"; 
+
 // favorites.jsをインポート
 import './favorites';
+
+// Custom SCSSのインポート
+import '../stylesheets/custom.scss';
 
 // This file is automatically compiled by Webpack, along with any other files
 // present in this directory. You're encouraged to place your actual application logic in
