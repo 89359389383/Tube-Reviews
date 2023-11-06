@@ -13,19 +13,25 @@
   <%= javascript_pack_tag 'application', 'data-turbo-track': 'reload' %>
 </head>
 <body>
-  <div class="text-center py-3" style="background-color: blue; color: white; font-size: 24px;">
-    TubeReviews
-  </div>
+  <% if controller_name == 'sessions' && action_name == 'new' %>
+    <div class="text-center py-3" style="background-color: blue; color: white; font-size: 24px;">
+      TubeReviews
+    </div>
+  <% end %>
 
   <% flash.each do |message_type, message| %>
-    <div class="<%= message_type %>"><%= message %></div>
-  <% end %>
+  　<div class="text-center <%= message_type %>"><%= message %></div>
+　<% end %>
+
 
   <% if user_signed_in? %>
     <%= link_to "Logout", destroy_user_session_path, method: :delete %>
+  <% else %>
+    <%= link_to "Login", new_user_session_path %>
   <% end %>
 
   <%= yield %>
 </body>
-</html>
+</html> 
 
+</html> 

@@ -1,4 +1,8 @@
 ja:
+  helpers:
+    submit:
+      create: "登録する"
+      update: "更新する"
   devise:
     sessions:
       new:
@@ -8,7 +12,13 @@ ja:
         remember_me: "ログイン状態を保持する"
     registrations:
       new:
-        sign_up: "登録する"
+        sign_up: "ユーザー登録"
+        email: "メールアドレス"
+        name: "名前"
+        password: "パスワード"
+        password_confirmation: "パスワード確認"
+        characters_minimum: "文字以上"
+        submit: "登録する"
     passwords:
       new:
         forgot_your_password: "パスワードを忘れた方はこちら"
@@ -25,5 +35,4 @@ ja:
       user:
         unauthenticated: "ユーザーとしてログインする必要があります。"
     # ここに他の devise 関連の翻訳を続けて追加します...
-
-
+  # ... 他の設定 ...

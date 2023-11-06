@@ -2,9 +2,9 @@
   <div class="row justify-content-center">
     <div class="col-md-6">
       <div class="card mt-5">
-        <div class="card-header text-center">
-          <%= t("devise.sessions.new.sign_in") %>
-        </div>
+        <%# <div class="card-header text-center">
+  　　　　　　<%= t("devise.sessions.new.sign_in") %>
+　　　　</div> 
         <div class="card-body">
           <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "needs-validation", novalidate: "" }) do |f| %>
             <div class="form-group">
@@ -35,4 +35,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> 
