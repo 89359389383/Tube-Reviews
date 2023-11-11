@@ -18,13 +18,14 @@
   <div class="video-list">
     <% @videos.each do |video| %>
       <div class="video-item">
-        <!-- サムネイル画像の表示 -->
-        <%= link_to image_tag("https://img.youtube.com/vi/#{video.video_id}/0.jpg", alt: video.title), video_path(id: video.id) %>
-
-        <h3><%= video.title %></h3>
-        <p>Published at: <%= video.published_at ? video.published_at.to_time.strftime("%B %d, %Y") : "Not available" %></p>
-
-        <p><%= link_to 'Details', video_path(id: video.id) %></p>
+        <div class="video-thumbnail">
+          <%= link_to image_tag("https://img.youtube.com/vi/#{video.video_id}/0.jpg", alt: video.title, class: "thumbnail-image"), video_path(id: video.id) %>
+        </div>
+        <div class="video-info">
+          <h3><%= video.title %></h3>
+          <p>Published at: <%= video.published_at ? video.published_at.to_time.strftime("%B %d, %Y") : "Not available" %></p>
+          <p><%= link_to 'Details', video_path(id: video.id) %></p>
+        </div>
       </div>
     <% end %>
   </div>

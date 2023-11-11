@@ -33,5 +33,26 @@
 }
 
 body {
-  background-color: #ffffe0; /* 薄い黄色 */
+  background-color: #ffffe0; // 薄い黄色
+}
+
+// 追加された動画リストのスタイル
+.video-item {
+  display: flex;
+  align-items: start;
+  margin-bottom: 20px;
+}
+
+.video-thumbnail {
+  flex: 0 0 auto;
+  margin-right: 20px;
+}
+
+.thumbnail-image {
+  width: 120px; // または好みのサイズに
+  height: auto;
+}
+
+.video-info {
+  flex: 1;
 }
