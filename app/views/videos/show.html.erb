@@ -3,7 +3,8 @@
 <!-- バリデーションエラーメッセージの表示 -->
 <% if @video.errors.any? %>
   <div id="error_explanation">
-    <h2><%= pluralize(@video.errors.count, "error") %> prohibited this video from being saved:</h2>
+    <h2><%= pluralize(@video.errors.count, "error") %> prohibited this vide
+o from being saved:</h2>
 
     <ul>
     <% @video.errors.full_messages.each do |message| %>
@@ -11,37 +12,17 @@
     <% end %>
     </ul>
   </div>
-<% end %>
+<% end %> 
 
 <!-- 動画のタイトルを表示 -->
 <h1><%= @video_details.title || @video.title %></h1>
 
-<!-- 動画の説明文を表示 -->
-<p>
-  <strong>Description:</strong>
-  <%= @video_details.description %>
-</p>
-
-<!-- お気に入りボタンの追加 -->
-<% if user_signed_in? %>
-  <% if current_user&.favorited?(@video) %>
-    <%= link_to 'Remove from Favorites', video_favorite_path(@video), method: :delete, class: 'btn btn-danger' %>
-  <% else %>
-    <%= link_to 'Add to Favorites', video_favorite_path(@video), method: :post, class: 'btn btn-primary' %>
-  <% end %>
-<% end %>
-
-<!-- お気に入り一覧ページへのリンクを追加 -->
-<p>
-  <%= link_to 'お気に入り一覧', favorites_path %>
-</p>
-
 <!-- 動画の埋め込み表示 -->
-<iframe width="560" height="315" src="https://www.youtube.com/embed/<%= @video_details.video_id %>" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/<%= @video_details.video_id %>" frameborder="0" allowfullscreen></iframe> 
 
 <!-- シェアボタンの表示 -->
 <%= social_share_button_tag('Share to social networks') %>
-<p>シェア機能を利用するためには、ポップアップを許可してください。</p>
+<p>シェア機能を利用するためには、ポップアップを許可してください。</p 
 
 <!-- おすすめの動画の表示 -->
 <div class="recommended-videos">
@@ -55,7 +36,7 @@
       </li>
     <% end %>
   </ul>
-</div>
+</div> 
 
 <!-- 感想入力フォームの直前にエラーメッセージを表示 -->
 <% if @review&.errors&.any? %>
@@ -70,11 +51,12 @@
 <h2>あなたの感想</h2>
 <%= form_for [@video, Review.new], data: { turbo: "false" } do |f| %>
   <%= f.hidden_field :video_id, value: @video.id %>
-  <%= f.text_area :body, rows: 5, placeholder: "ここに感想を入力してください" %>
-  <div class="submit-button">
+  <%= f.text_area :body, rows: 5, placeholder: "ここに感想を入力してくださ
+い" %> 
+ <div class="submit-button">
     <%= f.submit "感想を投稿する", class: "btn btn-primary" %>
   </div>
-<% end %>
+<% end %> 
 
 <!-- 感想の一覧表示 -->
 <h2><%= link_to '感想一覧', reviews_path %></h2>
@@ -86,9 +68,9 @@
         <%= link_to 'Edit', edit_video_review_path(@video, review) %> |
       </p>
     <% end %>
-    <small>Posted on <%= review.created_at.strftime('%Y-%m-%d %H:%M:%S') %></small>
-  </div>
-<% end %>
+    <small>Posted on <%= review.created_at.strftime('%Y-%m-%d %H:%M:%S') %></small> 
+ </div>
+<% end %> 
 
 <!-- 動画一覧ページへ戻るリンクを表示 -->
 <p>

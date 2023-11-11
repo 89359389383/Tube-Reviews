@@ -17,24 +17,12 @@
 <% if @videos.any? %>
   <div class="video-list">
     <% @videos.each do |video| %>
-  <div class="video-item">
-    <% if video.thumbnail.present? %>
-      <%= image_tag video.thumbnail, alt: video.title %>
-        <% end %>
-        <h3><%= video.title %></h3>
-        <p><%= video.description %></p>
-        <p>Published at: <%= video.published_at ? video.published_at.to_time.strftime("%B %d, %Y") : "Not available" %></p>
+      <div class="video-item">
+        <!-- サムネイル画像の表示 -->
+        <%= link_to image_tag("https://img.youtube.com/vi/#{video.video_id}/0.jpg", alt: video.title), video_path(id: video.id) %>
 
-        <% if user_signed_in? %>
-          <% current_video = Video.find_by(video_id: video.id) %>
-          <% if current_video && current_user.favorited?(current_video) %>
-            <%= link_to 'Remove from Favorites', video_favorite_path(video_id: current_video.id), method: :delete, class: 'btn btn-danger' %>
-          <% elsif current_video %>
-            <%= link_to 'Add to Favorites', video_favorite_path(video_id: current_video.id), method: :post, class: 'btn btn-primary' %>
-          <% else %>
-            <span class="btn btn-secondary disabled">Add to Favorites</span>
-          <% end %>
-        <% end %>
+        <h3><%= video.title %></h3>
+        <p>Published at: <%= video.published_at ? video.published_at.to_time.strftime("%B %d, %Y") : "Not available" %></p>
 
         <p><%= link_to 'Details', video_path(id: video.id) %></p>
       </div>
