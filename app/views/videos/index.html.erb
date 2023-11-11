@@ -17,9 +17,9 @@
 <% if @videos.any? %>
   <div class="video-list">
     <% @videos.each do |video| %>
-      <div class="video-item">
-        <% if video.thumbnail_url.present? %>
-          <%= image_tag video.thumbnail_url, alt: video.title %>
+  <div class="video-item">
+    <% if video.thumbnail.present? %>
+      <%= image_tag video.thumbnail, alt: video.title %>
         <% end %>
         <h3><%= video.title %></h3>
         <p><%= video.description %></p>
