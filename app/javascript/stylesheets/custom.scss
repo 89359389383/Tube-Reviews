@@ -56,3 +56,25 @@ body {
 .video-info {
   flex: 1;
 }
+
+// おすすめ動画リストのスタイル
+.recommended-video-item {
+  display: flex;
+  align-items: start;
+  margin-bottom: 20px;
+}
+
+.recommended-thumbnail {
+  flex: 0 0 auto;
+  margin-right: 20px;
+}
+
+.recommended-thumbnail-image {
+  width: 80px; // サムネイルのサイズを調整
+  height: auto;
+}
+
+.recommended-video-info {
+  flex: 1;
+}
+

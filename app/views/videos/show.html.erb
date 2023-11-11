@@ -29,14 +29,17 @@ o from being saved:</h2>
   <h3>おすすめの動画</h3>
   <ul>
     <% @recommended_videos.each do |video| %>
-      <li>
-        <!-- サムネイルの表示を削除 -->
-        <!-- 動画のタイトルの表示 -->
-        <p><%= link_to video.title, video_path(video) %></p>
+      <li class="recommended-video-item">
+        <div class="recommended-thumbnail">
+          <%= link_to image_tag("https://img.youtube.com/vi/#{video.video_id}/0.jpg", alt: video.title, class: "recommended-thumbnail-image"), video_path(video) %>
+        </div>
+        <div class="recommended-video-info">
+          <p><%= link_to video.title, video_path(video) %></p>
+        </div>
       </li>
     <% end %>
   </ul>
-</div> 
+</div>
 
 <!-- 感想入力フォームの直前にエラーメッセージを表示 -->
 <% if @review&.errors&.any? %>
