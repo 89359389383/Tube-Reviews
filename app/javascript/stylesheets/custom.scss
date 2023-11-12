@@ -1,43 +1,33 @@
+// 基本的なカラースキーム
+$body-bg-color: #f8f9fa; // 薄い灰色の背景
+$text-color: #333; // 濃いグレーのテキスト
+$accent-color: #007bff; // 明るい青のアクセントカラー
+
 // 既存のスタイル
-// フォーム全体を中央に配置するためのコンテナ
 .centered-form-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; // 画面の高さ全体を使用
+  height: 100vh;
 }
 
-// フォーム自体を中央揃えにするための追加スタイル
 .centered-form {
-  margin: auto; // 自動的に上下左右のマージンを調整して中央揃えに
+  margin: auto;
 }
 
-// カードのスタイル調整
-.card {
-  // margin-top: -5rem; // この行をコメントアウトするか、削除する
-}
-
-// フォーム内の要素のスタイル
 .form-control {
-  margin-bottom: 1rem; // フォーム要素の間に適切なスペースを確保
+  margin-bottom: 1rem;
 }
 
-// ボタンのスタイル
 .btn-primary {
-  width: 100%; // ボタンの幅をフル幅に
-  padding: 0.75rem 1rem; // パディングを調整してボタンのサイズを変更
+  width: 100%;
+  padding: 0.75rem 1rem;
 }
 
-// フォームのリンクを中央揃えにする
 .text-center {
-  text-align: center; // テキストを中央揃えに
+  text-align: center;
 }
 
-body {
-  background-color: #ffffe0; // 薄い黄色
-}
-
-// 追加された動画リストのスタイル
 .video-item {
   display: flex;
   align-items: start;
@@ -50,7 +40,7 @@ body {
 }
 
 .thumbnail-image {
-  width: 120px; // または好みのサイズに
+  width: 120px;
   height: auto;
 }
 
@@ -58,7 +48,6 @@ body {
   flex: 1;
 }
 
-// おすすめ動画リストのスタイル
 .recommended-video-item {
   display: flex;
   align-items: start;
@@ -71,7 +60,7 @@ body {
 }
 
 .recommended-thumbnail-image {
-  width: 80px; // サムネイルのサイズを調整
+  width: 80px;
   height: auto;
 }
 
@@ -79,7 +68,6 @@ body {
   flex: 1;
 }
 
-// カードレイアウトのスタイル
 .review-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -88,10 +76,10 @@ body {
 }
 
 .review-card {
-  background: #f9f9f9;
+  background: #fff;
   border: 1px solid #ddd;
   border-radius: 10px;
-  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .review-card-body {
@@ -105,7 +93,7 @@ body {
 }
 
 .review-thumbnail img {
-  width: 120px; // サムネイルのサイズを調整
+  width: 120px;
   height: auto;
 }
 
@@ -117,4 +105,42 @@ body {
 .review-actions {
   padding: 10px;
   text-align: right;
+}
+
+// 新しいスタイル要素
+body {
+  background-color: $body-bg-color;
+  color: $text-color;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: $accent-color;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.form-control, .form-control:focus {
+  border: 1px solid #ddd;
+  box-shadow: none;
+}
+
+.submit-tag {
+  background-color: $accent-color;
+  border-color: $accent-color;
+  &:hover {
+    background-color: darken($accent-color, 10%);
+  }
+}
+
+.review-content h3 {
+  font-size: 1.25rem;
+}
+
+.review-content p {
+  font-size: 1rem;
+  line-height: 1.5;
 }
