@@ -92,9 +92,10 @@ $accent-color: #007bff; // 明るい青のアクセントカラー
   margin-right: 20px;
 }
 
+// 修正したスタイル要素
 .review-thumbnail img {
-  width: 120px;
-  height: auto;
+  width: 120px; // サムネイルの幅を120pxに設定
+  height: auto; // 高さは自動調整
 }
 
 .review-content {
@@ -137,10 +138,21 @@ h1 {
 }
 
 .review-content h3 {
-  font-size: 1.25rem;
+  font-size: 1.25rem; // タイトルのフォントサイズを1.25remに設定
 }
 
 .review-content p {
   font-size: 1rem;
   line-height: 1.5;
+}
+
+.review-card-header {
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+}
+
+.review-card-header h3 {
+  margin: 0;
+  font-size: 1.25rem; // タイトルのフォントサイズを1.25remに設定
 }
