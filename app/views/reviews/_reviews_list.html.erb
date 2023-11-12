@@ -1,0 +1,27 @@
+<% reviews.each do |review| %>
+  <div class="review-card">
+    <div class="review-card-header">
+      <h3><%= link_to review.video.title, video_path(review.video) %></h3>
+    </div>
+
+    <div class="review-card-body">
+      <%# YouTube動画のサムネイルとリンク %>
+      <% if review.video.video_id.present? %>
+        <div class="review-thumbnail">
+          <%= link_to image_tag("https://img.youtube.com/vi/#{review.video.video_id}/0.jpg", alt: review.video.title), video_path(review.video) %>
+        </div>
+      <% end %>
+      
+      <div class="review-content">
+        <p><%= review.body %></p> <%# 本文全体を表示 %>
+        <small>投稿日: <%= review.created_at.strftime("%Y-%m-%d %H:%M:%S") %></small>
+      </div>
+    </div>
+
+    <%# 編集・削除リンク %>
+    <div class="review-actions">
+      <%= link_to '編集', edit_review_path(review) %>
+      <%= link_to '削除', review_path(review), method: :delete, data: { confirm: '本当に削除しますか？' } %>
+    </div>
+  </div>
+<% end %>

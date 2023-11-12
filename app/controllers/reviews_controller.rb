@@ -9,15 +9,11 @@ class ReviewsController < ApplicationController
   }
 
   def index
-    if params[:rating].present?
-      if (1..5).include?(params[:rating].to_i)
-        @reviews = Review.where(rating: params[:rating])
-      else
-        flash.now[:alert] = '無効な評価値です'
-        @reviews = Review.all
-      end
-    else
-      @reviews = fetch_reviews
+    @reviews = fetch_reviews
+
+    respond_to do |format|
+      format.html # 通常のHTTPリクエストに対するレスポンス
+      format.js   # Ajaxリクエストに対するレスポンス
     end
   end
 
@@ -99,4 +95,3 @@ class ReviewsController < ApplicationController
     end
   end
 end
-
