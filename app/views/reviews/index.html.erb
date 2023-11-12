@@ -23,26 +23,33 @@
   </div>
 <% end %>
 
-<%# 感想の一覧表示 %>
-<table>
-  <tr>
-    <th><%= sortable "動画タイトル", "videos.title" %></th>
-    <th><%= sortable "感想タイトル", "title" %></th>
-    <th><%= sortable "投稿日時", "created_at" %></th>
-    <th>操作</th>
-  </tr>
+<%# 感想の一覧表示 - カードレイアウト %>
+<div class="review-cards">
   <% @reviews.each do |review| %>
-    <tr>
-      <td><%= link_to review.video.title, video_path(review.video) %></td>
-      <td class="review-title"><%= review.title %></td>
-      <td><%= review.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
-      <td>
+    <div class="review-card">
+      <div class="review-card-body">
+        <%# YouTube動画のサムネイルを表示 %>
+        <% if review.video.video_id.present? %>
+          <div class="review-thumbnail">
+            <img src="https://img.youtube.com/vi/<%= review.video.video_id %>/0.jpg" alt="<%= review.video.title %>">
+          </div>
+        <% end %>
+        
+        <div class="review-content">
+          <h3><%= link_to review.title, review_path(review) %></h3>
+          <p><%= review.body %></p> <%# 本文全体を表示 %>
+          <small>投稿日: <%= review.created_at.strftime("%Y-%m-%d %H:%M:%S") %></small>
+        </div>
+      </div>
+
+      <%# 編集・削除リンク %>
+      <div class="review-actions">
         <%= link_to '編集', edit_review_path(review) %>
         <%= link_to '削除', review_path(review), method: :delete, data: { confirm: '本当に削除しますか？' } %>
-      </td>
-    </tr>
+      </div>
+    </div>
   <% end %>
-</table>
+</div>
 
 <%# ページネーション %>
-<%= paginate @reviews %>
+<%= paginate @reviews %> 

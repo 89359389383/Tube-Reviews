@@ -1,3 +1,4 @@
+// 既存のスタイル
 // フォーム全体を中央に配置するためのコンテナ
 .centered-form-container {
   display: flex;
@@ -78,3 +79,42 @@ body {
   flex: 1;
 }
 
+// カードレイアウトのスタイル
+.review-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-gap: 20px;
+  padding: 20px;
+}
+
+.review-card {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.review-card-body {
+  display: flex;
+  align-items: start;
+}
+
+.review-thumbnail {
+  flex: 0 0 auto;
+  margin-right: 20px;
+}
+
+.review-thumbnail img {
+  width: 120px; // サムネイルのサイズを調整
+  height: auto;
+}
+
+.review-content {
+  flex: 1;
+  padding: 15px;
+}
+
+.review-actions {
+  padding: 10px;
+  text-align: right;
+}
