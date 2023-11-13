@@ -1,5 +1,8 @@
-<h1>Edit Review</h1>
-
-<%= render 'form', review: @review %>
-
-<%= link_to 'Back', video_path(@review.video_id) %>
+<!-- app/views/reviews/edit.html.erb -->
+<div class="centered-form-container">
+  <div class="centered-form">
+    <h1>Edit Review</h1>
+    <%= render 'form', review: @review %>
+    <%= link_to 'Back', video_path(@review.video_id) %>
+  </div>
+</div>

@@ -3,12 +3,12 @@ $body-bg-color: #f8f9fa; // 薄い灰色の背景
 $text-color: #333; // 濃いグレーのテキスト
 $accent-color: #007bff; // 明るい青のアクセントカラー
 
-// 既存のスタイル
 .centered-form-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: start; // ここを変更
   height: 100vh;
+  padding-top: 20px; // トップに少しパディングを追加
 }
 
 .centered-form {
@@ -155,4 +155,19 @@ h1 {
 .review-card-header h3 {
   margin: 0;
   font-size: 1.25rem; // タイトルのフォントサイズを1.25remに設定
+}
+
+.form-control textarea {
+  min-height: 1000px; // 最小高さを設定
+  width: calc(100% * 1.5); // 幅を1.5倍に
+}
+
+// 高さの設定はそのままに、幅だけを拡大する
+.wide-text-area {
+  min-height: 300px; // 高さは300pxのまま
+  width: 200%; // 幅を200%に拡大
+  max-width: 100vw; // 最大幅をビューポートの幅に制限
+  position: relative; // 必要に応じて位置調整
+  left: 50%; // 中央から左に50%ずらす
+  transform: translateX(-50%); // X軸に-50%ずらして中央に戻す
 }

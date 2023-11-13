@@ -1,9 +1,14 @@
-<h1>Review Details</h1>
+<!-- app/views/reviews/show.html.erb -->
+<div class="centered-form-container">
+  <div class="centered-form">
+    <h1>Review Details</h1>
 
-<p>
-  <strong>Content:</strong>
-  <%= @review.body %>
-</p>
+    <p>
+      <strong>Content:</strong>
+      <%= @review.body %>
+    </p>
 
-<%= link_to 'Edit', edit_video_review_path(@video, @review) %> |
-<%= link_to 'Back', video_reviews_path(@video) %>
+    <%= link_to 'Edit', edit_video_review_path(@video, @review) %> |
+    <%= link_to 'Back', video_reviews_path(@video) %>
+  </div>
+</div>

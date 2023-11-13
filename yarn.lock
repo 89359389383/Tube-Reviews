@@ -1539,6 +1539,16 @@ array-flatten@^2.1.2:
   resolved "https://registry.npmjs.org/array-flatten/-/array-flatten-2.1.2.tgz"
   integrity sha512-hNfzcOV8W4NdualtqBFPyVO+54DSJuZGY9qT4pRroB6S9e3iiido2ISIC5h9R2sPJ8H3FHCIiEnsv1lPXO3KtQ==
 
+attrobj@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/attrobj/-/attrobj-3.1.0.tgz#6ab50a1701326182381718d370244f3c3cae0e48"
+  integrity sha512-YFN+wZSEgER2w5IdIkmNkPiGqi6lRrNKL+VPl+7WnAPenZvnPC6bEmQuxka06Ilwx265x/K6QRh9W5Klav738Q==
+
+aug@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/aug/-/aug-4.0.0.tgz#ac90ed6e8f331f7ab99fe0fc2742783754480a0e"
+  integrity sha512-2cr7AHg5B+Cbjma7qhs+DZbKznzKwpkjfSCb48WVJfEF/+Hwxsu4GPGuqUblt/0gVYBiqdeAIrerlTjt8edyKg==
+
 babel-loader@^8.2.2:
   version "8.3.0"
   resolved "https://registry.npmjs.org/babel-loader/-/babel-loader-8.3.0.tgz"
@@ -2008,6 +2018,20 @@ dns-packet@^5.2.2:
   integrity sha512-l4gcSouhcgIKRvyy99RNVOgxXiicE+2jZoNmaNmZ6JXiGajBOJAesk1OBlJuM5k2c+eudGdLxDqXuPCKIj6kpw==
   dependencies:
     "@leichtgewicht/ip-codec" "^2.0.1"
+
+domassist@^2.2.0:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/domassist/-/domassist-2.3.1.tgz#905fbdd3d0786bf8163fa8fbb7ae460123b86a04"
+  integrity sha512-uiZ+t0/mA01RBxn0VNbAUfuv2OVU7gGa/GocBRit8/ALHDB8JijEyKHurUKHX7yHzUuVe87eghQ0m7vEIj7nvQ==
+
+domodule@^8.0.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/domodule/-/domodule-8.1.0.tgz#362cd7dd913c50bfd3c8a9cbb907ae6cd46bb813"
+  integrity sha512-ION9hZ7tFVNkfLSx2t8gOM5YweUNb3jUezD4JXR7Vqb8S9pZt4kyuCJE25JvxozdkDXBIE9RUUAxDaOPUQV8Vw==
+  dependencies:
+    attrobj "^3.1.0"
+    aug "^4.0.0"
+    domassist "^2.2.0"
 
 ee-first@1.1.1:
   version "1.1.1"
@@ -3661,6 +3685,14 @@ smart-buffer@^4.2.0:
   version "4.2.0"
   resolved "https://registry.npmjs.org/smart-buffer/-/smart-buffer-4.2.0.tgz"
   integrity sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==
+
+social-share-button@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/social-share-button/-/social-share-button-2.2.0.tgz#429b4de78eb9c24a8d621a6a0e5f73c733fa8db9"
+  integrity sha512-8OatmjB10MFqnbgVFJe4SjRXBIwepla/FOo2gsC6w/PsQ1RuS5oKwe9kixv2TfWcTA1GCcT6m+lEylFRPrr71g==
+  dependencies:
+    domassist "^2.2.0"
+    domodule "^8.0.0"
 
 sockjs@^0.3.24:
   version "0.3.24"
