@@ -1,0 +1,13 @@
+ja:
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              taken: "は既に使用されています"
+            name:
+              taken: "は既に使用されています"
+      messages:
+        record_invalid: 'レコードが無効です: %{errors}'
+ 

@@ -41,6 +41,5 @@ Rails.application.routes.draw do
   # end
 
   # 現在のデフォルトのルート設定 
-  # 現在のデフォルトのルート設定
   root 'videos#index'
 end 

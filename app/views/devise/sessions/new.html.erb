@@ -1,10 +1,8 @@
-<div class="container centered-form-container"> <!-- centered-form-containerを追加 -->
+<div class="container centered-form-container">
   <div class="row justify-content-center">
     <div class="col-md-6">
       <div class="card mt-5">
-        <%# <div class="card-header text-center">
-  　　　　　　<%= t("devise.sessions.new.sign_in") %>
-　　　　</div> 
+        <!-- コメントアウトされたヘッダー部分を削除または適切に修正 -->
         <div class="card-body">
           <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "needs-validation", novalidate: "" }) do |f| %>
             <div class="form-group">
@@ -30,9 +28,9 @@
           <% end %>
         </div>
       </div>
-      <div class="text-center"> <!-- text-centerクラスをここに追加 -->
+      <div class="text-center">
         <%= render "devise/shared/links" %>
       </div>
     </div>
   </div>
-</div> 
+</div>
