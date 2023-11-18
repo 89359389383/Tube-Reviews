@@ -6,6 +6,16 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :render_404 unless Rails.env.development?
   rescue_from ActionController::RoutingError, with: :render_404 unless Rails.env.development?
 
+  def new_guest
+    user = User.find_or_create_by!(email: 'guest@example.com') do |user|
+      user.password = SecureRandom.urlsafe_base64
+      user.name = 'ゲスト' # ここで適切な名前を設定
+      # その他必要なユーザー情報の設定
+    end
+    sign_in user
+    redirect_to videos_path, notice: 'ゲストユーザーとしてログインしました。'
+  end
+
   protected
 
   def configure_permitted_parameters
@@ -38,3 +48,4 @@ class ApplicationController < ActionController::Base
     render template: "errors/500", status: 500
   end
 end
+

@@ -26,11 +26,13 @@ Rails.application.routes.draw do
   namespace :api do
     resources :favorites, only: [:index] do
       collection do
-        get 'search' # この行を追加
+        get 'search'
       end
     end
-    post 'save_memo', to: 'favorites#save_memo' # 追加
+    post 'save_memo', to: 'favorites#save_memo'
   end
+
+  post 'guest_login', to: 'application#new_guest'
   
   # authenticated :user do
   #   root 'videos#index', as: :authenticated_root
