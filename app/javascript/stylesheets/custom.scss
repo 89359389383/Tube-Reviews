@@ -200,3 +200,24 @@ h1 {
 // もしフォームの幅が小さすぎるまたは大きすぎる場合は、
 // width の値を調整してください。
 
+.flash {
+  text-align: center; // テキストを中央揃えにする
+  margin: 0 auto; // 上下のマージンを自動にして中央に配置
+  width: 100%; // フラッシュメッセージの幅を100%に設定
+  // 他のスタイル定義...
+}
+
+.session-message {
+  text-align: center;
+  background-color: blue;
+  color: white;
+  font-size: 24px;
+  padding: 10px 0; // 上下のパディング
+}
+
+.centered-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

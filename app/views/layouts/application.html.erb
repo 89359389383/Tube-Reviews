@@ -19,10 +19,11 @@
     </div>
   <% end %>
 
-  <% flash.each do |message_type, message| %>
-  　<div class="text-center <%= message_type %>"><%= message %></div>
-　<% end %>
-
+  <div class="flash-container">
+    <% flash.each do |key, value| %>
+      <div class="flash <%= key %>"><%= value %></div>
+    <% end %>
+  </div>
 
   <% if user_signed_in? %>
     <%= link_to "Logout", destroy_user_session_path, method: :delete %>

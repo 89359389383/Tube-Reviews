@@ -1,4 +1,5 @@
 <!-- app/views/reviews/show.html.erb -->
+
 <div class="centered-form-container">
   <div class="centered-form">
     <h1>Review Details</h1>
@@ -8,7 +9,14 @@
       <%= @review.body %>
     </p>
 
+    <% if @review.play_time.present? %>
+      <p>
+        <a href="https://www.youtube.com/watch?v=<%= @video_details.video_id %>&t=<%= @review.play_time.to_i %>s" target="_blank">この瞬間から見る</a>
+      </p>
+    <% end %>
+
     <%= link_to 'Edit', edit_video_review_path(@video, @review) %> |
     <%= link_to 'Back', video_reviews_path(@video) %>
   </div>
 </div>
+

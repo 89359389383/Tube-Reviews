@@ -12,8 +12,8 @@ class ReviewsController < ApplicationController
     @reviews = fetch_reviews
 
     respond_to do |format|
-      format.html # 通常のHTTPリクエストに対するレスポンス
-      format.js   # Ajaxリクエストに対するレスポンス
+      format.html
+      format.js
     end
   end
 
@@ -79,7 +79,7 @@ class ReviewsController < ApplicationController
   end
 
   def review_params
-    params.require(:review).permit(:title, :body, :video_id)
+    params.require(:review).permit(:title, :body, :video_id, :play_time)
   end
 
   def set_review
