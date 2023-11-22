@@ -1,4 +1,24 @@
 <!-- app/views/videos/show.html.erb -->
+<style>
+  .btn {
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 0.3em;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 10px;
+  }
+
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  .btn-success {
+    background-color: #28a745;
+    color: white;
+  }
+</style>
 
 <% if @video.errors.any? %>
   <div id="error_explanation">
@@ -29,10 +49,16 @@
   <%= form_for [@video, Review.new], html: { class: 'review-form', style: 'font-size: 1.2em;' }, data: { turbo: "false" } do |f| %>
     <%= f.hidden_field :video_id, value: @video.id %>
     <%= f.text_area :body, rows: 10, placeholder: "ここに感想を入力してください", class: 'review-text-area', style: 'width: 100%; height: 140%;' %> 
+
+    <!-- 音声録音ボタンの追加 -->
+    <div class="voice-recognition" style="margin-top: 1em;">
+      <button id="start-stop-recognition" type="button" class="btn btn-secondary">音声認識を開始</button>
+    </div>
+
     <div class="submit-button" style="margin-top: 1em;">
       <%= f.submit "感想を記録する", class: "btn btn-primary", style: 'font-size: 0.7em;' %>
     </div>
-  <% end %> 
+  <% end %>
 </div>
 
 <% @reviews.each do |review| %>
@@ -105,3 +131,66 @@
     });
   }
 </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var recognition;
+    var recognizing = false;
+    var finalTranscript = '';
+    var reviewTextArea = document.querySelector('.review-text-area'); // 感想入力フォームを取得
+
+    if (!('webkitSpeechRecognition' in window)) {
+      alert("お使いのブラウザでは音声認識がサポートされていません。");
+    } else {
+      recognition = new webkitSpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+
+      recognition.onstart = function() {
+        recognizing = true;
+        var button = document.getElementById('start-stop-recognition');
+        button.innerText = '音声認識を停止';
+        button.classList.remove('btn-secondary');
+        button.classList.add('btn-success');
+        reviewTextArea.focus(); // 感想入力フォームにフォーカスを当てる
+      };
+
+      recognition.onerror = function(event) {
+        console.error('音声認識エラー:', event.error);
+        alert('音声認識エラー: ' + event.error);
+      };
+
+      recognition.onend = function() {
+        recognizing = false;
+        var button = document.getElementById('start-stop-recognition');
+        button.innerText = '音声認識を開始';
+        button.classList.remove('btn-success');
+        button.classList.add('btn-secondary');
+        reviewTextArea.blur(); // 感想入力フォームのフォーカスを解除
+      };
+
+      recognition.onresult = function(event) {
+        var interimTranscript = '';
+        for (var i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript;
+          } else {
+            interimTranscript += event.results[i][0].transcript;
+          }
+        }
+        reviewTextArea.value = finalTranscript + interimTranscript;
+      };
+    }
+
+    document.getElementById('start-stop-recognition').onclick = function() {
+      if (recognizing) {
+        recognition.stop();
+        return;
+      }
+      finalTranscript = '';
+      recognition.lang = 'ja-JP';
+      recognition.start();
+    };
+  });
+</script>
+ 

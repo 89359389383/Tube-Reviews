@@ -39,10 +39,14 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = true
 
+  # Force all access to the app over SSL, use Strict-Transport-Security,
+  # and use secure cookies.
+  config.force_ssl = true
+
   config.action_mailer.perform_caching = false
   
   # 追記
- config.action_mailer.default_url_options = { host: '6b2dc80aa87243a08c4b74ad52eceb90.vfs.cloud9.ap-northeast-1.amazonaws.com', port: 8000 }
+  config.action_mailer.default_url_options = { host: '6b2dc80aa87243a08c4b74ad52eceb90.vfs.cloud9.ap-northeast-1.amazonaws.com', port: 8000 }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

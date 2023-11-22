@@ -8,6 +8,11 @@ ja:
               taken: "は既に使用されています"
             name:
               taken: "は既に使用されています"
+        review:
+          attributes:
+            body:
+              blank: "本文を入力してください"
       messages:
         record_invalid: 'レコードが無効です: %{errors}'
- 
+        # 他の一般的なエラーメッセージをここに追加
+  # ... 他の設定 ...
