@@ -221,3 +221,29 @@ h1 {
   align-items: center;
   flex-direction: column;
 }
+
+.video-item {
+  display: flex;
+  align-items: center; // アイテムを中央に配置
+  justify-content: center; // アイテムをコンテナの中央に配置
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+}
+
+.thumbnail-image {
+  width: 50%; // サムネイルの幅
+  height: auto;
+  border-radius: 4px;
+  margin-left: 100px; // サムネイルの左側にマージンを追加して右にずらす
+  // その他のスタイルはそのまま
+}
+
+.video-info {
+  flex: 1; // 残りのスペースを使う
+  padding-left: 10px; // 左側のパディングを調整
+  max-width: 50%; // 最大幅を設定
+  text-align: left; // テキストは左寄せ
+  margin-left: -200px; // 左側のマージンを負の値にして左にずらす
+}
+
