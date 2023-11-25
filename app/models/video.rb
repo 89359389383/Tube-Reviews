@@ -16,10 +16,10 @@ class Video < ApplicationRecord
     where("title LIKE ?", "%#{keyword}%")
   end
 
-  def self.search_from_youtube(keyword)
+  def self.search_from_youtube(keyword, max_results = 20)
     begin
       Rails.logger.debug "Searching YouTube API for: #{keyword}"
-      search_results = YoutubeService.search_videos(keyword)
+      search_results = YoutubeService.search_videos(keyword, max_results)
       search_results.map do |video_data|
         {
           title: video_data[:title],

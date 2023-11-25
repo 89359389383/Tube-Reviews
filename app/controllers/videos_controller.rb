@@ -9,6 +9,7 @@ class VideosController < ApplicationController
 
   def search
     query = params[:search_query] || params[:keyword]
+    max_results = params[:max_results] || 20
 
     if query.present?
       Rails.logger.debug "Search query: #{query}"
@@ -16,7 +17,7 @@ class VideosController < ApplicationController
 
       if @videos.empty?
         Rails.logger.debug "No videos found in the database. Searching YouTube API..."
-        search_results = Video.search_from_youtube(query)
+        search_results = Video.search_from_youtube(query, max_results)
 
         search_results.each do |video_data|
           video = Video.find_or_initialize_by(url: video_data[:url])
@@ -37,6 +38,11 @@ class VideosController < ApplicationController
       else
         @from_database = true
       end
+
+      # タイムフィルターの処理
+      if params[:time_filter].present?
+        @videos = filter_videos_by_time(@videos, params[:time_filter])
+      end
     else
       @videos = []
     end
@@ -45,7 +51,7 @@ class VideosController < ApplicationController
   rescue YoutubeService::YoutubeAPIError => e
     flash[:error] = e.message
     @videos = []
-    render 'index'
+    render :index
   end
 
   def show
@@ -84,5 +90,23 @@ class VideosController < ApplicationController
     return nil unless video_data
 
     Video.new(video_data)
+  end
+
+  # タイムフィルターに基づくビデオのフィルタリング
+  def filter_videos_by_time(videos, time_filter)
+    case time_filter
+    when '1hour'
+      videos.where('published_at > ?', 1.hour.ago)
+    when 'today'
+      videos.where('published_at > ?', Time.zone.now.beginning_of_day)
+    when 'thisweek'
+      videos.where('published_at > ?', Time.zone.now.beginning_of_week)
+    when 'thismonth'
+      videos.where('published_at > ?', Time.zone.now.beginning_of_month)
+    when 'thisyear'
+      videos.where('published_at > ?', Time.zone.now.beginning_of_year)
+    else
+      videos
+    end
   end
 end

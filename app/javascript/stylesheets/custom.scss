@@ -314,3 +314,17 @@ h1 {
   margin-bottom: 0px; /* 各情報間の余白 */
 }
 
+.results-filter {
+  display: flex; /* フレックスボックスを使用して要素を横に配置する */
+  align-items: center; /* テキストとリンクを縦方向に中央揃えにする */
+}
+
+.count-link {
+  margin-left: 5px; /* 数字と数字の間に余白を設定する */
+}
+
+/* リンクのテキストのフォントサイズを調整 */
+.same-size-link {
+  font-size: 1.5em; /* フォントサイズを調整（必要に応じて変更） */
+}
+

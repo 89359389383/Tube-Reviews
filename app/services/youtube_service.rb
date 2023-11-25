@@ -6,14 +6,14 @@ class YoutubeService
   # カスタムエラークラスを定義
   class YoutubeAPIError < StandardError; end
 
-  def self.search_videos(query)
+  def self.search_videos(query, max_results = 20)
     response = HTTParty.get("#{BASE_URL}/search", query: {
       part: 'snippet',
       q: query,
-      maxResults: 30, # 取得する動画の件数を40件に設定
+      maxResults: max_results,
       type: 'video',
       key: ENV['YOUTUBE_API_KEY']
-    })
+    }) 
 
     if response["error"]
       raise YoutubeAPIError.new(response["error"]["message"])

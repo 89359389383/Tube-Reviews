@@ -35,15 +35,34 @@
   </div>
 <% end %>
 
-<h2><%= link_to '感想一覧', reviews_path %></h2>
+<!-- 感想一覧へのリンク -->
+<div class="text-center">
+  <h2><%= link_to '感想一覧', reviews_path %></h2>
+</div>
 
-<p>
-  <%= link_to 'Back to All Videos', videos_path %>
-</p>
+<!-- Back to All Videos リンク -->
+<div class="text-center">
+  <p class="same-size-link">
+    <%= link_to 'Back to All Videos', videos_path %>
+  </p>
+</div>
 
-<%= render 'search_form' %>
+<!-- 検索フォームを中央寄りに配置 -->
+<div class="text-center">
+  <%= render 'search_form' %>
+</div>
+
 
 <h1 class="video-title"><%= @video_details.title || @video.title %></h1>
+
+<!-- 再生速度変更ボタン -->
+<div class="playback-speed-buttons" style="text-align: center;">
+  <button type="button" class="btn btn-secondary speed-button" data-speed="1">標準</button>
+  <button type="button" class="btn btn-secondary speed-button" data-speed="1.25">1.25</button>
+  <button type="button" class="btn btn-secondary speed-button" data-speed="1.5">1.5</button>
+  <button type="button" class="btn btn-secondary speed-button" data-speed="1.75">1.75</button>
+  <button type="button" class="btn btn-secondary speed-button" data-speed="2">2</button>
+</div>
 
 <div class="video-container text-center">
   <iframe id="youtube-player" width="560" height="315" src="https://www.youtube.com/embed/<%= @video_details.video_id %>?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
@@ -54,7 +73,7 @@
     <%= f.hidden_field :video_id, value: @video.id %>
     <%= f.text_area :body, rows: 10, placeholder: "ここに感想を入力してください", class: 'review-text-area', style: 'width: 100%; height: 140%;' %> 
 
-    <div class="voice-recognition" style="margin-top: 1em;">
+    <div class="voice-recognition text-center" style="margin-top: 1em;">
       <button id="start-stop-recognition" type="button" class="btn btn-secondary">音声認識を開始</button>
     </div>
 
@@ -112,6 +131,7 @@
 </div>
 
 <script>
+  // YouTube Player APIをロードする
   var tag = document.createElement('script');
   tag.src = "https://www.youtube.com/iframe_api";
   var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -126,6 +146,7 @@
     });
   }
 
+  // YouTube Playerが準備完了した際の処理
   function onPlayerReady(event) {
     var reviewForm = document.querySelector('.review-form-container form');
     reviewForm.addEventListener('focusin', function() {
@@ -136,10 +157,33 @@
       timeField.setAttribute('value', currentTime);
       reviewForm.appendChild(timeField);
     });
+
+    // 再生速度ボタンのイベントリスナーを設定
+    var speedButtons = document.querySelectorAll('.speed-button');
+    speedButtons.forEach(function(button) {
+      button.addEventListener('click', function() {
+        var speed = this.getAttribute('data-speed');
+        player.setPlaybackRate(parseFloat(speed));
+
+        // ボタンの色を更新
+        updateButtonColors(speedButtons, this);
+      });
+    });
+  }
+
+  // ボタンの色を更新する関数
+  function updateButtonColors(buttons, activeButton) {
+    buttons.forEach(function(button) {
+      button.classList.remove('btn-success');
+      button.classList.add('btn-secondary');
+    });
+    activeButton.classList.remove('btn-secondary');
+    activeButton.classList.add('btn-success');
   }
 </script>
 
 <script>
+  // 音声認識関連の処理
   document.addEventListener('DOMContentLoaded', function() {
     var recognition;
     var recognizing = false;
@@ -200,4 +244,5 @@
     };
   });
 </script>
+
  
