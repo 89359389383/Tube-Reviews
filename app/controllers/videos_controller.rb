@@ -20,7 +20,15 @@ class VideosController < ApplicationController
 
         search_results.each do |video_data|
           video = Video.find_or_initialize_by(url: video_data[:url])
-          video.assign_attributes(title: video_data[:title], description: video_data[:description])
+          video.assign_attributes(
+            title: video_data[:title],
+            description: video_data[:description],
+            thumbnail_url: video_data[:thumbnail_url],
+            published_at: video_data[:published_at],
+            duration: video_data[:duration],
+            view_count: video_data[:view_count],
+            channel_title: video_data[:channel_title]
+          )
           video.save if video.changed?
         end
 

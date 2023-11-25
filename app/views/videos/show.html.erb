@@ -18,15 +18,19 @@
     background-color: #28a745;
     color: white;
   }
+  
+  .video-title {
+    font-size: 20px; 
+  }
 </style>
 
 <% if @video.errors.any? %>
   <div id="error_explanation">
     <h2><%= pluralize(@video.errors.count, "error") %> prohibited this video from being saved:</h2>
     <ul>
-    <% @video.errors.full_messages.each do |message| %>
-      <li><%= message %></li>
-    <% end %>
+      <% @video.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
     </ul>
   </div>
 <% end %>
@@ -39,7 +43,7 @@
 
 <%= render 'search_form' %>
 
-<h1><%= @video_details.title || @video.title %></h1>
+<h1 class="video-title"><%= @video_details.title || @video.title %></h1>
 
 <div class="video-container text-center">
   <iframe id="youtube-player" width="560" height="315" src="https://www.youtube.com/embed/<%= @video_details.video_id %>?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
@@ -50,7 +54,6 @@
     <%= f.hidden_field :video_id, value: @video.id %>
     <%= f.text_area :body, rows: 10, placeholder: "ここに感想を入力してください", class: 'review-text-area', style: 'width: 100%; height: 140%;' %> 
 
-    <!-- 音声録音ボタンの追加 -->
     <div class="voice-recognition" style="margin-top: 1em;">
       <button id="start-stop-recognition" type="button" class="btn btn-secondary">音声認識を開始</button>
     </div>
@@ -96,8 +99,12 @@
         <div class="recommended-thumbnail">
           <%= link_to image_tag("https://img.youtube.com/vi/#{video.video_id}/0.jpg", alt: video.title, class: "recommended-thumbnail-image"), video_path(video) %>
         </div>
-        <div class="recommended-video-info">
-          <p><%= link_to video.title, video_path(video) %></p>
+        <div class="video-info"> <!-- 変更: 全ての情報を一つのdivで囲む -->
+          <h3 class="video-title2"><%= link_to video.title, video_path(video) %></h3>
+          <p class="video-published">公開日: <%= video.published_at ? video.published_at.to_time.strftime("%B %d, %Y") : "Not available" %></p>
+          <p class="video-views">再生数: <%= number_with_delimiter(video.view_count) %></p>
+          <p class="video-duration">再生時間: <%= video.duration %></p>
+          <p class="video-channel">チャンネル名: <%= video.channel_title %></p>
         </div>
       </li>
     <% end %>

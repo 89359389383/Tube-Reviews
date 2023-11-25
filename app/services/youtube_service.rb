@@ -10,6 +10,7 @@ class YoutubeService
     response = HTTParty.get("#{BASE_URL}/search", query: {
       part: 'snippet',
       q: query,
+      maxResults: 30, # 取得する動画の件数を40件に設定
       type: 'video',
       key: ENV['YOUTUBE_API_KEY']
     })
@@ -26,6 +27,9 @@ class YoutubeService
         thumbnail_url: item["snippet"]["thumbnails"]["default"]["url"],
         description: video_details[:description],
         published_at: video_details[:published_at],
+        duration: video_details[:duration],
+        view_count: video_details[:view_count],
+        channel_title: video_details[:channel_title],
         category_name: video_details[:category_name] # カテゴリ名を追加
       }
     end
@@ -34,7 +38,7 @@ class YoutubeService
   # 指定した動画IDを使用してYouTube APIから動画の詳細情報を取得する
   def self.fetch_video_details_by_id(video_id)
     response = HTTParty.get("#{BASE_URL}/videos", query: {
-      part: 'snippet',
+      part: 'snippet,contentDetails,statistics',
       id: video_id,
       key: ENV['YOUTUBE_API_KEY']
     })
@@ -53,6 +57,9 @@ class YoutubeService
           title: video["snippet"]["title"],
           description: video["snippet"]["description"],
           published_at: video["snippet"]["publishedAt"],
+          duration: parse_duration(video["contentDetails"]["duration"]),
+          view_count: video["statistics"]["viewCount"],
+          channel_title: video["snippet"]["channelTitle"],
           url: video_url,
           category_name: category_name # カテゴリ名を追加
         }
@@ -62,6 +69,20 @@ class YoutubeService
     else
       nil
     end
+  end
+
+  # ISO 8601形式の期間を解析してより読みやすい形式に変換する
+  def self.parse_duration(duration)
+    pattern = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/
+    matches = duration.match(pattern)
+    hours = matches[1]
+    minutes = matches[2]
+    seconds = matches[3]
+    formatted_duration = ""
+    formatted_duration += "#{hours}:" if hours
+    formatted_duration += "#{minutes}:" if minutes
+    formatted_duration += seconds if seconds
+    formatted_duration
   end
 
   # カテゴリIDからカテゴリ名を取得する

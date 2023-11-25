@@ -11,11 +11,11 @@
   </div>
 <% end %>
 
-<% if flash[:alert] %> <!-- 追加部分 -->
+<% if flash[:alert] %>
   <div class="alert alert-danger">
     <%= flash[:alert] %>
   </div>
-<% end %> <!-- 追加部分終了 -->
+<% end %>
 
 <% if @videos.any? %>
   <div class="video-list">
@@ -25,8 +25,13 @@
           <%= link_to image_tag("https://img.youtube.com/vi/#{video.video_id}/0.jpg", alt: video.title, class: "thumbnail-image"), video_path(id: video.id) %>
         </div>
         <div class="video-info">
-          <h3><%= video.title %></h3>
-          <p>Published at: <%= video.published_at ? video.published_at.to_time.strftime("%B %d, %Y") : "Not available" %></p>
+          <h3 class="video-title"><%= video.title %></h3>
+          
+          <p class="video-published">公開日: <%= video.published_at ? video.published_at.to_time.strftime("%B %d, %Y") : "Not available" %></p>
+          <p class="video-views">再生数: <%= number_with_delimiter(video.view_count) %></p>
+          <p class="video-duration">再生時間: <%= video.duration %></p>
+          <p class="video-channel">チャンネル名: <%= video.channel_title %></p>
+          <p class="video-description">説明: <%= truncate(video.description, length: 100) %></p>
           <p><%= link_to 'Details', video_path(id: video.id) %></p>
         </div>
       </div>

@@ -5,8 +5,8 @@ class Video < ApplicationRecord
   has_many :favorited_users, through: :favorites, source: :user
   
   # Validations
-  validates :url, presence: true, uniqueness: true, format: { with: URI::regexp(%w(http https)), message: 'is not a valid URL' }  # URLのフォーマットを検証
-  validates :title, presence: true, length: { maximum: 255, message: 'is too long (maximum is 255 characters)' }  # タイトルの長さを検証
+  validates :url, presence: true, uniqueness: true, format: { with: URI::regexp(%w(http https)), message: 'is not a valid URL' }
+  validates :title, presence: true, length: { maximum: 255, message: 'is too long (maximum is 255 characters)' }
   
   # Callbacks
   before_save :extract_video_id
@@ -20,13 +20,17 @@ class Video < ApplicationRecord
     begin
       Rails.logger.debug "Searching YouTube API for: #{keyword}"
       search_results = YoutubeService.search_videos(keyword)
-      search_results.map do |item|
+      search_results.map do |video_data|
         {
-          title: item[:title],
-          description: item[:description],
-          url: "https://www.youtube.com/watch?v=#{item[:video_id]}",
-          thumbnail_url: item[:thumbnail_url],
-          published_at: item[:published_at]
+          title: video_data[:title],
+          description: video_data[:description],
+          url: "https://www.youtube.com/watch?v=#{video_data[:video_id]}",
+          thumbnail_url: video_data[:thumbnail_url],
+          published_at: video_data[:published_at],
+          duration: video_data[:duration],
+          view_count: video_data[:view_count],
+          channel_title: video_data[:channel_title],
+          category: video_data[:category]  # カテゴリ情報もここで取得
         }
       end
     rescue => e
@@ -37,26 +41,16 @@ class Video < ApplicationRecord
   
   def self.save_category_info(video_url, category_name)
     video = find_by(url: video_url)
-    if video
-      video.update(category: category_name)
-    end
+    video.update(category: category_name) if video
   end
 
   def self.save_thumbnail_info(video_url, thumbnail_url)
     video = find_by(url: video_url)
-    if video
-      video.update(thumbnail: thumbnail_url)
-    else
-      create(url: video_url, thumbnail: thumbnail_url)
-    end
+    video.update(thumbnail: thumbnail_url) if video
   end
 
   def self.recommended(video)
-    category = video.category
-    where(category: category).where.not(id: video.id).order("RANDOM()").limit(5)
-  rescue => e
-    Rails.logger.error("Recommendation error: #{e.message}")
-    raise RecommendationError, "おすすめの動画の取得に失敗しました。"
+    where(category: video.category).where.not(id: video.id).order("RANDOM()").limit(30)
   end
 
   private

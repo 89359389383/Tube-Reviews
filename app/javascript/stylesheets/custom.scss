@@ -247,3 +247,70 @@ h1 {
   margin-left: -200px; // 左側のマージンを負の値にして左にずらす
 }
 
+.video-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.video-item {
+  margin-bottom: 1px; // 動画アイテム間のスペース
+}
+
+.video-title {
+  margin-bottom: 0px; // タイトルとその他情報間のスペース
+  font-size: 17px; /* タイトルの文字サイズ */
+}
+
+.video-published {
+  margin-bottom: 0px; 
+  font-size: 12px; /* 公開日の文字サイズ */
+}
+
+.video-views {
+  margin-bottom: 0px; 
+  font-size: 12px; /* 再生数の文字サイズ */
+}
+
+.video-duration,
+.video-channel,
+.video-description {
+  margin-bottom: 0px; // 各情報間のスペース
+  font-size: 12px; /* 再生時間、チャンネル名、説明の文字サイズ */
+}
+
+.recommended-video-item {
+  display: flex;
+  align-items: center; // アイテムを縦方向の中央に配置
+  justify-content: space-between; // アイテムを左右に分散
+  margin-bottom: 20px;
+}
+
+.recommended-thumbnail {
+  flex-shrink: 0;
+  width: 35%; // サムネイルの幅を調整
+  margin-right: 4px; // サムネイルと情報の間隔
+}
+
+.video-info {
+  flex: 1; // 残りのスペースを使う
+  max-width: 70%; // 最大幅を設定
+  text-align: left; // テキストは左寄せ
+}
+
+.recommended-thumbnail-image {
+  width: 80%; /* 画像の幅を親要素の幅に合わせる */
+  height: auto; /* 高さを自動調整 */
+  border-radius: 4px; /* 画像の角を丸くする */
+}
+
+.video-title2 {
+  font-size: 15px; /* タイトルのフォントサイズ */
+  margin-bottom: 1px; /* タイトルの下の余白 */
+}
+
+.video-published, .video-views, .video-duration, .video-channel {
+  font-size: 12px; /* これらの情報のフォントサイズを調整 */
+  margin-bottom: 0px; /* 各情報間の余白 */
+}
+
