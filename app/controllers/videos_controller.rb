@@ -115,7 +115,7 @@ class VideosController < ApplicationController
     when 'thismonth'
       videos.where('published_at > ?', Time.zone.now.beginning_of_month)
     when 'thisyear'
-      videos.where('published_at > ?', Time.zone.now.beginning_of_year)
+      videos.where('published_at > ?', 1.year.ago) # 1年以内のフィルター
     else
       videos
     end

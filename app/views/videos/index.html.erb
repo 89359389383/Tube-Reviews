@@ -19,10 +19,9 @@
 
 <div id="time-filters" class="text-center">
   <div class="results-filter">
-    <span>アップロード日:</span> <!-- "アップロード日"の文字を左側に追加 -->
-    <% ['1年以内'].each do |filter| %>
-      <%= link_to filter.humanize, "#", class: "time-filter", data: { filter: filter } %>
-    <% end %>
+    <span>アップロード日:</span>
+    <%= link_to '1年以内', search_videos_path(time_filter: 'thisyear', search_query: session[:last_search_query]), class: 'time-filter' %>
+    <!-- 他のフィルターリンクもここに追加 -->
   </div>
 </div>
 
@@ -82,9 +81,9 @@
   });
 
   function searchVideos(filter) {
-    // 検索クエリを取得（存在する場合）
     var query = document.querySelector('input[name="search_query"]').value;
-    window.location.href = `/videos/search?search_query=${query}&time_filter=${filter}`;
+    var max_results = 20;  // 表示件数を20に設定
+    window.location.href = `/videos/search?search_query=${query}&time_filter=${filter}&max_results=${max_results}`;
   }
 </script>
 
