@@ -20,11 +20,13 @@
 <div id="time-filters" class="text-center">
   <div class="results-filter">
     <span>アップロード日:</span> <!-- "アップロード日"の文字を左側に追加 -->
-    <% ['１時間以内', '今日', '今週', '今月', '今年'].each do |filter| %>
+    <% ['1年以内'].each do |filter| %>
       <%= link_to filter.humanize, "#", class: "time-filter", data: { filter: filter } %>
     <% end %>
   </div>
 </div>
+
+<%= link_to '新しい順', search_videos_path(sort: 'newest', search_query: session[:last_search_query]) %>
 
 <% if flash[:error] %>
   <div class="alert alert-danger">

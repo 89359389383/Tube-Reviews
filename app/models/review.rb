@@ -1,6 +1,7 @@
 class Review < ApplicationRecord
   belongs_to :user
   belongs_to :video
+  belongs_to :folder, optional: true
 
   validates :body, presence: true, length: { maximum: 500 }
 

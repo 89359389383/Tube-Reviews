@@ -4,7 +4,7 @@
 <%# ナビゲーションリンク %>
 <%= link_to '動画検索ページへ戻る', videos_path %>
 
-<!-- 追加する検索フォーム -->
+<%# キーワード検索フォーム %>
 <%= form_with url: reviews_path, method: :get, local: true do |form| %>
   <div>
     <%= form.label :search, '検索キーワード' %>
@@ -13,7 +13,7 @@
   </div>
 <% end %>
 
-<%# 検索フォーム %>
+<%# タイトル検索フォーム %>
 <%= form_with url: reviews_path, method: :get, local: true, remote: true do %>
   <div>
     <%= label_tag :search, 'タイトル' %>
@@ -31,11 +31,21 @@
   </div>
 <% end %>
 
+<%# フォルダフィルタリングフォーム %>
+<%= form_with url: reviews_path, method: :get, local: true do |f| %>
+  <div>
+    <%= f.label :folder_id, 'フォルダでフィルター' %>
+    <%= f.collection_select :folder_id, current_user.folders, :id, :name, { include_blank: 'すべてのフォルダ' } %>
+    <%= f.submit 'フィルター' %>
+  </div>
+<% end %>
+
 <%# 感想の一覧表示 - カードレイアウト %>
 <div id="reviews" class="review-cards">
   <%= render 'reviews_list', reviews: @reviews %>
 </div>
 
 <%# ページネーション %>
-<%= paginate @reviews %> 
+<%= paginate @reviews %>
+
 

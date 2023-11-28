@@ -1,5 +1,3 @@
-# config/routes.rb
-
 Rails.application.routes.draw do
   devise_for :users
 
@@ -20,7 +18,7 @@ Rails.application.routes.draw do
   end
 
   resources :reviews, only: [:index, :new, :create, :edit, :update, :destroy]
-  
+
   get 'favorites', to: 'favorites#index', as: 'favorites'
 
   namespace :api do
@@ -33,6 +31,16 @@ Rails.application.routes.draw do
   end
 
   post 'guest_login', to: 'application#new_guest'
+
+  resources :folders do
+    resources :reviews, only: [:index]
+
+    member do
+      get 'filter_reviews'
+    end
+  end
+
+  resources :comments
   
   # authenticated :user do
   #   root 'videos#index', as: :authenticated_root
@@ -45,3 +53,4 @@ Rails.application.routes.draw do
   # 現在のデフォルトのルート設定 
   root 'videos#index'
 end 
+

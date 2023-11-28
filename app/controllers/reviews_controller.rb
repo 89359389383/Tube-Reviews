@@ -18,10 +18,12 @@ class ReviewsController < ApplicationController
   end
 
   def show
+    @folders = current_user.folders
   end
 
   def new
     @review = Review.new
+    @folders = current_user.folders # フォルダ選択用
   end
 
   def create
@@ -29,21 +31,31 @@ class ReviewsController < ApplicationController
     @video = Video.find(params[:video_id])
     @review.video = @video
 
+    # 新しいフォルダ名が入力されている場合は、そのフォルダを作成または取得
+    if params[:review][:new_folder_name].present?
+      folder = current_user.folders.find_or_create_by(name: params[:review][:new_folder_name])
+      @review.folder_id = folder.id
+    end
+
     if @review.save
-      redirect_to @video, notice: '感想を投稿しました'
+      # レビューが保存された後、動画の詳細ページにリダイレクト
+      redirect_to video_path(@review.video), notice: '感想を投稿しました'
     else
+      @folders = current_user.folders # フォルダ選択用
       flash.now[:alert] = @review.errors.full_messages.to_sentence
       render :new
     end
   end
 
   def edit
+    @folders = current_user.folders # フォルダ選択用
   end
 
   def update
     if @review.update(review_params)
       redirect_to reviews_path, notice: '感想を更新しました'
     else
+      @folders = current_user.folders # フォルダ選択用
       flash.now[:alert] = @review.errors.full_messages.to_sentence
       render :edit
     end
@@ -79,7 +91,7 @@ class ReviewsController < ApplicationController
   end
 
   def review_params
-    params.require(:review).permit(:title, :body, :video_id, :play_time)
+    params.require(:review).permit(:title, :body, :video_id, :play_time, :folder_id, :new_folder_name)
   end
 
   def set_review
@@ -95,3 +107,4 @@ class ReviewsController < ApplicationController
     end
   end
 end
+

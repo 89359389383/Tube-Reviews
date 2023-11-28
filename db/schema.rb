@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_23_122227) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_28_113106) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "comments", force: :cascade do |t|
+    t.text "content"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "folder_id", null: false
+    t.index ["folder_id"], name: "index_comments_on_folder_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
 
   create_table "favorites", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -25,6 +35,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_23_122227) do
     t.index ["video_id"], name: "index_favorites_on_video_id"
   end
 
+  create_table "folders", force: :cascade do |t|
+    t.string "name"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_folders_on_user_id"
+  end
+
   create_table "reviews", force: :cascade do |t|
     t.text "body"
     t.bigint "user_id", null: false
@@ -34,6 +52,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_23_122227) do
     t.string "title"
     t.text "comment"
     t.float "play_time"
+    t.integer "folder_id"
     t.index ["user_id"], name: "index_reviews_on_user_id"
     t.index ["video_id"], name: "index_reviews_on_video_id"
   end
@@ -78,8 +97,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_23_122227) do
     t.index ["url"], name: "index_videos_on_url", unique: true
   end
 
+  add_foreign_key "comments", "folders"
+  add_foreign_key "comments", "users"
   add_foreign_key "favorites", "users"
   add_foreign_key "favorites", "videos"
+  add_foreign_key "folders", "users"
   add_foreign_key "reviews", "users"
   add_foreign_key "reviews", "videos"
 end

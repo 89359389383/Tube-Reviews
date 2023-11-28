@@ -3,13 +3,17 @@ class VideosController < ApplicationController
   before_action :set_video, only: [:show]
 
   def index
-    @videos = Video.all
+    sort_order = params[:sort] == 'newest' ? :desc : :asc
+    @videos = Video.all.order(published_at: sort_order)
     @from_database = true
   end
 
   def search
-    query = params[:search_query] || params[:keyword]
+    query = params[:search_query] || params[:keyword] || session[:last_search_query]
     max_results = params[:max_results] || 20
+
+    # 検索キーワードをセッションに保存
+    session[:last_search_query] = query if query.present?
 
     if query.present?
       Rails.logger.debug "Search query: #{query}"
@@ -39,10 +43,13 @@ class VideosController < ApplicationController
         @from_database = true
       end
 
-      # タイムフィルターの処理
+      # タイムフィルターとソート順の処理
       if params[:time_filter].present?
         @videos = filter_videos_by_time(@videos, params[:time_filter])
       end
+
+      sort_order = params[:sort] == 'newest' ? :desc : :asc
+      @videos = @videos.order(published_at: sort_order)
     else
       @videos = []
     end
@@ -58,6 +65,10 @@ class VideosController < ApplicationController
     @video_details = @video || fetch_video_details(params[:id])
     @reviews = @video.reviews.order(created_at: :desc) if @video&.reviews
     @recommended_videos = Video.recommended(@video)
+
+    # ユーザーのフォルダ一覧を取得
+    @folders = current_user.folders
+    @review = Review.new(video: @video) # ここでReviewインスタンスを初期化
   end
 
   def favorites
@@ -110,3 +121,4 @@ class VideosController < ApplicationController
     end
   end
 end
+
