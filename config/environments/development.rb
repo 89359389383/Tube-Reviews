@@ -13,6 +13,9 @@ Rails.application.configure do
 
   # Show full error reports.
   config.consider_all_requests_local = true
+  
+  # ログレベルをデバッグに設定
+  config.log_level = :debug
 
   # Enable server timing
   config.server_timing = true

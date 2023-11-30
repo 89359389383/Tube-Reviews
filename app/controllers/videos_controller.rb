@@ -4,13 +4,13 @@ class VideosController < ApplicationController
 
   def index
     sort_order = params[:sort] == 'newest' ? :desc : :asc
-    @videos = Video.all.order(published_at: sort_order)
+    @videos = Video.all.order(published_at: sort_order).page(params[:page]).per(50)
     @from_database = true
   end
 
   def search
     query = params[:search_query] || params[:keyword] || session[:last_search_query]
-    max_results = params[:max_results] || 20
+    max_results = params[:max_results] || 50
 
     # 検索キーワードをセッションに保存
     session[:last_search_query] = query if query.present?
@@ -50,14 +50,18 @@ class VideosController < ApplicationController
 
       sort_order = params[:sort] == 'newest' ? :desc : :asc
       @videos = @videos.order(published_at: sort_order)
+
+      # ページネーションの設定
+      @videos = @videos.page(params[:page]).per(50)  # 1ページあたり20件を表示
+
     else
-      @videos = []
+      @videos = Video.none.page(params[:page]).per(50)
     end
 
     render :index
   rescue YoutubeService::YoutubeAPIError => e
     flash[:error] = e.message
-    @videos = []
+    @videos = Video.none.page(params[:page]).per(20)
     render :index
   end
 
@@ -106,19 +110,16 @@ class VideosController < ApplicationController
   # タイムフィルターに基づくビデオのフィルタリング
   def filter_videos_by_time(videos, time_filter)
     case time_filter
-    when '1hour'
-      videos.where('published_at > ?', 1.hour.ago)
     when 'today'
-      videos.where('published_at > ?', Time.zone.now.beginning_of_day)
+      videos.where('published_at > ?', 1.day.ago)
     when 'thisweek'
-      videos.where('published_at > ?', Time.zone.now.beginning_of_week)
+      videos.where('published_at > ?', 1.week.ago)
     when 'thismonth'
-      videos.where('published_at > ?', Time.zone.now.beginning_of_month)
+      videos.where('published_at > ?', 1.month.ago)
     when 'thisyear'
-      videos.where('published_at > ?', 1.year.ago) # 1年以内のフィルター
+      videos.where('published_at > ?', 1.year.ago)
     else
       videos
     end
   end
-end
-
+end 

@@ -3,23 +3,16 @@
 <!-- 感想の一覧表示 -->
 <h2 class="text-center"><%= link_to '感想一覧', reviews_path %></h2>
 
-<div class="text-center"> <!-- 親要素を中央寄せにする -->
+<div class="text-center">
   <%= render 'search_form' %>
-</div>
-
-<!-- 表示件数選択 -->
-<div id="results-filters" class="text-center">
-  <div class="results-filter">
-    <span>表示件数:</span> <!-- 表示件数の文字を左側に追加 -->
-    <% [5, 10, 15, 20, 25, 30, 35, 40].each do |count| %>
-      <%= link_to count, "#", class: "count-link", data: { count: count } %>
-    <% end %>
-  </div>
 </div>
 
 <div id="time-filters" class="text-center">
   <div class="results-filter">
     <span>アップロード日:</span>
+    <%= link_to '1日以内', search_videos_path(time_filter: 'today', search_query: session[:last_search_query]), class: 'time-filter' %>
+    <%= link_to '1週間以内', search_videos_path(time_filter: 'thisweek', search_query: session[:last_search_query]), class: 'time-filter' %>
+    <%= link_to '1ヶ月以内', search_videos_path(time_filter: 'thismonth', search_query: session[:last_search_query]), class: 'time-filter' %>
     <%= link_to '1年以内', search_videos_path(time_filter: 'thisyear', search_query: session[:last_search_query]), class: 'time-filter' %>
     <!-- 他のフィルターリンクもここに追加 -->
   </div>
@@ -48,7 +41,6 @@
         </div>
         <div class="video-info">
           <h3 class="video-title"><%= link_to video.title, video_path(video) %></h3>
-          
           <p class="video-published">公開日: <%= video.published_at ? video.published_at.to_time.strftime("%B %d, %Y") : "Not available" %></p>
           <p class="video-views">再生数: <%= number_with_delimiter(video.view_count) %></p>
           <p class="video-duration">再生時間: <%= video.duration %></p>
@@ -62,33 +54,20 @@
   <p>No videos found</p>
 <% end %>
 
-<!-- app/views/videos/index.html.erb の末尾に追加 -->
+<!-- 以下は無限スクロールのためのJavaScriptコード -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.time-filter').forEach(function(link) {
       link.addEventListener('click', function(event) {
         event.preventDefault();
-        // 他のフィルターのスタイルをリセット
         document.querySelectorAll('.time-filter').forEach(function(el) {
           el.style.color = 'blue';
         });
-        // 選択されたフィルターのスタイルを変更
         event.target.style.color = 'green';
-        // 検索クエリとフィルターを使用してビデオを再読み込み
         searchVideos(event.target.dataset.filter);
       });
     });
-  });
 
-  function searchVideos(filter) {
-    var query = document.querySelector('input[name="search_query"]').value;
-    var max_results = 20;  // 表示件数を20に設定
-    window.location.href = `/videos/search?search_query=${query}&time_filter=${filter}&max_results=${max_results}`;
-  }
-</script>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.results-filter').forEach(function(link) {
       link.addEventListener('click', function(event) {
         event.preventDefault();
@@ -98,5 +77,43 @@
       });
     });
   });
-</script>
 
+  var page = 2;
+  <% if @videos.respond_to?(:total_pages) %>
+    var total_pages = <%= @videos.total_pages %>;
+  <% else %>
+    var total_pages = 1; // ページネーションが適用されていない場合はデフォルト値を設定
+  <% end %>
+  var total_videos_loaded = 30; // 初期ロードで20件の動画が表示されている
+
+  window.onscroll = function() {
+    if (total_videos_loaded >= 30) {
+      // 既に30件の動画が表示されている場合、追加の読み込みを行わない
+      return;
+    }
+
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+      if (page <= total_pages) {
+        fetchMoreVideos(page);
+        page++;
+      }
+    }
+  };
+
+  function fetchMoreVideos(page) {
+    var query = document.querySelector('input[name="search_query"]').value;
+    var url = `/videos/search?search_query=${encodeURIComponent(query)}&page=${page}`;
+    fetch(url)
+      .then(response => response.text())
+      .then(html => {
+        var div = document.createElement('div');
+        div.innerHTML = html;
+        var newVideos = div.querySelector('.video-list');
+        if (newVideos) {
+          document.querySelector('.video-list').appendChild(newVideos);
+          total_videos_loaded += newVideos.childElementCount;
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+</script>
