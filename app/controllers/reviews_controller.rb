@@ -11,6 +11,11 @@ class ReviewsController < ApplicationController
   def index
     @reviews = fetch_reviews
 
+    # フォルダIDに基づくフィルタリング
+    if params[:folder_id].present?
+      @reviews = @reviews.where(folder_id: params[:folder_id])
+    end
+
     respond_to do |format|
       format.html
       format.js
@@ -32,8 +37,8 @@ class ReviewsController < ApplicationController
     @review.video = @video
 
     # 新しいフォルダ名が入力されている場合は、そのフォルダを作成または取得
-    if params[:review][:new_folder_name].present?
-      folder = current_user.folders.find_or_create_by(name: params[:review][:new_folder_name])
+    if params[:new_folder_name].present?
+      folder = current_user.folders.find_or_create_by(name: params[:new_folder_name])
       @review.folder_id = folder.id
     end
 
@@ -75,16 +80,23 @@ class ReviewsController < ApplicationController
   def fetch_reviews
     reviews = current_user.reviews.includes(:video)
 
+    # 検索によるフィルタリング
     if params[:search].present?
       reviews = reviews.joins(:video).where("videos.title LIKE ?", "%#{params[:search]}%")
     end
 
+    # ソート
     if params[:sort].present? && SORT_MAPPINGS.keys.include?(params[:sort])
       sort_column = SORT_MAPPINGS[params[:sort]]
       direction = (params[:direction] == "desc" ? "DESC" : "ASC")
       reviews = reviews.order("#{sort_column} #{direction}")
     else
       reviews = reviews.order("reviews.created_at DESC")
+    end
+
+    # フォルダによるフィルタリング
+    if params[:folder_id].present?
+      reviews = reviews.where(folder_id: params[:folder_id])
     end
 
     reviews.page(params[:page]).per(10)

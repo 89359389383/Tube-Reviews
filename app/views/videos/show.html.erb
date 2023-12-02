@@ -75,11 +75,13 @@
     <%= f.label :folder_id, "フォルダ選択" %>
     <%= f.collection_select :folder_id, @folders, :id, :name, { include_blank: true }, { class: "folder-select", id: "review_folder_id" } %>
 
-    <%= f.text_area :body, rows: 10, placeholder: "ここに感想を入力してください", class: 'review-text-area', style: 'width: 100%; height: 140%;' %> 
+    <!-- 新しいフォルダ名の入力フィールド -->
+    <div>
+      <%= label_tag :new_folder_name, "新しいフォルダ名" %>
+      <%= text_field_tag :new_folder_name, nil, class: 'new-folder-input' %>
+    </div>
 
-    <!-- 新しいフォルダ名の入力フィールド（form_forの外） -->
-    <label for="new_folder_name">新しいフォルダ名</label>
-    <input type="text" name="new_folder_name" id="new_folder_name" class="new-folder-input" />
+    <%= f.text_area :body, rows: 10, placeholder: "ここに感想を入力してください", class: 'review-text-area', style: 'width: 100%; height: 140%;' %> 
 
     <div class="voice-recognition text-center" style="margin-top: 1em;">
       <button id="start-stop-recognition" type="button" class="btn btn-secondary">音声認識を開始</button>

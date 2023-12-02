@@ -4,13 +4,13 @@ class VideosController < ApplicationController
 
   def index
     sort_order = params[:sort] == 'newest' ? :desc : :asc
-    @videos = Video.all.order(published_at: sort_order).page(params[:page]).per(50)
+    @videos = Video.all.order(published_at: sort_order).page(params[:page]).per(30)
     @from_database = true
   end
 
   def search
     query = params[:search_query] || params[:keyword] || session[:last_search_query]
-    max_results = params[:max_results] || 50
+    max_results = params[:max_results] || 30
 
     # 検索キーワードをセッションに保存
     session[:last_search_query] = query if query.present?
@@ -52,10 +52,10 @@ class VideosController < ApplicationController
       @videos = @videos.order(published_at: sort_order)
 
       # ページネーションの設定
-      @videos = @videos.page(params[:page]).per(50)  # 1ページあたり20件を表示
+      @videos = @videos.page(params[:page]).per(30)  # 1ページあたり20件を表示
 
     else
-      @videos = Video.none.page(params[:page]).per(50)
+      @videos = Video.none.page(params[:page]).per(30)
     end
 
     render :index
