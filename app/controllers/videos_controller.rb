@@ -4,15 +4,13 @@ class VideosController < ApplicationController
 
   def index
     sort_order = params[:sort] == 'newest' ? :desc : :asc
-    @videos = Video.all.order(published_at: sort_order).page(params[:page]).per(30)
+    @videos = Video.all.order(published_at: sort_order)
     @from_database = true
   end
 
   def search
     query = params[:search_query] || params[:keyword] || session[:last_search_query]
-    max_results = params[:max_results] || 30
 
-    # 検索キーワードをセッションに保存
     session[:last_search_query] = query if query.present?
 
     if query.present?
@@ -21,47 +19,23 @@ class VideosController < ApplicationController
 
       if @videos.empty?
         Rails.logger.debug "No videos found in the database. Searching YouTube API..."
-        search_results = Video.search_from_youtube(query, max_results)
-
-        search_results.each do |video_data|
-          video = Video.find_or_initialize_by(url: video_data[:url])
-          video.assign_attributes(
-            title: video_data[:title],
-            description: video_data[:description],
-            thumbnail_url: video_data[:thumbnail_url],
-            published_at: video_data[:published_at],
-            duration: video_data[:duration],
-            view_count: video_data[:view_count],
-            channel_title: video_data[:channel_title]
-          )
-          video.save if video.changed?
-        end
-
+        search_results = Video.search_from_youtube(query, 20)
+        save_search_results(search_results)
         @videos = Video.where(url: search_results.map { |data| data[:url] })
         @from_database = false
       else
         @from_database = true
       end
 
-      # タイムフィルターとソート順の処理
-      if params[:time_filter].present?
-        @videos = filter_videos_by_time(@videos, params[:time_filter])
-      end
-
-      sort_order = params[:sort] == 'newest' ? :desc : :asc
-      @videos = @videos.order(published_at: sort_order)
-
-      # ページネーションの設定
-      @videos = @videos.page(params[:page]).per(30)  # 1ページあたり20件を表示
-
+      apply_time_filter_and_sort_order(params[:time_filter], params[:sort])
     else
-      @videos = Video.none.page(params[:page]).per(30)
+      @videos = Video.none
     end
 
     render :index
   rescue YoutubeService::YoutubeAPIError => e
     flash[:error] = e.message
-    @videos = Video.none.page(params[:page]).per(20)
+    @videos = Video.none
     render :index
   end
 
@@ -70,9 +44,8 @@ class VideosController < ApplicationController
     @reviews = @video.reviews.order(created_at: :desc) if @video&.reviews
     @recommended_videos = Video.recommended(@video)
 
-    # ユーザーのフォルダ一覧を取得
     @folders = current_user.folders
-    @review = Review.new(video: @video) # ここでReviewインスタンスを初期化
+    @review = Review.new(video: @video) # Reviewインスタンスを初期化
   end
 
   def favorites
@@ -83,7 +56,6 @@ class VideosController < ApplicationController
 
   def set_video
     @video = Video.find_by(id: params[:id])
-
     unless @video
       video_data = YoutubeService.fetch_video_details_by_id(params[:video_id] || params[:id])
       if video_data
@@ -103,11 +75,23 @@ class VideosController < ApplicationController
   def fetch_video_details(video_id)
     video_data = YoutubeService.fetch_video_details_by_id(video_id)
     return nil unless video_data
-
     Video.new(video_data)
   end
 
-  # タイムフィルターに基づくビデオのフィルタリング
+  def save_search_results(search_results)
+    search_results.each do |video_data|
+      video = Video.find_or_initialize_by(url: video_data[:url])
+      video.assign_attributes(video_data)
+      video.save if video.changed?
+    end
+  end
+
+  def apply_time_filter_and_sort_order(time_filter, sort_order)
+    @videos = filter_videos_by_time(@videos, time_filter)
+    sort_order = sort_order == 'newest' ? :desc : :asc
+    @videos = @videos.order(published_at: sort_order)
+  end
+
   def filter_videos_by_time(videos, time_filter)
     case time_filter
     when 'today'
@@ -122,4 +106,4 @@ class VideosController < ApplicationController
       videos
     end
   end
-end 
+end

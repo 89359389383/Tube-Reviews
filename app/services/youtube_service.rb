@@ -10,7 +10,7 @@ class YoutubeService
     response = HTTParty.get("#{BASE_URL}/search", query: {
       part: 'snippet',
       q: query,
-      maxResults: 50,
+      maxResults: max_results,
       type: 'video',
       key: ENV['YOUTUBE_API_KEY']
     }) 

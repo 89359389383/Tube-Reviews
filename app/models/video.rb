@@ -1,21 +1,20 @@
 class Video < ApplicationRecord
-  # Associations
   has_many :reviews, dependent: :destroy
   has_many :favorites
   has_many :favorited_users, through: :favorites, source: :user
-  
-  # Validations
+
   validates :url, presence: true, uniqueness: true, format: { with: URI::regexp(%w(http https)), message: 'is not a valid URL' }
   validates :title, presence: true, length: { maximum: 255, message: 'is too long (maximum is 255 characters)' }
-  
-  # Callbacks
+
   before_save :extract_video_id
-  
-  # Class methods
-  def self.search(keyword)
-    where("title LIKE ?", "%#{keyword}%")
+
+  # 検索メソッド
+  def self.search(keyword, page = 1, per_page = 20)
+    offset = (page - 1) * per_page
+    where("title LIKE ?", "%#{keyword}%").limit(per_page).offset(offset)
   end
 
+  # YouTube APIからの検索
   def self.search_from_youtube(keyword, max_results = 20)
     begin
       Rails.logger.debug "Searching YouTube API for: #{keyword}"
@@ -30,7 +29,7 @@ class Video < ApplicationRecord
           duration: video_data[:duration],
           view_count: video_data[:view_count],
           channel_title: video_data[:channel_title],
-          category: video_data[:category]  # カテゴリ情報もここで取得
+          category: video_data[:category]
         }
       end
     rescue => e
@@ -38,7 +37,8 @@ class Video < ApplicationRecord
       []
     end
   end
-  
+
+  # カテゴリとサムネイルの保存
   def self.save_category_info(video_url, category_name)
     video = find_by(url: video_url)
     video.update(category: category_name) if video
@@ -49,16 +49,17 @@ class Video < ApplicationRecord
     video.update(thumbnail: thumbnail_url) if video
   end
 
-  def self.recommended(video)
-    where(category: video.category).where.not(id: video.id).order("RANDOM()").limit(30)
+  # おすすめ動画の取得
+  def self.recommended(video, page = 1, per_page = 30)
+    offset = (page - 1) * per_page
+    where(category: video.category).where.not(id: video.id).order("RANDOM()").limit(per_page).offset(offset)
   end
 
   private
 
+  # 動画IDの抽出
   def extract_video_id
     match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/)
     self.video_id = match[1] if match && match[1]
   end
 end
-
-class RecommendationError < StandardError; end
