@@ -51,6 +51,15 @@ Rails.application.configure do
   # 追記
   config.action_mailer.default_url_options = { host: '6b2dc80aa87243a08c4b74ad52eceb90.vfs.cloud9.ap-northeast-1.amazonaws.com', port: 8000 }
 
+  # Action Mailerの設定を追加
+  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.perform_deliveries = true
+  
+  # LetterOpenerの設定ブロックを削除
+  # LetterOpener.configure do |config|
+  #   config.launchy = false # 自動的にブラウザを開かないように設定
+  # end
+  
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 

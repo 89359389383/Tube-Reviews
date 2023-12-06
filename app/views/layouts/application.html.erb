@@ -8,9 +8,30 @@
 
   <!-- Stylesheet pack tag for Webpacker -->
   <%= stylesheet_pack_tag 'application', 'data-turbo-track': 'reload' %>
-
   <%= turbo_include_tags %>
   <%= javascript_pack_tag 'application', 'data-turbo-track': 'reload' %>
+
+  <style>
+    .flash-container {
+      text-align: center;
+      z-index: 10;
+    }
+
+    .flash {
+      margin: 10px auto; /* 上下のマージンを追加 */
+      padding: 10px;
+      background-color: #fff3cd; /* 薄い黄色に変更 */
+      border-color: #ffeeba;
+      color: #856404;
+      border-radius: 4px;
+      width: 60%;
+    }
+
+    body {
+      /* flash-container との間隔設定を削除 */
+    }
+  </style>
+
 </head>
 <body>
   <% if controller_name == 'sessions' && action_name == 'new' %>
@@ -18,7 +39,7 @@
       TubeReviews
     </div>
   <% end %>
-
+  
   <div class="flash-container">
     <% flash.each do |key, value| %>
       <div class="flash <%= key %>"><%= value %></div>
@@ -33,6 +54,4 @@
 
   <%= yield %>
 </body>
-</html> 
-
-</html> 
+</html>

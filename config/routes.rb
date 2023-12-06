@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
-  devise_for :users
-
+  
   get 'videos/search', to: 'videos#search', as: 'search_videos'
-
+  
+  devise_for :users
+  
   resources :videos do
     resources :reviews, except: [:index, :new, :destroy]
     resource :favorite, only: [:create, :destroy]
@@ -41,7 +42,7 @@ Rails.application.routes.draw do
   end
 
   resources :comments
-  
+
   # authenticated :user do
   #   root 'videos#index', as: :authenticated_root
   # end
@@ -52,5 +53,6 @@ Rails.application.routes.draw do
 
   # 現在のデフォルトのルート設定 
   root 'videos#index'
-end 
+end
+
 
