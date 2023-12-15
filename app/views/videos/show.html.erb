@@ -75,6 +75,9 @@
     <%= f.label :folder_id, "フォルダ選択" %>
     <%= f.collection_select :folder_id, @folders, :id, :name, { include_blank: true }, { class: "folder-select", id: "review_folder_id" } %>
 
+    <!-- 動的に更新される削除リンク -->
+    <%= link_to '削除', '#', id: 'delete-folder-link', method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'delete-folder-link', style: 'display: none;' %>
+
     <!-- 新しいフォルダ名の入力フィールド -->
     <div>
       <%= label_tag :new_folder_name, "新しいフォルダ名" %>
@@ -254,3 +257,20 @@
     };
   });
 </script> 
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const folderSelect = document.getElementById('review_folder_id');
+    const deleteLink = document.getElementById('delete-folder-link');
+
+    folderSelect.addEventListener('change', function() {
+      const selectedFolderId = this.value;
+      if (selectedFolderId) {
+        deleteLink.href = `/folders/${selectedFolderId}`;
+        deleteLink.style.display = 'inline';
+      } else {
+        deleteLink.style.display = 'none';
+      }
+    });
+  });
+</script>

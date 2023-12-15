@@ -1,8 +1,8 @@
 class Folder < ApplicationRecord
-  # User モデルへの関連付け
   belongs_to :user
 
-  # Comment モデルへの関連付け
-  has_many :comments
+  # Review と Comment モデルへの関連付けに dependent: :destroy オプションを追加
+  has_many :reviews, dependent: :destroy
+  has_many :comments, dependent: :destroy
 end
 

@@ -32,13 +32,16 @@ class FoldersController < ApplicationController
   # DELETE /folders/:id
   def destroy
     @folder.destroy
-    redirect_to folders_path, notice: 'Folder was successfully destroyed.'
+    respond_to do |format|
+      format.html { redirect_back fallback_location: root_path, notice: 'フォルダが削除されました。' }
+      format.js   # Ajax対応
+    end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_folder
-      @folder = Folder.find(params[:id])
+      @folder = current_user.folders.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.

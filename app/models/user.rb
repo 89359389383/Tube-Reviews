@@ -12,7 +12,7 @@ class User < ApplicationRecord
   has_many :folders, dependent: :destroy
 
   # コメントに関するアソシエーション
-  has_many :comments
+  has_many :comments, dependent: :destroy  # dependent: :destroy を追加
 
   # バリデーション
   validates :name, presence: true, uniqueness: true, length: { in: 3..15 }
@@ -28,4 +28,3 @@ class User < ApplicationRecord
     folders.create(name: 'ノーマル')
   end
 end
-

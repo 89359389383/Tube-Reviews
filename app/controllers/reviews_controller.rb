@@ -99,7 +99,7 @@ class ReviewsController < ApplicationController
       reviews = reviews.where(folder_id: params[:folder_id])
     end
 
-    reviews.page(params[:page]).per(10)
+    reviews # ページネーション関連のコードを削除
   end
 
   def review_params

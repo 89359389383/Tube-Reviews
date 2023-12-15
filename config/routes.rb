@@ -33,7 +33,7 @@ Rails.application.routes.draw do
 
   post 'guest_login', to: 'application#new_guest'
 
-  resources :folders do
+  resources :folders, only: [:destroy] do
     resources :reviews, only: [:index]
 
     member do

@@ -35,17 +35,32 @@
 <%= form_with url: reviews_path, method: :get, local: true do |f| %>
   <div>
     <%= f.label :folder_id, 'フォルダでフィルター' %>
-    <%= f.collection_select :folder_id, current_user.folders, :id, :name, { include_blank: 'すべてのフォルダ' } %>
+    <%= f.collection_select :folder_id, current_user.folders, :id, :name, { include_blank: 'すべてのフォルダ' }, { id: 'folder_filter_select' } %>
     <%= f.submit 'フィルター' %>
   </div>
 <% end %>
+
+<!-- 動的に更新される削除リンク -->
+<%= link_to '削除', '#', id: 'folder-delete-link', method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'delete-folder-link', style: 'display: none;' %>
 
 <%# 感想の一覧表示 - カードレイアウト %>
 <div id="reviews" class="review-cards">
   <%= render 'reviews_list', reviews: @reviews %>
 </div>
 
-<%# ページネーション %>
-<%= paginate @reviews %>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const folderFilterSelect = document.getElementById('folder_filter_select');
+    const deleteLink = document.getElementById('folder-delete-link');
 
-
+    folderFilterSelect.addEventListener('change', function() {
+      const selectedFolderId = this.value;
+      if (selectedFolderId) {
+        deleteLink.href = `/folders/${selectedFolderId}`;
+        deleteLink.style.display = 'inline';
+      } else {
+        deleteLink.style.display = 'none';
+      }
+    });
+  });
+</script>
