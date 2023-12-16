@@ -15,13 +15,13 @@ class VideosController < ApplicationController
 
     if query.present?
       Rails.logger.debug "Search query: #{query}"
-      @videos = Video.search(query)
+      @videos = Video.search(query).page(params[:page]).per(20)
 
       if @videos.empty?
         Rails.logger.debug "No videos found in the database. Searching YouTube API..."
         search_results = Video.search_from_youtube(query, 20)
         save_search_results(search_results)
-        @videos = Video.where(url: search_results.map { |data| data[:url] })
+        @videos = Video.where(url: search_results.map { |data| data[:url] }).page(params[:page]).per(20)
         @from_database = false
       else
         @from_database = true
@@ -29,7 +29,7 @@ class VideosController < ApplicationController
 
       apply_time_filter_and_sort_order(params[:time_filter], params[:sort])
     else
-      @videos = Video.none
+      @videos = Video.none.page(params[:page]).per(20)
     end
 
     render :index
@@ -106,4 +106,4 @@ class VideosController < ApplicationController
       videos
     end
   end
-end
+end 

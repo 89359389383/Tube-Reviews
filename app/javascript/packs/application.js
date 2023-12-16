@@ -17,6 +17,9 @@ import '../stylesheets/custom.scss';
 // Social Share Buttonのインポート
 import "social-share-button";
 
+// Infinite Scrollのインポート
+import './infinite_scroll';
+
 import './folder_management';
 
 // This file is automatically compiled by Webpack, along with any other files
