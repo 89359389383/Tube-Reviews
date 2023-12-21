@@ -355,3 +355,43 @@ h1 {
   height: auto; /* アスペクト比を保つため自動調整 */
 }
 
+.video-thumbnail-enhanced img {
+  max-width: 60%; /* サムネイル画像の最大幅を100%に設定 */
+  height: auto; /* アスペクト比を保持したまま高さを自動調整 */
+}
+
+/* スマートフォンサイズ（768px未満）の場合のスタイル */
+@media screen and (max-width: 767px) {
+  .video-item-enhanced {
+    display: flex;
+    flex-direction: row; /* 動画情報とサムネイルを横に並べる */
+    align-items: center; /* 動画情報とサムネイルの高さを同じにする */
+  }
+  
+  .video-thumbnail-enhanced img {
+    max-width: 60%; /* 画像の幅を縮小 */
+    height: auto; /* 高さを自動調整 */
+    padding: 0px;
+    margin: 10px; /* サムネイルの右側に10pxの余白を設定 */
+  }
+
+  .video-info-enhanced {
+    flex-grow: 1; /* 動画情報の高さをサムネイルの高さに合わせる */
+    margin-left: -100px; /* 動画情報をサムネイルの右端に寄せる */
+    padding: 0px; /* パディングをリセット */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* タイトルや情報のスタイル調整 */
+  .video-title,
+  .video-published,
+  .video-views,
+  .video-duration,
+  .video-channel,
+  .video-description {
+    margin: 0px; /* 動画情報の上下のマージンを調整 */
+    font-size: 10px; /* フォントサイズを調整 */
+  }
+}
+

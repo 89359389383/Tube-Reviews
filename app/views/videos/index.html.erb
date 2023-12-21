@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="path/to/custom.css">
+</head>
 <h1 class="text-center">All Videos</h1>
 
 <!-- 感想の一覧表示 -->
@@ -38,11 +45,11 @@
     <% @videos.each do |video| %>
       <div class="video-item-enhanced">
         <div class="video-thumbnail-enhanced">
-          <% if video.is_a?(Hash) %> <!-- APIから取得したデータをチェック -->
-            <%= link_to(image_tag(video[:thumbnail_url], alt: video[:title]), video_path(id: video[:video_id])) %>
-          <% else %>
-            <%= link_to(image_tag(video.thumbnail_url, alt: video.title), video_path(video)) %>
-          <% end %>
+          <% if video.is_a?(Hash) %>
+            <%= link_to(image_tag(video[:thumbnail_url], alt: video[:title], class: "thumbnail-image"), video_path(id: video[:video_id])) %>
+        <% else %>
+          <%= link_to(image_tag(video.thumbnail_url, alt: video.title, class: "thumbnail-image"), video_path(video)) %>
+        <% end %>
         </div>
         <div class="video-info-enhanced">
           <h3 class="video-title">
