@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_28_113106) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_16_231559) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -94,6 +94,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_28_113106) do
     t.string "duration"
     t.integer "view_count"
     t.string "channel_title"
+    t.string "api_video_id"
     t.index ["url"], name: "index_videos_on_url", unique: true
   end
 

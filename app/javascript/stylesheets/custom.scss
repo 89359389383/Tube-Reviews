@@ -334,3 +334,24 @@ h1 {
   overflow-y: auto; /* 縦方向のスクロールバーを有効にする */
 }
 
+.video-item-enhanced {
+  display: flex;
+  align-items: center; /* 動画アイテムを縦方向中央に配置 */
+  margin-bottom: 20px;
+}
+
+.video-thumbnail-enhanced {
+  flex: 0 0 auto; /* サムネイル画像は固定サイズ */
+  margin-right: 20px;
+}
+
+.video-info-enhanced {
+  flex: 1; /* 動画情報は残りのスペースを占有 */
+}
+
+/* サムネイル画像のサイズ指定 */
+.thumbnail-image {
+  width: 240px; /* 希望の幅に調整 */
+  height: auto; /* アスペクト比を保つため自動調整 */
+}
+

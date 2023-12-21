@@ -1,0 +1,11 @@
+<% if @videos.any? %>
+  // 検索結果のHTMLを生成して、search-results要素に挿入
+  $("#search-results").html("<%= j(render 'video_list', videos: @videos) %>");
+
+  // ページネーションリンクのHTMLを生成して、pagination要素に挿入
+  $("#pagination").html("<%= j(paginate @videos) %>");
+<% else %>
+  // 検索結果がない場合のメッセージを表示
+  $("#search-results").html("<p>No videos found</p>");
+  $("#pagination").html(""); // ページネーションリンクをクリア
+<% end %>

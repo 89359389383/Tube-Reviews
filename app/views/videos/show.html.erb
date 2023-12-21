@@ -68,31 +68,33 @@
 </div>
 
 <div class="review-form-container centered-form" style="width: 140%; margin-left: -20%; margin-right: -20%;">
-  <%= form_for [@video, Review.new], html: { class: 'review-form', id: 'new_review' }, data: { turbo: "false" } do |f| %>
-    <%= f.hidden_field :video_id, value: @video.id %>
+  <% if @video.persisted? %>
+    <%= form_with(model: [ @video, Review.new ], url: video_reviews_path(@video), local: true) do |form| %>
+      <%= form.hidden_field :video_id, value: @video.id %>
 
-    <!-- フォルダ選択のドロップダウンメニュー -->
-    <%= f.label :folder_id, "フォルダ選択" %>
-    <%= f.collection_select :folder_id, @folders, :id, :name, { include_blank: true }, { class: "folder-select", id: "review_folder_id" } %>
+      <!-- フォルダ選択のドロップダウンメニュー -->
+      <%= form.label :folder_id, "フォルダ選択" %>
+      <%= form.collection_select :folder_id, @folders, :id, :name, { include_blank: true }, { class: "folder-select", id: "review_folder_id" } %>
 
-    <!-- 動的に更新される削除リンク -->
-    <%= link_to '削除', '#', id: 'delete-folder-link', method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'delete-folder-link', style: 'display: none;' %>
+      <!-- 動的に更新される削除リンク -->
+      <%= link_to '削除', '#', id: 'delete-folder-link', method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'delete-folder-link', style: 'display: none;' %>
 
-    <!-- 新しいフォルダ名の入力フィールド -->
-    <div>
-      <%= label_tag :new_folder_name, "新しいフォルダ名" %>
-      <%= text_field_tag :new_folder_name, nil, class: 'new-folder-input' %>
-    </div>
+      <!-- 新しいフォルダ名の入力フィールド -->
+      <div>
+        <%= label_tag :new_folder_name, "新しいフォルダ名" %>
+        <%= text_field_tag :new_folder_name, nil, class: 'new-folder-input' %>
+      </div>
 
-    <%= f.text_area :body, rows: 10, placeholder: "ここに感想を入力してください", class: 'review-text-area', style: 'width: 100%; height: 140%;' %> 
+      <%= form.text_area :body, rows: 10, placeholder: "ここに感想を入力してください", class: 'review-text-area', style: 'width: 100%; height: 140%;' %> 
 
-    <div class="voice-recognition text-center" style="margin-top: 1em;">
-      <button id="start-stop-recognition" type="button" class="btn btn-secondary">音声認識を開始</button>
-    </div>
+      <div class="voice-recognition text-center" style="margin-top: 1em;">
+        <button id="start-stop-recognition" type="button" class="btn btn-secondary">音声認識を開始</button>
+      </div>
 
-    <div class="submit-button" style="margin-top: 1em;">
-      <%= f.submit "感想を記録する", class: "btn btn-primary", style: 'font-size: 0.7em;' %>
-    </div>
+      <div class="submit-button" style="margin-top: 1em;">
+        <%= form.submit "感想を記録する", class: "btn btn-primary", style: 'font-size: 0.7em;' %>
+      </div>
+    <% end %>
   <% end %>
 </div>
 

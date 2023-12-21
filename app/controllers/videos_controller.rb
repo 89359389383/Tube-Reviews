@@ -4,35 +4,35 @@ class VideosController < ApplicationController
 
   def index
     sort_order = params[:sort] == 'newest' ? :desc : :asc
-    @videos = Video.all.order(published_at: sort_order)
+    @videos = Video.all.order(published_at: sort_order).page(params[:page]).per(20)
     @from_database = true
+
+    respond_to do |format|
+      format.html # 通常のHTML応答
+      # format.js   # JavaScriptリクエスト（Ajax）に対する応答（もし必要なら）
+    end
   end
 
   def search
-    query = params[:search_query] || params[:keyword] || session[:last_search_query]
-
+    query = params[:search_query] || session[:last_search_query]
     session[:last_search_query] = query if query.present?
+    page_token = params[:page_token]
 
     if query.present?
-      Rails.logger.debug "Search query: #{query}"
-      @videos = Video.search(query).page(params[:page]).per(20)
+      # YouTube APIを呼び出して動画を取得
+      response = YoutubeService.search_videos(query, 20, page_token)
+      @videos = response[:items]
+      @next_page_token = response[:nextPageToken]
+      @prev_page_token = response[:prevPageToken]
 
-      if @videos.empty?
-        Rails.logger.debug "No videos found in the database. Searching YouTube API..."
-        search_results = Video.search_from_youtube(query, 20)
-        save_search_results(search_results)
-        @videos = Video.where(url: search_results.map { |data| data[:url] }).page(params[:page]).per(20)
-        @from_database = false
-      else
-        @from_database = true
-      end
-
-      apply_time_filter_and_sort_order(params[:time_filter], params[:sort])
+      @from_database = false
     else
       @videos = Video.none.page(params[:page]).per(20)
     end
 
-    render :index
+    respond_to do |format|
+      format.html { render :index }
+    end
   rescue YoutubeService::YoutubeAPIError => e
     flash[:error] = e.message
     @videos = Video.none
@@ -40,12 +40,23 @@ class VideosController < ApplicationController
   end
 
   def show
-    @video_details = @video || fetch_video_details(params[:id])
-    @reviews = @video.reviews.order(created_at: :desc) if @video&.reviews
+    unless @video
+      video_data = YoutubeService.fetch_video_details_by_id(params[:id])
+      if video_data
+        @video = Video.new(video_data)
+        @video.save # ここでデータベースに保存
+      else
+        redirect_to videos_path, alert: "動画が見つかりませんでした。"
+        return
+      end
+    end
+
+    @video_details = @video
+    @reviews = @video.reviews.order(created_at: :desc) if @video.reviews
     @recommended_videos = Video.recommended(@video)
 
     @folders = current_user.folders
-    @review = Review.new(video: @video) # Reviewインスタンスを初期化
+    @review = Review.new(video: @video)
   end
 
   def favorites
@@ -57,13 +68,24 @@ class VideosController < ApplicationController
   def set_video
     @video = Video.find_by(id: params[:id])
     unless @video
-      video_data = YoutubeService.fetch_video_details_by_id(params[:video_id] || params[:id])
+      video_data = YoutubeService.fetch_video_details_by_id(params[:id])
       if video_data
-        @video = Video.new(video_data)
-        @video.save
+        video_data.delete(:category_name)
+        video_data[:url] ||= "https://www.youtube.com/watch?v=#{params[:id]}"
+      
+        # 重複チェック
+        @video = Video.find_by(url: video_data[:url])
+        unless @video
+          @video = Video.new(video_data)
+          unless @video.save
+            Rails.logger.debug @video.errors.full_messages
+            flash[:alert] = "動画の保存に失敗しました。"
+            redirect_to videos_path and return
+          end
+        end
       else
         flash[:alert] = "動画が見つかりませんでした。"
-        redirect_to videos_path
+        redirect_to videos_path and return
       end
     end
   end
@@ -106,4 +128,5 @@ class VideosController < ApplicationController
       videos
     end
   end
-end 
+end
+

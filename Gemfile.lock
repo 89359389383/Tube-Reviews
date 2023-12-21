@@ -186,7 +186,7 @@ GEM
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    loofah (2.21.4)
+    loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     mail (2.8.1)
@@ -212,7 +212,7 @@ GEM
     net-smtp (0.4.0)
       net-protocol
     nio4r (2.5.9)
-    nokogiri (1.15.4-x86_64-linux)
+    nokogiri (1.15.5-x86_64-linux)
       racc (~> 1.4)
     orm_adapter (0.5.0)
     os (1.1.4)
@@ -360,7 +360,6 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    will_paginate (4.0.0)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     youtube_embed (0.0.5)
@@ -403,7 +402,6 @@ DEPENDENCIES
   web-console
   webdrivers
   webpacker (~> 6.0.0.rc.6)
-  will_paginate (~> 4.0.0)
   youtube_embed
 
 RUBY VERSION
