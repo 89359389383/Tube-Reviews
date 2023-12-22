@@ -52,7 +52,7 @@
   <%= render 'search_form' %>
 </div>
 
-<h1 class="video-title"><%= @video_details.title || @video.title %></h1>
+<h1 class="text-center video-title"><%= @video_details.title || @video.title %></h1>
 
 <!-- 再生速度変更ボタン -->
 <div class="playback-speed-buttons" style="text-align: center;">
@@ -73,14 +73,16 @@
       <%= form.hidden_field :video_id, value: @video.id %>
 
       <!-- フォルダ選択のドロップダウンメニュー -->
-      <%= form.label :folder_id, "フォルダ選択" %>
-      <%= form.collection_select :folder_id, @folders, :id, :name, { include_blank: true }, { class: "folder-select", id: "review_folder_id" } %>
+      <div class="text-center">
+        <%= form.label :folder_id, "フォルダ選択" %>
+        <%= form.collection_select :folder_id, @folders, :id, :name, { include_blank: true }, { class: "folder-select", id: "review_folder_id" } %> 
+      </div>
 
       <!-- 動的に更新される削除リンク -->
       <%= link_to '削除', '#', id: 'delete-folder-link', method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'delete-folder-link', style: 'display: none;' %>
 
       <!-- 新しいフォルダ名の入力フィールド -->
-      <div>
+      <div class="text-center">
         <%= label_tag :new_folder_name, "新しいフォルダ名" %>
         <%= text_field_tag :new_folder_name, nil, class: 'new-folder-input' %>
       </div>

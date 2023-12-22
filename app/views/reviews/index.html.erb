@@ -1,44 +1,48 @@
 <%# ページのタイトル %>
-<h1>感想一覧</h1>
+<h1 class="text-center">感想一覧</h1>
 
 <%# ナビゲーションリンク %>
-<%= link_to '動画検索ページへ戻る', videos_path %>
+<div class="text-center">
+  <%= link_to '動画検索ページへ戻る', videos_path %>
+</div>
 
-<%# キーワード検索フォーム %>
-<%= form_with url: reviews_path, method: :get, local: true do |form| %>
-  <div>
-    <%= form.label :search, '検索キーワード' %>
-    <%= form.text_field :search, value: params[:search] %>
-    <%= form.submit '検索' %>
+<div class="text-center">
+  <%# キーワード検索フォーム %>
+  <div class="form-item">
+    <%= form_with url: reviews_path, method: :get, local: true do |form| %>
+      <%= form.label :search, '検索キーワード' %>
+      <%= form.text_field :search, value: params[:search] %>
+      <%= form.submit '検索' %>
+    <% end %>
   </div>
-<% end %>
 
-<%# タイトル検索フォーム %>
-<%= form_with url: reviews_path, method: :get, local: true, remote: true do %>
-  <div>
-    <%= label_tag :search, 'タイトル' %>
-    <%= text_field_tag :search, params[:search] %>
-    <%= submit_tag '検索' %>
+  <%# タイトル検索フォーム %>
+  <div class="form-item">
+    <%= form_with url: reviews_path, method: :get, local: true, remote: true do %>
+      <%= label_tag :title_search, 'タイトル' %>
+      <%= text_field_tag :title_search, params[:title_search] %>
+      <%= submit_tag '検索' %>
+    <% end %>
   </div>
-<% end %>
 
-<%# 並べ替えフォーム %>
-<%= form_with url: reviews_path, method: :get, local: true, remote: true do %>
-  <div>
-    <%= label_tag :sort, '並べ替え' %>
-    <%= select_tag :sort, options_for_select([['降順', 'created_at DESC'], ['昇順', 'created_at ASC']], params[:sort]) %>
-    <%= submit_tag '適用' %>
+  <%# 並べ替えフォーム %>
+  <div class="form-item">
+    <%= form_with url: reviews_path, method: :get, local: true, remote: true do %>
+      <%= label_tag :sort, '並べ替え' %>
+      <%= select_tag :sort, options_for_select([['降順', 'created_at DESC'], ['昇順', 'created_at ASC']], params[:sort]) %>
+      <%= submit_tag '適用' %>
+    <% end %>
   </div>
-<% end %>
 
-<%# フォルダフィルタリングフォーム %>
-<%= form_with url: reviews_path, method: :get, local: true do |f| %>
-  <div>
-    <%= f.label :folder_id, 'フォルダでフィルター' %>
-    <%= f.collection_select :folder_id, current_user.folders, :id, :name, { include_blank: 'すべてのフォルダ' }, { id: 'folder_filter_select' } %>
-    <%= f.submit 'フィルター' %>
+  <%# フォルダフィルタリングフォーム %>
+  <div class="form-item">
+    <%= form_with url: reviews_path, method: :get, local: true do |f| %>
+      <%= f.label :folder_id, 'フォルダでフィルター' %>
+      <%= f.collection_select :folder_id, current_user.folders, :id, :name, { include_blank: 'すべてのフォルダ' }, { id: 'folder_filter_select' } %>
+      <%= f.submit 'フィルター' %>
+    <% end %>
   </div>
-<% end %>
+</div>
 
 <!-- 動的に更新される削除リンク -->
 <%= link_to '削除', '#', id: 'folder-delete-link', method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'delete-folder-link', style: 'display: none;' %>

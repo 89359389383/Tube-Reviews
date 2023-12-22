@@ -19,11 +19,15 @@
     <span>アップロード日:</span>
     <div style="display: flex; align-items: center;">
       <%= link_to '1日以内', search_videos_path(time_filter: 'today', search_query: session[:last_search_query]), class: 'time-filter' %>
+      <span class="filter-separator">|</span>
       <%= link_to '1週間以内', search_videos_path(time_filter: 'thisweek', search_query: session[:last_search_query]), class: 'time-filter' %>
+      <span class="filter-separator">|</span>
       <%= link_to '1ヶ月以内', search_videos_path(time_filter: 'thismonth', search_query: session[:last_search_query]), class: 'time-filter' %>
+      <span class="filter-separator">|</span>
       <%= link_to '1年以内', search_videos_path(time_filter: 'thisyear', search_query: session[:last_search_query]), class: 'time-filter' %>
+      <span class="filter-separator">|</span>
+      <%= link_to '新しい順', search_videos_path(sort: 'newest', search_query: session[:last_search_query]) %>
     </div>
-    <%= link_to '新しい順', search_videos_path(sort: 'newest', search_query: session[:last_search_query]) %>
   </div>
 </div>
 
