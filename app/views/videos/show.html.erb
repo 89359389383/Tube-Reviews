@@ -93,8 +93,8 @@
         <button id="start-stop-recognition" type="button" class="btn btn-secondary">音声認識を開始</button>
       </div>
 
-      <div class="submit-button" style="margin-top: 1em;">
-        <%= form.submit "感想を記録する", class: "btn btn-primary", style: 'font-size: 0.7em;' %>
+      <div class="submit-button" style="margin-top: 1em; text-align: center;">
+        <%= form.submit "感想を記録する", class: "btn btn-primary", style: 'font-size: 1em; width: auto;' %>
       </div>
     <% end %>
   <% end %>
@@ -200,13 +200,26 @@
 </script>
 
 <script>
-  // 音声認識関連の処理
-  document.addEventListener('DOMContentLoaded', function() {
-    var recognition;
-    var recognizing = false;
-    var finalTranscript = '';
-    var reviewTextArea = document.querySelector('.review-text-area'); // 感想入力フォームを取得
+  var recognition;
+  var recognizing = false;
+  var finalTranscript = '';
+  var reviewTextArea = document.querySelector('.review-text-area'); // 感想入力フォームを取得
 
+  document.getElementById('start-stop-recognition').onclick = function() {
+    if (!recognition) {
+      initializeRecognition();
+    }
+
+    if (recognizing) {
+      recognition.stop();
+      return;
+    }
+    finalTranscript = '';
+    recognition.lang = 'ja-JP';
+    recognition.start();
+  };
+
+  function initializeRecognition() {
     if (!('webkitSpeechRecognition' in window)) {
       alert("お使いのブラウザでは音声認識がサポートされていません。");
     } else {
@@ -249,32 +262,5 @@
         reviewTextArea.value = finalTranscript + interimTranscript;
       };
     }
-
-    document.getElementById('start-stop-recognition').onclick = function() {
-      if (recognizing) {
-        recognition.stop();
-        return;
-      }
-      finalTranscript = '';
-      recognition.lang = 'ja-JP';
-      recognition.start();
-    };
-  });
-</script> 
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const folderSelect = document.getElementById('review_folder_id');
-    const deleteLink = document.getElementById('delete-folder-link');
-
-    folderSelect.addEventListener('change', function() {
-      const selectedFolderId = this.value;
-      if (selectedFolderId) {
-        deleteLink.href = `/folders/${selectedFolderId}`;
-        deleteLink.style.display = 'inline';
-      } else {
-        deleteLink.style.display = 'none';
-      }
-    });
-  });
+  }
 </script>

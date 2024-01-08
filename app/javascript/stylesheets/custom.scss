@@ -1,3 +1,43 @@
+.video-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: #f8f8f8;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.video-thumbnail {
+    flex: 0 0 auto; /* サムネイルのサイズは変わらないように設定 */
+    width: 120px;
+    height: 90px;
+    margin-right: 15px;
+}
+
+.thumbnail-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: blue; /* シンプルな青色の画面 */
+}
+
+.video-details {
+    flex: 1; /* 残りのスペースを全て使う */
+}
+
+.video-title {
+    font-size: 1rem;
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.video-views, .video-date {
+    font-size: 0.8rem;
+    margin: 0;
+    color: #666;
+}
+
+
 // 基本的なカラースキーム
 $body-bg-color: #f8f9fa; // 薄い灰色の背景
 $text-color: #333; // 濃いグレーのテキスト
@@ -342,7 +382,7 @@ h1 {
 
 .video-thumbnail-enhanced {
   flex: 0 0 auto; /* サムネイル画像は固定サイズ */
-  margin-right: 20px;
+  margin-right: 15px;
 }
 
 .video-info-enhanced {

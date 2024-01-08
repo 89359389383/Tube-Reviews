@@ -1,4 +1,5 @@
 /*global Option*/
+/*global fetch*/
 document.addEventListener("turbolinks:load", () => {
   const reviewForm = document.getElementById('new_review');
   const folderSelect = document.getElementById('review_folder_id');
