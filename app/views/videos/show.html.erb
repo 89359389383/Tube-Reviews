@@ -264,3 +264,23 @@
     }
   }
 </script>
+
+<script>
+  function setupFolderSelect() {
+    const folderSelect = document.getElementById('review_folder_id');
+    const deleteLink = document.getElementById('delete-folder-link');
+
+    folderSelect.addEventListener('change', function() {
+      const selectedFolderId = this.value;
+      if (selectedFolderId) {
+        deleteLink.href = `/folders/${selectedFolderId}`;
+        deleteLink.style.display = 'inline';
+      } else {
+        deleteLink.style.display = 'none';
+      }
+    });
+  }
+
+  document.addEventListener('turbo:load', setupFolderSelect);
+</script>
+

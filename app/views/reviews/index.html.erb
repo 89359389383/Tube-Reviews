@@ -66,9 +66,11 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  function setupFolderFilterSelect() {
     const folderFilterSelect = document.getElementById('folder_filter_select');
     const deleteLink = document.getElementById('folder-delete-link');
+
+    if (!folderFilterSelect) return; // フォルダフィルターのセレクトが存在しない場合は何もしない
 
     folderFilterSelect.addEventListener('change', function() {
       const selectedFolderId = this.value;
@@ -79,5 +81,8 @@
         deleteLink.style.display = 'none';
       }
     });
-  });
+  }
+
+  document.addEventListener('turbo:load', setupFolderFilterSelect);
 </script>
+
