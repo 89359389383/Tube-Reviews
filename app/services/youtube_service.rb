@@ -26,7 +26,7 @@ class YoutubeService
       {
         title: item["snippet"]["title"],
         video_id: item["id"]["videoId"],
-        thumbnail_url: item["snippet"]["thumbnails"]["default"]["url"],
+        thumbnail_url: item["snippet"]["thumbnails"]["high"]["url"],
         description: video_details[:description],
         published_at: video_details[:published_at],
         duration: video_details[:duration],
