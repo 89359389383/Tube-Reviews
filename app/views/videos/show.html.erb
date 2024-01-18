@@ -22,6 +22,13 @@
   .video-title {
     font-size: 20px; 
   }
+  
+  .folder-selection-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px; /* エレメント間のスペース */
+  }
 </style>
 
 <% if @video.errors.any? %>
@@ -72,14 +79,16 @@
     <%= form_with(model: [ @video, Review.new ], url: video_reviews_path(@video), local: true) do |form| %>
       <%= form.hidden_field :video_id, value: @video.id %>
 
-      <!-- フォルダ選択のドロップダウンメニュー -->
-      <div class="text-center">
-        <%= form.label :folder_id, "フォルダ選択" %>
-        <%= form.collection_select :folder_id, @folders, :id, :name, { include_blank: true }, { class: "folder-select", id: "review_folder_id" } %> 
-      </div>
+      <!-- フォルダ選択と削除リンクを含む新しいdiv -->
+      <div class="folder-selection-container" style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+        <div class="text-center">
+          <%= form.label :folder_id, "フォルダ選択" %>
+          <%= form.collection_select :folder_id, @folders, :id, :name, { include_blank: true }, { class: "folder-select", id: "review_folder_id" } %> 
+        </div>
 
-      <!-- 動的に更新される削除リンク -->
-      <%= link_to '削除', '#', id: 'delete-folder-link', method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'delete-folder-link', style: 'display: none;' %>
+        <!-- 削除リンク -->
+        <%= link_to '削除', '#', id: 'delete-folder-link', method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'delete-folder-link', style: 'display: none;' %>
+      </div>
 
       <!-- 新しいフォルダ名の入力フィールド -->
       <div class="text-center">
