@@ -1,4 +1,8 @@
 ja:
+  errors:
+    messages:
+      not_saved: "保存に失敗しました"
+      not_found: "見つかりません"
   helpers:
     submit:
       create: "登録する"
@@ -22,6 +26,15 @@ ja:
     passwords:
       new:
         forgot_your_password: "パスワードを忘れた方はこちら"
+      create:
+        send_instructions: "パスワードリセットの手順を送信しました"
+        email_not_found: "メールアドレスが見つかりませんでした"
+      edit:
+        change_your_password: "パスワードを変更"
+        new_password: "新しいパスワード"
+        confirm_new_password: "新しいパスワードの確認"
+      user:
+        send_instructions: "パスワードリセットの手順を送信しました"  # この行を追加
     confirmations:
       new:
         didnt_receive_confirmation_instructions: "確認メールが届いていない方はこちら"
@@ -34,5 +47,11 @@ ja:
       unauthenticated: "ログインまたは登録が必要です。"
       user:
         unauthenticated: "ユーザーとしてログインする必要があります。"
-    # ここに他の devise 関連の翻訳を続けて追加します...
-  # ... 他の設定 ...
+    mailer:
+      reset_password_instructions:
+        subject: "パスワードリセットの手順"
+      confirmation_instructions:
+        subject: "アカウントの確認"
+      unlock_instructions:
+        subject: "アカウントのロック解除"
+    # 他の devise 関連の翻訳を続けて追加します...

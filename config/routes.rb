@@ -42,6 +42,10 @@ Rails.application.routes.draw do
   end
 
   resources :comments
+  
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
 
   # authenticated :user do
   #   root 'videos#index', as: :authenticated_root

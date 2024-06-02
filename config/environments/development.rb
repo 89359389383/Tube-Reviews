@@ -13,7 +13,7 @@ Rails.application.configure do
 
   # Show full error reports.
   config.consider_all_requests_local = true
-  
+
   # ログレベルをデバッグに設定
   config.log_level = :debug
 
@@ -44,21 +44,26 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security,
   # and use secure cookies.
-  config.force_ssl = true
+  config.force_ssl = false
 
   config.action_mailer.perform_caching = false
-  
-  # 追記
-  config.action_mailer.default_url_options = { host: '6b2dc80aa87243a08c4b74ad52eceb90.vfs.cloud9.ap-northeast-1.amazonaws.com', port: 8000 }
 
   # Action Mailerの設定を追加
-  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.delivery_method = :letter_opener_web
+  # config.action_mailer.smtp_settings = {
+  #   address: 'smtp.gmail.com',
+  #   port: 587,
+  #   domain: 'localhost',
+  #   user_name: '<your_email>@gmail.com',
+  #   password: '<your_email_password>',
+  #   authentication: 'plain',
+  #   enable_starttls_auto: true
+  # }
+
+  # 開発環境でのメールプレビュー
   config.action_mailer.perform_deliveries = true
-  
-  # LetterOpenerの設定ブロックを削除
-  # LetterOpener.configure do |config|
-  #   config.launchy = false # 自動的にブラウザを開かないように設定
-  # end
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_url_options = { host: 'localhost', port: 8080 }
   
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -86,7 +91,7 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
-  
+
   # 特定のホスト名を許可
   config.hosts << "6b2dc80aa87243a08c4b74ad52eceb90.vfs.cloud9.ap-northeast-1.amazonaws.com"
 end
