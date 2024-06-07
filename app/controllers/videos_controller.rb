@@ -9,7 +9,6 @@ class VideosController < ApplicationController
 
     respond_to do |format|
       format.html # 通常のHTML応答
-      # format.js   # JavaScriptリクエスト（Ajax）に対する応答（もし必要なら）
     end
   end
 
@@ -24,7 +23,6 @@ class VideosController < ApplicationController
       @videos = response[:items]
       @next_page_token = response[:nextPageToken]
       @prev_page_token = response[:prevPageToken]
-
       @from_database = false
     else
       @videos = Video.none.page(params[:page]).per(20)
@@ -44,7 +42,7 @@ class VideosController < ApplicationController
       video_data = YoutubeService.fetch_video_details_by_id(params[:id])
       if video_data
         @video = Video.new(video_data)
-        @video.save # ここでデータベースに保存
+        @video.save
       else
         redirect_to videos_path, alert: "動画が見つかりませんでした。"
         return
@@ -52,11 +50,12 @@ class VideosController < ApplicationController
     end
 
     @video_details = @video
-    @reviews = @video.reviews.order(created_at: :desc) if @video.reviews
+    @reviews = @video.reviews.order(created_at: :desc).page(params[:page]).per(5)
     @recommended_videos = Video.recommended(@video)
 
     @folders = current_user.folders
     @review = Review.new(video: @video)
+    @start_time = params[:start_time] || 0 # 再生開始時間のパラメータを取得
   end
 
   def favorites
@@ -74,14 +73,10 @@ class VideosController < ApplicationController
         video_data[:url] ||= "https://www.youtube.com/watch?v=#{params[:id]}"
       
         # 重複チェック
-        @video = Video.find_by(url: video_data[:url])
-        unless @video
-          @video = Video.new(video_data)
-          unless @video.save
-            Rails.logger.debug @video.errors.full_messages
-            flash[:alert] = "動画の保存に失敗しました。"
-            redirect_to videos_path and return
-          end
+        @video = Video.find_by(url: video_data[:url]) || Video.new(video_data)
+        unless @video.save
+          flash[:alert] = "動画の保存に失敗しました。"
+          redirect_to videos_path and return
         end
       else
         flash[:alert] = "動画が見つかりませんでした。"
@@ -129,4 +124,3 @@ class VideosController < ApplicationController
     end
   end
 end
-

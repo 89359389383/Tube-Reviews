@@ -520,3 +520,55 @@ h1 {
   }
 }
 
+.review-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px; /* カード間の隙間を設定 */
+  margin-top: 20px;
+}
+
+.review-card {
+  width: calc(100% / 5 - 20px); /* カードの幅を5分割し、隙間を引いた値に設定 */
+  margin: 10px 0; /* 上下のマージンを設定 */
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden; /* オーバーフローを隠す */
+}
+
+.review-card-header h3 {
+  font-size: 1.2em;
+  margin: 0;
+  text-align: center;
+}
+
+.review-thumbnail {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.review-content {
+  white-space: nowrap; /* テキストを1行に制限 */
+  overflow: hidden; /* オーバーフローを隠す */
+  text-overflow: ellipsis; /* 省略記号を表示 */
+}
+
+.review-content p {
+  margin: 0;
+  font-size: 0.9em;
+}
+
+.review-actions {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.review-actions a {
+  margin: 0 5px;
+}
+

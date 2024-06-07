@@ -47,11 +47,46 @@
     <!-- 動的に更新される削除リンク -->
     <%= link_to '削除', '#', id: 'folder-delete-link', method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'delete-folder-link', style: 'display: none;' %>
   </div>
+</div>
 
 <%# 感想の一覧表示 - カードレイアウト %>
 <div id="reviews" class="review-cards">
-  <%= render 'reviews_list', reviews: @reviews %>
+  <% @reviews.each do |review| %>
+    <div class="review-card">
+      <% if review.video.video_id.present? %>
+        <div class="review-thumbnail">
+          <%= link_to image_tag("https://img.youtube.com/vi/#{review.video.video_id}/0.jpg", alt: review.video.title), video_path(review.video) %>
+        </div>
+      <% end %>
+
+      <div class="review-card-header">
+        <h3><%= link_to review.video.title, video_path(review.video) %></h3>
+      </div>
+
+      <div class="review-content">
+        <p><%= truncate(review.body, length: 14) %></p>
+        <small>投稿日: <%= review.created_at.strftime("%Y-%m-%d %H:%M:%S") %></small>
+      </div>
+
+      <div class="review-actions">
+        <%= link_to '編集', edit_review_path(review), class: 'action-link' %>
+        <%= link_to '削除', review_path(review), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'action-link' %>
+      </div>
+    </div>
+  <% end %>
 </div>
+
+<%# ページネーションリンク %>
+<% if @reviews.total_pages > 1 %>
+  <div class="pagination-links text-center" style="margin-top: 20px;">
+    <% if @prev_page_token %>
+      <%= link_to '前へ', reviews_path(page: @prev_page_token), class: 'btn btn-secondary' %>
+    <% end %>
+    <% if @next_page_token %>
+      <%= link_to '次へ', reviews_path(page: @next_page_token), class: 'btn btn-secondary' %>
+    <% end %>
+  </div>
+<% end %>
 
 <script>
   function setupFolderFilterSelect() {
@@ -74,3 +109,113 @@
   document.addEventListener('turbo:load', setupFolderFilterSelect);
 </script>
 
+<style>
+:root {
+  --font-size-base: 16px;
+  --card-gap: 10px;
+}
+
+body {
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+}
+
+.review-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--card-gap);
+  padding: 10px;
+}
+
+.review-card {
+  width: calc(20% - var(--card-gap));
+  box-sizing: border-box;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  background-color: #fff;
+  transition: transform 0.3s ease;
+}
+
+.review-thumbnail {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.review-thumbnail img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0;
+}
+
+.review-card-header h3 {
+  font-size: 1.2rem;
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
+.review-content {
+  margin: 10px 0;
+  text-align: center;
+}
+
+.review-content p {
+  margin: 0 0 10px 0;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.review-content small {
+  display: block;
+}
+
+.review-actions {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.action-link {
+  margin: 0 5px;
+  text-decoration: none;
+  color: #007bff;
+}
+
+.action-link:hover {
+  text-decoration: underline;
+}
+
+/* メディアクエリでレスポンシブ対応 */
+@media (max-width: 1200px) {
+  .review-card {
+    width: calc(25% - var(--card-gap));
+  }
+}
+
+@media (max-width: 992px) {
+  .review-card {
+    width: calc(33.3333% - var(--card-gap));
+  }
+}
+
+@media (max-width: 768px) {
+  .review-card {
+    width: calc(50% - var(--card-gap));
+  }
+}
+
+@media (max-width: 576px) {
+  .review-card {
+    width: 100%;
+  }
+}
+</style> 

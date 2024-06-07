@@ -71,13 +71,14 @@
 </div>
 
 <div class="video-container text-center">
-  <iframe id="youtube-player" width="560" height="315" src="https://www.youtube.com/embed/<%= @video_details.video_id %>?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+  <iframe id="youtube-player" width="560" height="315" src="https://www.youtube.com/embed/<%= @video_details.video_id %>?start=<%= @start_time %>&enablejsapi=1" frameborder="0" allowfullscreen></iframe>
 </div>
 
 <div class="review-form-container centered-form" style="width: 140%; margin-left: -20%; margin-right: -20%;">
   <% if @video.persisted? %>
     <%= form_with(model: [ @video, Review.new ], url: video_reviews_path(@video), local: true) do |form| %>
       <%= form.hidden_field :video_id, value: @video.id %>
+      <%= form.hidden_field :play_time, id: 'review_play_time' %> <!-- play_time フィールドを追加 -->
 
       <!-- フォルダ選択と削除リンクを含む新しいdiv -->
       <div class="folder-selection-container" style="display: flex; align-items: center; justify-content: center; gap: 20px;">
@@ -112,14 +113,13 @@
 <% @reviews.each do |review| %>
   <div class="review text-center">
     <p><%= review.body %></p>
-    <% if review.play_time.present? %>
-      <p>
-        <a href="https://www.youtube.com/watch?v=<%= @video_details.video_id %>&t=<%= review.play_time.to_i %>s" target="_blank">この瞬間から見る</a>
-      </p>
-    <% end %>
+    <p>
+      <%= link_to 'この瞬間から見る', video_path(@video, start_time: review.play_time.to_i), target: "_blank" %>
+    </p>
     <% if current_user == review.user %>
       <p>
-        <%= link_to 'Edit', edit_video_review_path(@video, review) %> |
+        <%= link_to '編集', edit_video_review_path(@video, review) %> |
+        <%= link_to '削除', review_path(review), method: :delete, data: { confirm: '本当に削除しますか？' } %>
       </p>
     <% end %>
     <small>Posted on <%= review.created_at.strftime('%Y-%m-%d %H:%M:%S') %></small> 
@@ -134,6 +134,18 @@
       <li><%= message %></li>
     <% end %>
   </ul>
+<% end %>
+
+<!-- ページネーションリンク -->
+<% if @reviews.total_pages > 1 %>
+  <div class="pagination-links text-center" style="margin-top: 20px;">
+    <% if @reviews.prev_page %>
+      <%= link_to '前へ', video_path(@video, page: @reviews.prev_page), class: 'btn btn-secondary' %>
+    <% end %>
+    <% if @reviews.next_page %>
+      <%= link_to '次へ', video_path(@video, page: @reviews.next_page), class: 'btn btn-secondary' %>
+    <% end %>
+  </div>
 <% end %>
 
 <div class="recommended-videos">
@@ -177,11 +189,8 @@
     var reviewForm = document.querySelector('.review-form-container form');
     reviewForm.addEventListener('focusin', function() {
       var currentTime = player.getCurrentTime();
-      var timeField = document.createElement('input');
-      timeField.setAttribute('type', 'hidden');
-      timeField.setAttribute('name', 'review[play_time]');
-      timeField.setAttribute('value', currentTime);
-      reviewForm.appendChild(timeField);
+      var timeField = document.getElementById('review_play_time'); // play_time フィールドを取得
+      timeField.value = currentTime; // 再生時間を設定
     });
 
     // 再生速度ボタンのイベントリスナーを設定
@@ -292,4 +301,3 @@
 
   document.addEventListener('turbo:load', setupFolderSelect);
 </script>
-
