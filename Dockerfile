@@ -18,11 +18,11 @@ RUN bundle install
 COPY . /myapp
 
 # ポートを指定
-EXPOSE 8080
+EXPOSE 10000
 
 # entrypoint.shをコピーして実行権限を付与
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 
 # アプリケーションの起動コマンド
-CMD ["rails", "server", "-b", "0.0.0.0"]
+CMD ["rails", "server", "-b", "0.0.0.0", "-p", "10000"]
