@@ -17,4 +17,7 @@ test:
 
 production:
   <<: *default
-  database: YTfield_production
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+
