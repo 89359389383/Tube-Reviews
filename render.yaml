@@ -1,0 +1,22 @@
+databases:
+  - name: TubeReviews_DB
+    databaseName: tubereviews_db
+    user: Tube-Reviews-1
+    region: singapore
+
+services:
+  - type: web
+    name: Tube-Reviews-1
+    env: ruby
+    region: singapore
+    plan: free
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec puma -C config/puma.rb"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: TubeReviews_DB
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+
