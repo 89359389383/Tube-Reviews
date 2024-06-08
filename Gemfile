@@ -23,12 +23,15 @@ gem 'webpacker', '~> 6.0.0.rc.6'
 gem 'social-share-button'
 gem 'redis'
 
+# PostgreSQL
+gem 'pg', '~> 1.4'
+
 group :development, :test do
   # Debugging
   gem "debug", platforms: %i[mri mingw x64_mingw]
 
   # Database
-  gem 'sqlite3', '~> 1.4' # 追加
+  gem 'sqlite3', '~> 1.4'
 
   # Environment variables
   gem 'dotenv-rails'
@@ -55,10 +58,6 @@ group :test do
   gem 'shoulda-matchers', '~> 4.0' 
   gem 'database_cleaner'
   gem 'rails-controller-testing'
-end
-
-group :production do
-  gem 'pg', '~> 1.4'
 end
 
 gem "cssbundling-rails", "~> 1.3"

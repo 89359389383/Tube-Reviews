@@ -18,7 +18,7 @@ RUN bundle install
 COPY . /myapp
 
 # ポートを指定
-EXPOSE 3000
+EXPOSE 8080
 
 # entrypoint.shをコピーして実行権限を付与
 COPY entrypoint.sh /usr/bin/
