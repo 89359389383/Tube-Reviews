@@ -21,6 +21,7 @@ default: &default
     - .ttf
     - .woff
     - .woff2
+  compile: true
 
 development:
   <<: *default
@@ -38,4 +39,4 @@ production:
   <<: *default
   compile: true
   extract_css: true
-  cache_manifest: true 
+  cache_manifest: true
