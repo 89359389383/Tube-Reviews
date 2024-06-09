@@ -13,5 +13,11 @@ fi
 # Check yarn integrity
 yarn install --check-files
 
+# Compile assets
+RAILS_ENV=production bundle exec rails assets:precompile
+
+# Run database migrations
+RAILS_ENV=production bundle exec rails db:migrate
+
 # Run commands from the command line
 exec "$@"
