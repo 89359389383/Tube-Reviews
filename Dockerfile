@@ -3,6 +3,9 @@ FROM ruby:3.0.0
 # 必要なパッケージをインストール
 RUN apt-get update -qq && apt-get install -y nodejs postgresql-client yarn
 
+# Bundlerのバージョンを固定
+RUN gem install bundler:2.4.17
+
 # アプリケーションディレクトリを作成
 RUN mkdir /myapp
 WORKDIR /myapp
@@ -12,7 +15,7 @@ COPY Gemfile /myapp/Gemfile
 COPY Gemfile.lock /myapp/Gemfile.lock
 
 # 必要なGemをインストール
-RUN bundle install
+RUN bundle _2.4.17_ install
 
 # アプリケーションコードをコピー
 COPY . /myapp
@@ -25,4 +28,4 @@ COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 
 # アプリケーションの起動コマンド
-CMD ["rails", "server", "-b", "0.0.0.0", "-p", "10000"]
+CMD ["rails", "server", "-b", "0.0.0.0", "-e", "production", "-p", "10000"]
