@@ -36,6 +36,6 @@ test:
 
 production:
   <<: *default
-  compile: false
+  compile: true
   extract_css: true
   cache_manifest: true 
