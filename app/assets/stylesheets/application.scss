@@ -11,11 +11,8 @@
  * It is generally better to create a new file per style scope.
  *
  *= require_self
- *= require social-share-button
  */
 
 // custom.scssをインポートします。
-@import "custom";
-
-// 他のスタイルシートも必要に応じてここに追加します。
+@import "custom"
 

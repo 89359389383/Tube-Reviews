@@ -6,10 +6,9 @@
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
-  <!-- Stylesheet pack tag for Webpacker -->
-  <!-- <%= stylesheet_pack_tag 'application', 'data-turbo-track': 'reload' %> -->
+  <%= stylesheet_link_tag 'custom', media: 'all', 'data-turbo-track': 'reload' %>
   <%= turbo_include_tags %>
-  <!-- <%= javascript_pack_tag 'application', 'data-turbo-track': 'reload' %> -->
+  <%= javascript_pack_tag 'application', 'data-turbo-track': 'reload' %>
 
   <style>
     .flash-container {
@@ -31,7 +30,6 @@
       /* flash-container との間隔設定を削除 */
     }
   </style>
-
 </head>
 <body>
   <% if controller_name == 'sessions' && action_name == 'new' %>

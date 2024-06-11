@@ -1,24 +1,42 @@
-const { environment } = require('@rails/webpacker');
-const webpack = require('webpack');
+const { environment } = require('@rails/webpacker')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-// ProvidePluginを追加してjQueryがグローバルに利用できるようにする
-environment.plugins.prepend('Provide',
-  new webpack.ProvidePlugin({
-    $: 'jquery',
-    jQuery: 'jquery',
-    'window.jQuery': 'jquery',
-  })
-);
+// Babel ローダーの設定を更新
+const babelLoader = environment.loaders.get('babel')
+babelLoader.test = /\.(js|jsx|mjs|cjs)$/
+babelLoader.exclude = /node_modules/
+environment.loaders.prepend('babel', babelLoader)
 
-// Sass（SCSS）ファイルの処理を追加
-environment.loaders.append('sass', {
-  test: /\.scss$/,
+// Sass ローダーの設定を追加
+const sassLoader = {
+  test: /\.(scss|sass)$/,
   use: [
-    'style-loader', // JSの文字列から`style`ノードを作成
-    'css-loader',   // CSSをCommonJSに変換
-    'sass-loader'   // SassをCSSにコンパイル
+    process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
+    'css-loader',
+    {
+      loader: 'sass-loader',
+      options: {
+        implementation: require('sass')
+      }
+    }
   ]
-});
+}
+environment.loaders.append('sass', sassLoader)
 
-module.exports = environment;
+// CSS ローダーの設定を追加
+const cssLoader = {
+  test: /\.css$/,
+  use: [
+    process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
+    'css-loader'
+  ]
+}
+environment.loaders.append('css', cssLoader)
 
+// プラグインの設定を追加
+environment.plugins.append('MiniCssExtractPlugin', new MiniCssExtractPlugin({
+  filename: '[name]-[contenthash].css',
+  chunkFilename: '[id]-[contenthash].css'
+}))
+
+module.exports = environment

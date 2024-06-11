@@ -19,9 +19,9 @@ gem 'youtube_embed'
 gem 'google-apis-youtube_v3'
 gem 'kaminari'
 # gem 'will_paginate', '~> 4.0.0' 
-gem 'webpacker', '~> 6.0.0.rc.6'
 gem 'social-share-button'
 gem 'redis'
+gem 'sassc-rails'
 
 # PostgreSQL
 gem 'pg', '~> 1.4'
@@ -61,3 +61,5 @@ group :test do
 end
 
 gem "cssbundling-rails", "~> 1.3"
+
+gem 'webpacker', '~> 5.4.4'
