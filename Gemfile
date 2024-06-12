@@ -18,7 +18,7 @@ gem 'httparty'
 gem 'youtube_embed'
 gem 'google-apis-youtube_v3'
 gem 'kaminari'
-# gem 'will_paginate', '~> 4.0.0' 
+# gem 'will_paginate', '~> 4.0.0'
 gem 'social-share-button'
 gem 'redis'
 gem 'sassc-rails'
@@ -43,6 +43,10 @@ group :development, :test do
   # Spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.1.0'
+
+  # Rails UJS and jQuery
+  gem 'rails-ujs'
+  gem 'jquery-rails'
 end
 
 group :development do
@@ -55,7 +59,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem "webdrivers"
-  gem 'shoulda-matchers', '~> 4.0' 
+  gem 'shoulda-matchers', '~> 4.0'
   gem 'database_cleaner'
   gem 'rails-controller-testing'
 end

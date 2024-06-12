@@ -1,36 +1,63 @@
-// Rails UJSのインポートと起動
-import Rails from "@rails/ujs";
-Rails.start();
+document.addEventListener('DOMContentLoaded', function() {
+  var links = document.querySelectorAll('a[data-method="delete"]');
+  
+  links.forEach(function(link) {
+    link.addEventListener('click', function(event) {
+      event.preventDefault();
+      var message = link.getAttribute('data-confirm');
+      if (!message || confirm(message)) {
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = link.href;
 
-// jQueryをインポート
-import $ from 'jquery';
+        var hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = '_method';
+        hiddenInput.value = 'delete';
+        form.appendChild(hiddenInput);
 
-// Bootstrapをインポート
-import "bootstrap"; 
+        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        var csrfParam = document.querySelector('meta[name="csrf-param"]').getAttribute('content');
 
-// favorites.jsをインポート
-import './favorites';
+        var csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = csrfParam;
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
 
-// Custom SCSSのインポート
-import '../stylesheets/custom.scss';
+        document.body.appendChild(form);
+        form.submit();
+      }
+    });
+  });
 
-// Social Share Buttonのインポート
-import "social-share-button";
+  document.querySelectorAll('a[data-method="delete"]').forEach(function(link) {
+    link.addEventListener('click', function(event) {
+      event.preventDefault();
+      const message = link.getAttribute('data-confirm');
+      if (!message || confirm(message)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = link.href;
 
-import './folder_management';
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = '_method';
+        hiddenInput.value = 'delete';
+        form.appendChild(hiddenInput);
 
-// This file is automatically compiled by Webpack, along with any other files
-// present in this directory. You're encouraged to place your actual application logic in
-// a relevant structure within app/javascript and only use these pack files to reference
-// that code so it'll be compiled.
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const csrfParam = document.querySelector('meta[name="csrf-param"]').getAttribute('content');
 
-// To reference this file, add <%= javascript_pack_tag 'application' %> to the appropriate
-// layout file, like app/views/layouts/application.html.erb
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = csrfParam;
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
 
-// Uncomment to copy all static images under ./images to the output folder and reference
-// them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
-// or the `imagePath` JavaScript helper below.
-//
-// const images = require.context('./images', true)
-// const imagePath = (name) => images(name, true)
-
+        document.body.appendChild(form);
+        form.submit();
+      }
+    });
+  });
+});

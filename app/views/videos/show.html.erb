@@ -88,7 +88,7 @@
         </div>
 
         <!-- 削除リンク -->
-        <%= link_to '削除', '#', id: 'delete-folder-link', method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'delete-folder-link', style: 'display: none;' %>
+        <%= link_to '削除', '#', id: 'delete-folder-link', data: { method: :delete, confirm: '本当に削除しますか？' }, class: 'delete-folder-link', style: 'display: none;' %>
       </div>
 
       <!-- 新しいフォルダ名の入力フィールド -->
@@ -119,7 +119,7 @@
     <% if current_user == review.user %>
       <p>
         <%= link_to '編集', edit_video_review_path(@video, review) %> |
-        <%= link_to '削除', review_path(review), method: :delete, data: { confirm: '本当に削除しますか？' } %>
+        <%= link_to '削除', review_path(review), data: { method: :delete, confirm: '本当に削除しますか？' }, class: 'action-link' %>
       </p>
     <% end %>
     <small>Posted on <%= review.created_at.strftime('%Y-%m-%d %H:%M:%S') %></small> 
@@ -300,4 +300,40 @@
   }
 
   document.addEventListener('turbo:load', setupFolderSelect);
+
+  // DELETEリクエストを処理するJavaScriptコードを追加
+  function setupDeleteLinks() {
+    document.querySelectorAll('a[data-method="delete"]').forEach(function(link) {
+      link.addEventListener('click', function(event) {
+        event.preventDefault();
+        const message = link.getAttribute('data-confirm');
+        if (!message || confirm(message)) {
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = link.href;
+
+          const hiddenInput = document.createElement('input');
+          hiddenInput.type = 'hidden';
+          hiddenInput.name = '_method';
+          hiddenInput.value = 'delete';
+          form.appendChild(hiddenInput);
+
+          const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+          const csrfParam = document.querySelector('meta[name="csrf-param"]').getAttribute('content');
+
+          const csrfInput = document.createElement('input');
+          csrfInput.type = 'hidden';
+          csrfInput.name = csrfParam;
+          csrfInput.value = csrfToken;
+          form.appendChild(csrfInput);
+
+          document.body.appendChild(form);
+          form.submit();
+        }
+      });
+    });
+  }
+
+  document.addEventListener('turbo:load', setupDeleteLinks);
+  document.addEventListener('DOMContentLoaded', setupDeleteLinks);
 </script>
