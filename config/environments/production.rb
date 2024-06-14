@@ -87,7 +87,7 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default_url_options = { host: 'tube-reviews-1.onrender.com', protocol: 'https' }
 
-　# メールのデバッグ用ログを有効にする
+  # メールのデバッグ用ログを有効にする
   config.action_mailer.logger = ActiveSupport::Logger.new(STDOUT)
   config.action_mailer.logger.level = Logger::DEBUG
 
