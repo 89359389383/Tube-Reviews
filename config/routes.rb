@@ -1,3 +1,5 @@
+# config/routes.rb
+
 Rails.application.routes.draw do
   
   get 'videos/search', to: 'videos#search', as: 'search_videos'
@@ -58,5 +60,3 @@ Rails.application.routes.draw do
   # 現在のデフォルトのルート設定 
   root 'videos#index'
 end
-
-

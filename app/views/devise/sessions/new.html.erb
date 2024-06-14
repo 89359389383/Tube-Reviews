@@ -2,9 +2,8 @@
   <div class="row justify-content-center">
     <div class="col-md-6">
       <div class="card mt-5">
-        <!-- コメントアウトされたヘッダー部分を削除または適切に修正 -->
         <div class="card-body">
-          <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "needs-validation", novalidate: "" }) do |f| %>
+          <%= form_with(model: resource, as: resource_name, url: session_path(resource_name), html: { class: "needs-validation", novalidate: "" }) do |f| %>
             <div class="form-group">
               <%= f.label :email, t("devise.sessions.new.email"), class: 'form-control-label' %>
               <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control' %>

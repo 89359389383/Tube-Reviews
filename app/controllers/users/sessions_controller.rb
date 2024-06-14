@@ -9,11 +9,16 @@ class Users::SessionsController < Devise::SessionsController
   # end
 
   # DELETE /resource/sign_out
-    def destroy
-      super do
-        flash[:notice] = 'ログアウトしました'
-      end
+  def destroy
+    if current_user.email == 'guest@example.com'
+      # ゲストユーザーのデータをリセットする処理を追加
+      current_user.reviews.destroy_all
+      # 必要に応じて他のデータ削除処理を追加
     end
+    super do
+      flash[:notice] = 'ログアウトしました'
+    end
+  end
 
   # protected
 

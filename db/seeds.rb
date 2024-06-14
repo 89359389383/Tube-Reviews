@@ -1,10 +1,31 @@
-# db/seeds.rb
-
 # ユーザーサンプルデータ
-user1 = User.create!(name: 'newuser1', email: 'newuser1@example.com', password: 'password123')
-user2 = User.create!(name: 'newuser2', email: 'newuser2@example.com', password: 'password123')
+user1 = User.find_or_create_by!(email: 'newuser1@example.com') do |user|
+  user.name = 'newuser1'
+  user.password = 'password123'
+  user.password_confirmation = 'password123'
+end
 
-# レビューサンプルデータ
-Review.create!(body: 'Great video!', user: user1, video: video1)
-Review.create!(body: 'Not bad.', user: user1, video: video2)
-Review.create!(body: 'I liked this one.', user: user2, video: video1)
+user2 = User.find_or_create_by!(email: 'newuser2@example.com') do |user|
+  user.name = 'newuser2'
+  user.password = 'password123'
+  user.password_confirmation = 'password123'
+end
+
+guest_user = User.find_or_create_by!(email: 'guest@example.com') do |user|
+  user.password = 'guestpassword'
+  user.password_confirmation = 'guestpassword'
+end
+
+# 既存のゲストユーザーの感想データを削除
+guest_user.reviews.destroy_all
+
+# ビデオサンプルデータ
+video1 = Video.find_or_create_by!(title: 'Sample Video 1') do |video|
+  video.description = 'This is a sample video.'
+  video.url = 'http://example.com/sample_video_1'
+end
+
+video2 = Video.find_or_create_by!(title: 'Sample Video 2') do |video|
+  video.description = 'This is another sample video.'
+  video.url = 'http://example.com/sample_video_2'
+end

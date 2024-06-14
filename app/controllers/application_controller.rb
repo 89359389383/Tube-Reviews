@@ -1,3 +1,4 @@
+# app/controllers/application_controller.rb
 class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
@@ -12,8 +13,11 @@ class ApplicationController < ActionController::Base
       user.name = 'ゲスト' # ここで適切な名前を設定
       # その他必要なユーザー情報の設定
     end
-    sign_in user
-    redirect_to videos_path, notice: 'ゲストユーザーとしてログインしました。'
+    sign_out_all_scopes # ログアウトしてセッションをリセット
+    sign_in(user)
+    reset_guest_session # セッション情報のリセットメソッドを呼び出し
+    clear_guest_reviews(user) # ゲストユーザーの感想データを削除
+    redirect_to search_videos_path, notice: 'ゲストユーザーとしてログインしました。'
   end
 
   protected
@@ -38,6 +42,16 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def reset_guest_session
+    session[:search_query] = nil
+    # その他のセッション情報のリセットが必要な場合、ここに追加
+  end
+
+  def clear_guest_reviews(user)
+    user.reviews.destroy_all
+    # 必要に応じて他の関連データの削除も追加
+  end
+
   def render_404
     render template: "errors/404", status: 404
   end
@@ -48,4 +62,3 @@ class ApplicationController < ActionController::Base
     render template: "errors/500", status: 500
   end
 end
-
