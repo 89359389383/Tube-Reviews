@@ -84,7 +84,7 @@ Rails.application.configure do
 
   # 本番環境でのメール設定
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default_url_options = { host: 'tube-reviews-1.onrender.com', protocol: 'https' }
 
   # Ignore bad email addresses and do not raise email delivery errors.
