@@ -3,84 +3,91 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="path/to/custom.css">
+  <link rel="stylesheet" href="<%= asset_path 'custom.css' %>">
 </head>
-<h1 class="text-center">All Videos</h1>
+<body>
+  <h1 class="text-center">All Videos</h1>
 
-<!-- 感想の一覧表示 -->
-<h2 class="text-center"><%= link_to '感想一覧', reviews_path %></h2>
+  <!-- 感想の一覧表示 -->
+  <h2 class="text-center"><%= link_to '感想一覧', reviews_path %></h2>
 
-<div class="text-center">
-  <%= render 'search_form' %>
-</div>
+  <div class="text-center">
+    <%= render 'search_form' %>
+  </div>
 
-<div id="time-filters" class="text-center">
-  <div class="results-filter" style="display: flex; justify-content: center;">
-    <span>アップロード日:</span>
-    <div style="display: flex; align-items: center;">
-      <%= link_to '1日以内', search_videos_path(time_filter: 'today', search_query: session[:last_search_query]), class: 'time-filter' %>
-      <span class="filter-separator">|</span>
-      <%= link_to '1週間以内', search_videos_path(time_filter: 'thisweek', search_query: session[:last_search_query]), class: 'time-filter' %>
-      <span class="filter-separator">|</span>
-      <%= link_to '1ヶ月以内', search_videos_path(time_filter: 'thismonth', search_query: session[:last_search_query]), class: 'time-filter' %>
-      <span class="filter-separator">|</span>
-      <%= link_to '1年以内', search_videos_path(time_filter: 'thisyear', search_query: session[:last_search_query]), class: 'time-filter' %>
-      <span class="filter-separator">|</span>
-      <%= link_to '新しい順', search_videos_path(sort: 'newest', search_query: session[:last_search_query]) %>
+  <div id="time-filters" class="text-center">
+    <div class="results-filter" style="display: flex; justify-content: center;">
+      <span>アップロード日:</span>
+      <div style="display: flex; align-items: center;">
+        <%= link_to '1日以内', search_videos_path(time_filter: 'today', search_query: session[:last_search_query]), class: 'time-filter' %>
+        <span class="filter-separator">|</span>
+        <%= link_to '1週間以内', search_videos_path(time_filter: 'thisweek', search_query: session[:last_search_query]), class: 'time-filter' %>
+        <span class="filter-separator">|</span>
+        <%= link_to '1ヶ月以内', search_videos_path(time_filter: 'thismonth', search_query: session[:last_search_query]), class: 'time-filter' %>
+        <span class="filter-separator">|</span>
+        <%= link_to '1年以内', search_videos_path(time_filter: 'thisyear', search_query: session[:last_search_query]), class: 'time-filter' %>
+        <span class="filter-separator">|</span>
+        <%= link_to '新しい順', search_videos_path(sort: 'newest', search_query: session[:last_search_query]) %>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- フラッシュメッセージ -->
-<% if flash[:error] %>
-  <div class="alert alert-danger">
-    <%= flash[:error] %>
-  </div>
-<% end %>
-<% if flash[:alert] %>
-  <div class="alert alert-danger">
-    <%= flash[:alert] %>
-  </div>
-<% end %>
+  <!-- フラッシュメッセージ -->
+  <% if flash[:error] %>
+    <div class="alert alert-danger">
+      <%= flash[:error] %>
+    </div>
+  <% end %>
+  <% if flash[:alert] %>
+    <div class="alert alert-danger">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
 
-<!-- 動画一覧 -->
-<% if @videos.any? %>
-  <div class="video-list">
-    <% @videos.each do |video| %>
-      <div class="video-item-enhanced">
-        <div class="video-thumbnail-enhanced">
-          <% if video.is_a?(Hash) %>
-            <%= link_to(image_tag(video[:thumbnail_url], alt: video[:title], class: "thumbnail-image"), video_path(id: video[:video_id])) %>
-        <% else %>
-          <%= link_to(image_tag(video.thumbnail_url, alt: video.title, class: "thumbnail-image"), video_path(video)) %>
-        <% end %>
-        </div>
-        <div class="video-info-enhanced">
-          <h3 class="video-title">
+  <!-- 動画一覧 -->
+  <% if @videos.any? %>
+    <div class="video-list">
+      <% @videos.each do |video| %>
+        <div class="video-item-enhanced">
+          <div class="video-thumbnail-enhanced">
             <% if video.is_a?(Hash) %>
-              <%= link_to video[:title], video_path(id: video[:video_id]) %>
+              <% if video[:thumbnail_url].present? %>
+                <%= link_to(image_tag(video[:thumbnail_url], alt: video[:title], class: "thumbnail-image"), video_path(id: video[:video_id])) %>
+              <% end %>
             <% else %>
-              <%= link_to video.title, video_path(video) %>
+              <% if video.thumbnail_url.present? %>
+                <%= link_to(image_tag(video.thumbnail_url, alt: video.title, class: "thumbnail-image"), video_path(video)) %>
+              <% end %>
             <% end %>
-          </h3>
-          <p class="video-published">公開日: <%= video.is_a?(Video) ? video.published_at.strftime("%B %d, %Y") : video[:published_at] %></p>
-          <p class="video-views">再生数: <%= number_with_delimiter(video.is_a?(Video) ? video.view_count : video[:view_count]) %></p>
-          <p class="video-duration">再生時間: <%= video.is_a?(Video) ? video.duration : video[:duration] %></p>
-          <p class="video-channel">チャンネル名: <%= video.is_a?(Video) ? video.channel_title : video[:channel_title] %></p>
-          <p class="video-description">説明: <%= truncate(video.is_a?(Video) ? video.description : video[:description], length: 100) %></p>
+          </div>
+          <div class="video-info-enhanced">
+            <h3 class="video-title">
+              <% if video.is_a?(Hash) %>
+                <%= link_to video[:title], video_path(id: video[:video_id]) %>
+              <% else %>
+                <%= link_to video.title, video_path(video) %>
+              <% end %>
+            </h3>
+            <p class="video-published">公開日: <%= video.is_a?(Video) ? video.published_at.strftime("%B %d, %Y") : video[:published_at] %></p>
+            <p class="video-views">再生数: <%= number_with_delimiter(video.is_a?(Video) ? video.view_count : video[:view_count]) %></p>
+            <p class="video-duration">再生時間: <%= video.is_a?(Video) ? video.duration : video[:duration] %></p>
+            <p class="video-channel">チャンネル名: <%= video.is_a?(Video) ? video.channel_title : video[:channel_title] %></p>
+            <p class="video-description">説明: <%= truncate(video.is_a?(Video) ? video.description : video[:description], length: 100) %></p>
+          </div>
         </div>
-      </div>
-    <% end %>
-  </div> 
-  <!-- ページネーションリンク -->
-  <div class="pagination-links">
-    <% if @prev_page_token %>
-      <%= link_to '前へ', search_videos_path(search_query: session[:last_search_query], page_token: @prev_page_token) %>
-    <% end %>
-    <% if @next_page_token %>
-      <%= link_to '次へ', search_videos_path(search_query: session[:last_search_query], page_token: @next_page_token) %>
-    <% end %>
-  </div>
-<% else %>
-  <p></p>
-<% end %> 
+      <% end %>
+    </div> 
+    <!-- ページネーションリンク -->
+    <div class="pagination-links">
+      <% if @prev_page_token %>
+        <%= link_to '前へ', search_videos_path(search_query: session[:last_search_query], page_token: @prev_page_token) %>
+      <% end %>
+      <% if @next_page_token %>
+        <%= link_to '次へ', search_videos_path(search_query: session[:last_search_query], page_token: @next_page_token) %>
+      <% end %>
+    </div>
+  <% else %>
+    <p></p>
+  <% end %> 
+</body>
+</html>
