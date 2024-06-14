@@ -76,8 +76,8 @@ Rails.application.configure do
     address:              'smtp.gmail.com',
     port:                 587,
     domain:               'tube-reviews-1.onrender.com',
-    user_name:            ENV['contact.tubereviews2558@gmail.com'],
-    password:             ENV['bxthndostxknbcoz'],
+    user_name:            ENV['GMAIL_USERNAME'],
+    password:             ENV['GMAIL_PASSWORD'],
     authentication:       'plain',
     enable_starttls_auto: true
   }
