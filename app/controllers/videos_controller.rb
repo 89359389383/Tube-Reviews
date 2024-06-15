@@ -40,24 +40,40 @@ class VideosController < ApplicationController
   end
 
   def show
+    @video = Video.find_by(id: params[:id])
     unless @video
       video_data = YoutubeService.fetch_video_details_by_id(params[:id])
       if video_data
-        @video = Video.new(video_data)
-        @video.save
+        video_data.delete(:category_name)
+        video_data[:url] ||= "https://www.youtube.com/watch?v=#{params[:id]}"
+      
+        # 重複チェック
+        @video = Video.find_by(url: video_data[:url]) || Video.new(video_data)
+        unless @video.save
+          flash[:alert] = "動画の保存に失敗しました。"
+          redirect_to videos_path and return
+        end
       else
-        redirect_to videos_path, alert: "動画が見つかりませんでした。"
-        return
+        flash[:alert] = "動画が見つかりませんでした。"
+        redirect_to videos_path and return
       end
     end
 
     @video_details = @video
-    @reviews = @video.reviews.order(created_at: :desc).page(params[:page]).per(5)
-    @recommended_videos = Video.recommended(@video)
+    @start_time = params[:start_time] || 0 # 再生開始時間のパラメータを取得
 
+    # おすすめ動画を取得
+    @recommended_videos = Rails.cache.fetch("recommended_videos_#{@video.id}", expires_in: 1.hour) do
+      fetch_recommended_videos(@video)
+    end
+
+    # デバッグ情報を追加
+    Rails.logger.debug "Recommended videos count: #{@recommended_videos.size}"
+    Rails.logger.debug "Recommended videos: #{@recommended_videos.map(&:id).join(', ')}"
+
+    @reviews = @video.reviews.order(created_at: :desc).page(params[:page]).per(10)
     @folders = current_user.folders
     @review = Review.new(video: @video)
-    @start_time = params[:start_time] || 0 # 再生開始時間のパラメータを取得
   end
 
   def favorites
@@ -95,6 +111,12 @@ class VideosController < ApplicationController
     video_data = YoutubeService.fetch_video_details_by_id(video_id)
     return nil unless video_data
     Video.new(video_data)
+  end
+
+  def fetch_recommended_videos(video)
+    recommended_videos = Video.where.not(id: video.id).limit(30)
+    Rails.logger.debug "Fetched recommended videos: #{recommended_videos.map(&:id)}"
+    recommended_videos
   end
 
   def save_search_results(search_results)
