@@ -115,8 +115,11 @@ class VideosController < ApplicationController
   end
 
   def fetch_recommended_videos(video)
-    recommended_videos = Video.where.not(id: video.id).limit(30)
+    recommended_videos = Video.where.not(id: video.id).order('created_at DESC').limit(30)
     Rails.logger.debug "Fetched recommended videos: #{recommended_videos.map(&:id)}"
+    recommended_videos.each do |rv|
+      Rails.logger.debug "Recommended video details: #{rv.attributes}"
+    end
     recommended_videos
   end
 
