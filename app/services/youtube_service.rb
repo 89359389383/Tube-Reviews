@@ -69,9 +69,14 @@ class YoutubeService
 
   # ISO 8601形式の期間を解析してより読みやすい形式に変換
   def self.parse_duration(duration)
+    return "00h00m00s" if duration.nil?  # duration が nil の場合のデフォルト値を返す
+
     pattern = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/
     matches = duration.match(pattern)
-    hours = matches[1]
+  
+    return "00h00m00s" if matches.nil?  # matches が nil の場合のデフォルト値を返す
+
+    hours = matches[1] || "00"
     minutes = matches[2] || "00"
     seconds = matches[3] || "00"
     "#{hours}h#{minutes}m#{seconds}s"
