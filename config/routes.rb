@@ -1,5 +1,3 @@
-# config/routes.rb
-
 Rails.application.routes.draw do
   get 'videos/search', to: 'videos#search', as: 'search_videos'
   
@@ -57,6 +55,4 @@ Rails.application.routes.draw do
       root to: 'devise/sessions#new', as: :unauthenticated_root
     end
   end
-
-  root 'videos#index'
 end

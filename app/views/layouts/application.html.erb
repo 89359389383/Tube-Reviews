@@ -131,8 +131,8 @@
     });
   });
 </script>
-<body class="<%= 'login-page' if controller_name == 'sessions' && action_name == 'new' %>">
-  <% if controller_name == 'sessions' && action_name == 'new' %>
+<body class="<%= 'login-page' if devise_controller? && action_name == 'new' %>">
+  <% if devise_controller? && action_name == 'new' %>
     <div class="header">
       TubeReviews
     </div>
