@@ -47,10 +47,10 @@
   <h2><%= link_to '感想一覧', reviews_path %></h2>
 </div>
 
-<!-- Back to All Videos リンク -->
+<!-- 検索結果ページへ戻る リンク -->
 <div class="text-center">
   <p class="same-size-link">
-    <%= link_to 'Back to All Videos', videos_path %>
+    <%= link_to '検索結果ページへ戻る', search_videos_path(search_query: session[:last_search_query]) %>
   </p>
 </div>
 

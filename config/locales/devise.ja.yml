@@ -48,6 +48,7 @@ ja:
       sign_in_with_provider: "%{provider}でサインイン"
     failure:
       unauthenticated: "ログインまたは登録が必要です。"
+      not_found_in_database: "メールアドレスまたはパスワードが正しくありません" # ここに翻訳を追加
       user:
         unauthenticated: "ユーザーとしてログインする必要があります。"
     mailer:

@@ -12,23 +12,113 @@
   <%= javascript_include_tag 'application' %>
   
   <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f9; /* 全体の背景色を淡い灰色に変更 */
+      margin: 0;
+      padding: 0;
+    }
+
+    .login-page {
+      overflow: hidden; /* ログインページのみスクロールバーを非表示 */
+    }
+
+    .header {
+      background-color: #2c3e50; /* ダークブルー */
+      color: #ecf0f1; /* 明るい灰色 */
+      font-size: 28px; /* フォントサイズを少し大きく */
+      font-weight: bold; /* 太字に */
+      text-align: center;
+      padding: 20px 0; /* 上下に余白を追加 */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 少しの影を追加して立体感を出す */
+      margin-bottom: 20px; /* 下に余白を追加 */
+    }
+
     .flash-container {
       text-align: center;
       z-index: 10;
+      margin-top: 20px;
+      margin-bottom: 20px;
     }
 
     .flash {
-      margin: 10px auto; /* 上下のマージンを追加 */
+      margin: 10px auto;
       padding: 10px;
-      background-color: #fff3cd; /* 薄い黄色に変更 */
+      background-color: #fff3cd;
       border-color: #ffeeba;
       color: #856404;
       border-radius: 4px;
       width: 60%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* フラッシュメッセージに影を追加 */
     }
 
-    body {
-      /* flash-container との間隔設定を削除 */
+    .login-container {
+      text-align: center;
+      margin: 20px 0; /* 上下に余白を追加 */
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #3498db;
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+      margin: 10px 0; /* 上下に余白を追加 */
+    }
+
+    .button:hover {
+      background-color: #2980b9;
+    }
+
+    .form-container {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      text-align: center;
+    }
+
+    .form-container .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-container label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-container input[type="text"],
+    .form-container input[type="password"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-bottom: 10px; /* 下に余白を追加 */
+    }
+
+    a {
+      color: #3498db;
+      text-decoration: none;
+      margin: 5px;
+      display: inline-block;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -41,9 +131,9 @@
     });
   });
 </script>
-<body>
+<body class="<%= 'login-page' if controller_name == 'sessions' && action_name == 'new' %>">
   <% if controller_name == 'sessions' && action_name == 'new' %>
-    <div class="text-center py-3" style="background-color: blue; color: white; font-size: 24px;">
+    <div class="header">
       TubeReviews
     </div>
   <% end %>
@@ -55,13 +145,13 @@
   </div>
 
   <% if user_signed_in? %>
-    <%= form_with url: destroy_user_session_path, method: :delete, local: true do %>
-      <%= submit_tag "Logout" %>
-    <% end %>
-  <% else %>
-    <%= link_to "Login", new_user_session_path %>
+    <div class="login-container">
+      <%= form_with url: destroy_user_session_path, method: :delete, local: true do %>
+        <%= submit_tag "Logout", class: 'button' %>
+      <% end %>
+    </div>
   <% end %>
 
   <%= yield %>
 </body>
-</html> 
+</html>
