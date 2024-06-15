@@ -14,6 +14,7 @@ ja:
         email: "メールアドレス"
         password: "パスワード"
         remember_me: "ログイン状態を保持する"
+      signed_out: "ログアウトしました" # ここに翻訳を追加
     registrations:
       new:
         sign_up: "ユーザー登録"
@@ -34,9 +35,9 @@ ja:
         new_password: "新しいパスワード"
         confirm_new_password: "新しいパスワードの確認"
       user:
-        send_instructions: "パスワードリセットの手順を送信しました"  # この行を追加
-        updated: "パスワードが正常に更新されました。"  # この行を追加
-      updated: "パスワードが正常に更新されました。"  # この行を追加
+        send_instructions: "パスワードリセットの手順を送信しました" # この行を追加
+        updated: "パスワードが正常に更新されました。" # この行を追加
+      updated: "パスワードが正常に更新されました。" # この行を追加
     confirmations:
       new:
         didnt_receive_confirmation_instructions: "確認メールが届いていない方はこちら"

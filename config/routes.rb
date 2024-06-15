@@ -1,7 +1,6 @@
 # config/routes.rb
 
 Rails.application.routes.draw do
-  
   get 'videos/search', to: 'videos#search', as: 'search_videos'
   
   devise_for :users
@@ -49,14 +48,15 @@ Rails.application.routes.draw do
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
 
-  # authenticated :user do
-  #   root 'videos#index', as: :authenticated_root
-  # end
+  authenticated :user do
+    root 'videos#index', as: :authenticated_root
+  end
 
-  # unauthenticated :user do
-  #   root to: "devise/sessions#new"
-  # end
+  unauthenticated :user do
+    devise_scope :user do
+      root to: 'devise/sessions#new', as: :unauthenticated_root
+    end
+  end
 
-  # 現在のデフォルトのルート設定 
   root 'videos#index'
 end

@@ -1,5 +1,7 @@
 # app/controllers/application_controller.rb
+
 class ApplicationController < ActionController::Base
+  protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   # 例外処理の追加
@@ -60,5 +62,15 @@ class ApplicationController < ActionController::Base
     logger.error e.message
     logger.error e.backtrace.join("\n")
     render template: "errors/500", status: 500
+  end
+
+  # ログイン後にリダイレクトされるパスを指定
+  def after_sign_in_path_for(resource)
+    search_videos_path
+  end
+
+  # パスワードリセット後にリダイレクトされるパスを指定
+  def after_resetting_password_path_for(resource)
+    new_user_session_path
   end
 end
