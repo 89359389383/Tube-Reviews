@@ -2,6 +2,7 @@
 
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
+  before_action :authenticate_user!, except: [:new_guest]
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   # 例外処理の追加

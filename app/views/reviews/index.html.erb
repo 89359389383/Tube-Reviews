@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="<%= asset_path 'custom.css' %>">
-  
   <style>
     body {
       margin: 0;
@@ -14,7 +13,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start; /* 上に詰める */
+      justify-content: flex-start;
     }
 
     .text-center {
@@ -82,16 +81,13 @@
   </style>
 </head>
 <body>
-  <%# ページのタイトル %>
   <h1 class="text-center">感想一覧</h1>
 
-  <%# ナビゲーションリンク %>
   <div class="text-center">
     <h2><%= link_to '検索結果ページへ戻る', search_videos_path(query: session[:last_search_query]) %></h2>
   </div>
 
   <div class="text-center">
-    <%# キーワード検索フォーム %>
     <div class="form-item">
       <%= form_with url: reviews_path, method: :get, local: true do |form| %>
         <%= form.label :search, '検索キーワード' %>
@@ -100,7 +96,6 @@
       <% end %>
     </div>
 
-    <%# タイトル検索フォーム %>
     <div class="form-item">
       <%= form_with url: reviews_path, method: :get, local: true, remote: true do %>
         <%= label_tag :title_search, 'タイトル' %>
@@ -109,7 +104,6 @@
       <% end %>
     </div>
 
-    <%# 並べ替えフォーム %>
     <div class="form-item">
       <%= form_with url: reviews_path, method: :get, local: true, remote: true do %>
         <%= label_tag :sort, '並べ替え' %>
@@ -118,7 +112,6 @@
       <% end %>
     </div>
 
-    <%# フォルダフィルタリングフォームと削除リンクを含むdiv %>
     <div class="folder-filter-container">
       <div class="form-item">
         <%= form_with url: reviews_path, method: :get, local: true do |f| %>
@@ -128,12 +121,10 @@
         <% end %>
       </div>
 
-      <!-- 動的に更新される削除リンク -->
-      <%= link_to '削除', '#', id: 'folder-delete-link', data: { method: :delete, confirm: '本当に削除しますか？' }, class: 'delete-folder-link', style: 'display: none;' %>
+      <%= link_to '削除', '#', id: 'folder-delete-link', data: { method: :delete }, class: 'delete-folder-link', style: 'display: none;' %>
     </div>
   </div>
 
-  <%# 感想の一覧表示 - カードレイアウト %>
   <div id="reviews" class="review-cards">
     <% @reviews.each do |review| %>
       <div class="review-card">
@@ -154,13 +145,12 @@
 
         <div class="review-actions">
           <%= link_to '編集', edit_review_path(review), class: 'action-link' %>
-          <%= link_to '削除', review_path(review), data: { method: :delete, confirm: '本当に削除しますか？' }, class: 'action-link' %>
+          <%= link_to '削除', review_path(review), method: :delete, class: 'action-link delete-review-link' %>
         </div>
       </div>
     <% end %>
   </div>
 
-  <%# ページネーションリンク %>
   <% if @reviews.total_pages > 1 %>
     <div class="pagination-links">
       <% if @prev_page_token %>
@@ -196,30 +186,27 @@
       document.querySelectorAll('a[data-method="delete"]').forEach(function(link) {
         link.addEventListener('click', function(event) {
           event.preventDefault();
-          const message = link.getAttribute('data-confirm');
-          if (!message || confirm(message)) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = link.href;
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = link.href;
 
-            const hiddenInput = document.createElement('input');
-            hiddenInput.type = 'hidden';
-            hiddenInput.name = '_method';
-            hiddenInput.value = 'delete';
-            form.appendChild(hiddenInput);
+          const hiddenInput = document.createElement('input');
+          hiddenInput.type = 'hidden';
+          hiddenInput.name = '_method';
+          hiddenInput.value = 'delete';
+          form.appendChild(hiddenInput);
 
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const csrfParam = document.querySelector('meta[name="csrf-param"]').getAttribute('content');
+          const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+          const csrfParam = document.querySelector('meta[name="csrf-param"]').getAttribute('content');
 
-            const csrfInput = document.createElement('input');
-            csrfInput.type = 'hidden';
-            csrfInput.name = csrfParam;
-            csrfInput.value = csrfToken;
-            form.appendChild(csrfInput);
+          const csrfInput = document.createElement('input');
+          csrfInput.type = 'hidden';
+          csrfInput.name = csrfParam;
+          csrfInput.value = csrfToken;
+          form.appendChild(csrfInput);
 
-            document.body.appendChild(form);
-            form.submit();
-          }
+          document.body.appendChild(form);
+          form.submit();
         });
       });
     });

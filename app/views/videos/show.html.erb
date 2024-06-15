@@ -88,7 +88,7 @@
         </div>
 
         <!-- 削除リンク -->
-        <%= link_to '削除', '#', id: 'delete-folder-link', data: { method: :delete, confirm: '本当に削除しますか？' }, class: 'delete-folder-link', style: 'display: none;' %>
+        <%= link_to '削除', '#', id: 'delete-folder-link', data: { method: :delete }, class: 'delete-folder-link', style: 'display: none;' %>
       </div>
 
       <!-- 新しいフォルダ名の入力フィールド -->
@@ -119,7 +119,7 @@
     <% if current_user == review.user %>
       <p>
         <%= link_to '編集', edit_video_review_path(@video, review) %> |
-        <%= link_to '削除', review_path(review), data: { method: :delete, confirm: '本当に削除しますか？' }, class: 'action-link' %>
+        <%= link_to '削除', review_path(review), method: :delete, class: 'action-link delete-review-link' %>
       </p>
     <% end %>
     <small>Posted on <%= review.created_at.strftime('%Y-%m-%d %H:%M:%S') %></small> 
@@ -148,6 +148,7 @@
   </div>
 <% end %>
 
+<!-- おすすめの動画セクション -->
 <div class="recommended-videos">
   <h3 class="text-center">おすすめの動画</h3>
   <ul>
@@ -156,7 +157,7 @@
         <div class="recommended-thumbnail">
           <%= link_to image_tag("https://img.youtube.com/vi/#{video.video_id}/0.jpg", alt: video.title, class: "recommended-thumbnail-image"), video_path(video) %>
         </div>
-        <div class="video-info"> <!-- 変更: 全ての情報を一つのdivで囲む -->
+        <div class="video-info">
           <h3 class="video-title2"><%= link_to video.title, video_path(video) %></h3>
           <p class="video-published">公開日: <%= video.published_at ? video.published_at.to_time.strftime("%B %d, %Y") : "Not available" %></p>
           <p class="video-views">再生数: <%= number_with_delimiter(video.view_count) %></p>
@@ -306,30 +307,27 @@
     document.querySelectorAll('a[data-method="delete"]').forEach(function(link) {
       link.addEventListener('click', function(event) {
         event.preventDefault();
-        const message = link.getAttribute('data-confirm');
-        if (!message || confirm(message)) {
-          const form = document.createElement('form');
-          form.method = 'POST';
-          form.action = link.href;
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = link.href;
 
-          const hiddenInput = document.createElement('input');
-          hiddenInput.type = 'hidden';
-          hiddenInput.name = '_method';
-          hiddenInput.value = 'delete';
-          form.appendChild(hiddenInput);
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = '_method';
+        hiddenInput.value = 'delete';
+        form.appendChild(hiddenInput);
 
-          const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-          const csrfParam = document.querySelector('meta[name="csrf-param"]').getAttribute('content');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const csrfParam = document.querySelector('meta[name="csrf-param"]').getAttribute('content');
 
-          const csrfInput = document.createElement('input');
-          csrfInput.type = 'hidden';
-          csrfInput.name = csrfParam;
-          csrfInput.value = csrfToken;
-          form.appendChild(csrfInput);
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = csrfParam;
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
 
-          document.body.appendChild(form);
-          form.submit();
-        }
+        document.body.appendChild(form);
+        form.submit();
       });
     });
   }
