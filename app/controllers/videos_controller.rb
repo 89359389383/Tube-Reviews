@@ -1,5 +1,3 @@
-# app/controllers/videos_controller.rb
-
 class VideosController < ApplicationController
   before_action :authenticate_user!
   before_action :set_video, only: [:show]
@@ -70,6 +68,9 @@ class VideosController < ApplicationController
     # デバッグ情報を追加
     Rails.logger.debug "Recommended videos count: #{@recommended_videos.size}"
     Rails.logger.debug "Recommended videos: #{@recommended_videos.map(&:id).join(', ')}"
+    @recommended_videos.each do |rv|
+      Rails.logger.debug "Recommended video details: #{rv.attributes}"
+    end
 
     @reviews = @video.reviews.order(created_at: :desc).page(params[:page]).per(10)
     @folders = current_user.folders
