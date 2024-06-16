@@ -29,6 +29,37 @@
     justify-content: center;
     gap: 20px; /* エレメント間のスペース */
   }
+
+  /* 追加: 推奨動画の情報のフォントサイズを1.3倍にする */
+  .recommended-videos .video-info h3.video-title2 {
+    font-size: 1.3rem; /* 20.8px */
+  }
+
+  .recommended-videos .video-info p {
+    font-size: 1.04rem; /* 16.64px */
+  }
+  
+  /* メディアクエリ: 横幅が480pxから639pxのときのフォントサイズを1倍に設定 */
+  @media (min-width: 480px) and (max-width: 639px) {
+    .recommended-videos .video-info h3.video-title2 {
+      font-size: 1rem; /* 16px */
+    }
+
+    .recommended-videos .video-info p {
+      font-size: 0.8rem; /* 12.8px */
+    }
+  }
+  
+  /* メディアクエリ: 横幅が479px以下のときのフォントサイズを0.6倍に設定 */
+  @media (max-width: 479px) {
+    .recommended-videos .video-info h3.video-title2 {
+      font-size: 0.6rem; /* 9.6px */
+    }
+
+    .recommended-videos .video-info p {
+      font-size: 0.48rem; /* 7.68px */
+    }
+  }
 </style>
 
 <% if @video.errors.any? %>
@@ -167,7 +198,7 @@
       </li>
     <% end %>
   </ul>
-</div>
+</div> 
 
 <script>
   // YouTube Player APIをロードする
