@@ -60,10 +60,8 @@ class VideosController < ApplicationController
     @video_details = @video
     @start_time = params[:start_time] || 0 # 再生開始時間のパラメータを取得
 
-    # おすすめ動画を取得
-    @recommended_videos = Rails.cache.fetch("recommended_videos_#{@video.id}", expires_in: 1.hour) do
-      fetch_recommended_videos(@video)
-    end
+    # おすすめ動画を取得（キャッシュを無効化）
+    @recommended_videos = fetch_recommended_videos(@video)
 
     # デバッグ情報を追加
     Rails.logger.debug "Recommended videos count: #{@recommended_videos.size}"

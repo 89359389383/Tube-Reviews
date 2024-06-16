@@ -62,7 +62,10 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
   
   # Use Redis as the cache store in production.
-  config.cache_store = :redis_cache_store, { url: 'redis://localhost:6379/0' }
+  # config.cache_store = :redis_cache_store, { url: 'redis://localhost:6379/0' }
+
+  # Disable caching in production (for debugging purposes)
+  config.cache_store = :null_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter     = :resque
