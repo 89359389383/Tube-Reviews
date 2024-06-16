@@ -3,6 +3,18 @@ Rails.application.routes.draw do
   
   devise_for :users
   
+  authenticated :user do
+    root 'videos#search', as: :authenticated_root
+  end
+
+  unauthenticated :user do
+    devise_scope :user do
+      root to: 'devise/sessions#new', as: :unauthenticated_root
+    end
+  end
+
+  post 'guest_login', to: 'application#new_guest'
+
   resources :videos do
     resources :reviews, except: [:index, :new, :destroy]
     resource :favorite, only: [:create, :destroy]
@@ -11,7 +23,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :favorite_videos do
+  resources :favorite_videos, only: [:index, :create, :destroy] do
     member do
       delete 'delete'
     end
@@ -30,8 +42,6 @@ Rails.application.routes.draw do
     post 'save_memo', to: 'favorites#save_memo'
   end
 
-  post 'guest_login', to: 'application#new_guest'
-
   resources :folders, only: [:destroy] do
     resources :reviews, only: [:index]
 
@@ -44,15 +54,5 @@ Rails.application.routes.draw do
   
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
-  end
-
-  authenticated :user do
-    root 'videos#index', as: :authenticated_root
-  end
-
-  unauthenticated :user do
-    devise_scope :user do
-      root to: 'devise/sessions#new', as: :unauthenticated_root
-    end
   end
 end

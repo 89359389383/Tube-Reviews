@@ -15,6 +15,9 @@ ja:
         password: "パスワード"
         remember_me: "ログイン状態を保持する"
       signed_out: "ログアウトしました"
+      signed_in: "ログインしました"
+      user:
+        signed_in: "ユーザーとしてログインしました"
     registrations:
       new:
         sign_up: "ユーザー登録"
@@ -51,6 +54,9 @@ ja:
       not_found_in_database: "メールアドレスまたはパスワードが正しくありません"
       user:
         unauthenticated: "ユーザーとしてログインする必要があります。"
+      invalid: "メールアドレスまたはパスワードが正しくありません"
+      user:
+        invalid: "メールアドレスまたはパスワードが正しくありません"
     mailer:
       reset_password_instructions:
         subject: "パスワードリセットの手順"
