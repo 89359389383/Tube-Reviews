@@ -31,11 +31,21 @@
 
     .field {
       margin-bottom: 15px;
+      text-align: center; /* フィールド全体を中央揃えに */
     }
 
-    .field label {
+    .field label, 
+    .field em {
       display: block;
       margin-bottom: 5px;
+      text-align: center; /* ラベルと説明文を中央揃えに */
+    }
+
+    .field input {
+      width: 100%; /* 入力フィールドの幅を100%に */
+      max-width: 300px; /* 入力フィールドの最大幅を設定 */
+      margin: 0 auto; /* 入力フィールドを中央に */
+      display: block; /* 入力フィールドをブロック要素に */
     }
 
     .actions {
