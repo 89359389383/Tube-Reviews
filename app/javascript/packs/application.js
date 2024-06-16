@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
 // jQueryをインポート
 import $ from 'jquery';
 
+// Popper.jsをインポート
+import 'popper.js';
+
 // Bootstrapをインポート
 import "bootstrap"; 
 
@@ -42,4 +45,3 @@ import './folder_management';
 //
 // const images = require.context('./images', true)
 // const imagePath = (name) => images(name, true)
-

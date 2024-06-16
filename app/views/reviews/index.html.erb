@@ -21,7 +21,7 @@
     }
 
     .form-item {
-      margin-bottom: 20px;
+      flex: 1;
     }
 
     .review-cards {
@@ -47,6 +47,7 @@
     .review-thumbnail img {
       width: 100%;
       height: auto;
+      margin-left: 10px;
     }
 
     .review-card-header,
@@ -77,6 +78,25 @@
       justify-content: center;
       gap: 20px;
       margin-bottom: 20px;
+    }
+
+    /* メディアクエリ追加 */
+    @media (max-width: 1023px) and (min-width: 768px) {
+      .review-card {
+        width: calc(33.3333% - 20px);
+      }
+    }
+
+    @media (max-width: 767px) and (min-width: 480px) {
+      .review-card {
+        width: calc(50% - 20px);
+      }
+    }
+
+    @media (max-width: 479px) {
+      .review-card {
+        width: calc(100% - 20px);
+      }
     }
   </style>
 </head>

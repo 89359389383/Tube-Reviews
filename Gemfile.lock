@@ -68,11 +68,17 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.5)
       public_suffix (>= 2.0.2, < 6.0)
+    autoprefixer-rails (10.4.16.0)
+      execjs (~> 2)
     base64 (0.2.0)
     bcrypt (3.1.19)
     bindex (0.8.1)
     bootsnap (1.17.0)
       msgpack (~> 1.2)
+    bootstrap (5.1.3)
+      autoprefixer-rails (>= 9.1.0)
+      popper_js (>= 2.9.3, < 3)
+      sassc-rails (>= 2.0.0)
     builder (3.2.4)
     capybara (3.39.2)
       addressable
@@ -226,6 +232,7 @@ GEM
     orm_adapter (0.5.0)
     os (1.1.4)
     pg (1.5.4)
+    popper_js (2.11.8)
     psych (5.1.1.1)
       stringio
     public_suffix (5.0.3)
@@ -392,6 +399,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap
+  bootstrap (~> 5.1.3)
   capybara
   cssbundling-rails (~> 1.3)
   database_cleaner
@@ -408,6 +416,7 @@ DEPENDENCIES
   letter_opener
   letter_opener_web
   pg (~> 1.4)
+  popper_js (~> 2.11.8)
   puma (~> 5.0)
   rails (= 7.0.6)
   rails-controller-testing

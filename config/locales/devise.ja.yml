@@ -14,7 +14,7 @@ ja:
         email: "メールアドレス"
         password: "パスワード"
         remember_me: "ログイン状態を保持する"
-      signed_out: "ログアウトしました" # ここに翻訳を追加
+      signed_out: "ログアウトしました"
     registrations:
       new:
         sign_up: "ユーザー登録"
@@ -35,9 +35,9 @@ ja:
         new_password: "新しいパスワード"
         confirm_new_password: "新しいパスワードの確認"
       user:
-        send_instructions: "パスワードリセットの手順を送信しました" # この行を追加
-        updated: "パスワードが正常に更新されました。" # この行を追加
-      updated: "パスワードが正常に更新されました。" # この行を追加
+        send_instructions: "パスワードリセットの手順を送信しました"
+        updated: "パスワードが正常に更新されました。"
+      updated: "パスワードが正常に更新されました。"
     confirmations:
       new:
         didnt_receive_confirmation_instructions: "確認メールが届いていない方はこちら"
@@ -48,12 +48,17 @@ ja:
       sign_in_with_provider: "%{provider}でサインイン"
     failure:
       unauthenticated: "ログインまたは登録が必要です。"
-      not_found_in_database: "メールアドレスまたはパスワードが正しくありません" # ここに翻訳を追加
+      not_found_in_database: "メールアドレスまたはパスワードが正しくありません"
       user:
         unauthenticated: "ユーザーとしてログインする必要があります。"
     mailer:
       reset_password_instructions:
         subject: "パスワードリセットの手順"
+        body:
+          greeting: "こんにちは%{email}さん！"
+          instructions: "パスワード変更のリクエストがありました。以下のリンクをクリックしてパスワードを変更してください。"
+          action_text: "パスワードを変更する"
+          ignore_if_not_requested: "このリクエストに覚えがない場合は、このメールを無視してください。パスワードは変更されません。"
       confirmation_instructions:
         subject: "アカウントの確認"
       unlock_instructions:

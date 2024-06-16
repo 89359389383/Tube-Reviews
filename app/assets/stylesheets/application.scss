@@ -13,6 +13,8 @@
  *= require_self
  */
 
-// custom.scssをインポートします。
-@import "custom"
+// Bootstrapをインポートします。
+@import "bootstrap";
 
+// custom.scssをインポートします。
+@import "custom";
