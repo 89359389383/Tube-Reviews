@@ -1,5 +1,3 @@
-require 'httparty'
-
 class YoutubeService
   BASE_URL = 'https://www.googleapis.com/youtube/v3'
 
@@ -32,7 +30,6 @@ class YoutubeService
         duration: video_details[:duration],
         view_count: video_details[:view_count],
         channel_title: video_details[:channel_title],
-        # category_name: fetch_category_name(video["snippet"]["categoryId"]) 
       }
     end
 
@@ -60,26 +57,49 @@ class YoutubeService
       title: video["snippet"]["title"],
       description: video["snippet"]["description"],
       published_at: video["snippet"]["publishedAt"],
-      duration: parse_duration(video["contentDetails"]["duration"]),
+      duration: video["contentDetails"]["duration"],
       view_count: video["statistics"]["viewCount"].to_i,
       channel_title: video["snippet"]["channelTitle"],
       category_name: fetch_category_name(video["snippet"]["categoryId"])
     }
   end
 
-  # ISO 8601形式の期間を解析してより読みやすい形式に変換
-  def self.parse_duration(duration)
-    return "00h00m00s" if duration.nil?  # duration が nil の場合のデフォルト値を返す
-
+  # ISO 8601形式の期間を秒数に変換
+  def self.duration_to_seconds(duration)
+    return 0 if duration.nil?
+    
     pattern = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/
     matches = duration.match(pattern)
-  
-    return "00h00m00s" if matches.nil?  # matches が nil の場合のデフォルト値を返す
+    return 0 if matches.nil?
+    
+    hours = matches[1].to_i * 3600
+    minutes = matches[2].to_i * 60
+    seconds = matches[3].to_i
+    
+    hours + minutes + seconds
+  end
 
-    hours = matches[1] || "00"
-    minutes = matches[2] || "00"
-    seconds = matches[3] || "00"
-    "#{hours}h#{minutes}m#{seconds}s"
+  # HH:MM:SS形式の文字列を返す
+  def self.parse_duration(duration)
+    seconds = duration_to_seconds(duration)
+    hours = seconds / 3600
+    minutes = (seconds % 3600) / 60
+    seconds = seconds % 60
+    format("%02d:%02d:%02d", hours, minutes, seconds)
+  end
+
+  # 動画を時間でフィルタリング
+  def self.filter_videos_by_duration(videos, duration_filter)
+    case duration_filter
+    when 'short'
+      videos.select { |video| duration_to_seconds(video[:duration]) < 240 }
+    when 'medium'
+      videos.select { |video| duration_to_seconds(video[:duration]) >= 240 && duration_to_seconds(video[:duration]) <= 1200 }
+    when 'long'
+      videos.select { |video| duration_to_seconds(video[:duration]) > 1200 }
+    else
+      videos
+    end
   end
 
   # カテゴリ名を取得

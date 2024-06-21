@@ -16,11 +16,15 @@ class VideosController < ApplicationController
     query = params[:search_query] || session[:last_search_query]
     session[:last_search_query] = query if query.present?
     page_token = params[:page_token]
+    duration_filter = params[:duration_filter]
 
     if query.present?
       # YouTube APIを呼び出して動画を取得
       response = YoutubeService.search_videos(query, 20, page_token)
-      @videos = response[:items]
+      videos = response[:items]
+      
+      # 動画の長さに基づいてフィルタリング
+      @videos = YoutubeService.filter_videos_by_duration(videos, duration_filter)
       @next_page_token = response[:nextPageToken]
       @prev_page_token = response[:prevPageToken]
       @from_database = false
@@ -57,11 +61,17 @@ class VideosController < ApplicationController
       end
     end
 
+    # 動画のタイトルで再検索を行う
+    query = @video.title
+    response = YoutubeService.search_videos(query, 5)
+    @related_videos = response[:items]
+
     @video_details = @video
     @start_time = params[:start_time] || 0 # 再生開始時間のパラメータを取得
 
-    # おすすめ動画を取得（キャッシュを無効化）
-    @recommended_videos = fetch_recommended_videos(@video)
+    @recommended_videos = Rails.cache.fetch("recommended_videos_#{@video.id}", expires_in: 1.hour) do
+      fetch_recommended_videos(@video)
+    end
 
     # デバッグ情報を追加
     Rails.logger.debug "Recommended videos count: #{@recommended_videos.size}"

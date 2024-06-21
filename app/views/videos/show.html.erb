@@ -181,22 +181,22 @@
 
 <!-- おすすめの動画セクション -->
 <div class="recommended-videos">
-  <h3 class="text-center">おすすめの動画</h3>
+  <h3 class="text-center">関連動画</h3>
   <ul>
-    <% @recommended_videos.each do |video| %>
+    <% @related_videos.each do |video| %>
       <li class="recommended-video-item">
         <div class="recommended-thumbnail">
-          <%= link_to image_tag("https://img.youtube.com/vi/#{video.video_id}/0.jpg", alt: video.title, class: "recommended-thumbnail-image"), video_path(video) %>
+          <%= link_to image_tag("https://img.youtube.com/vi/#{video[:video_id]}/0.jpg", alt: video[:title], class: "recommended-thumbnail-image"), video_path(video[:video_id]) %>
         </div>
         <div class="video-info">
-          <h3 class="video-title2"><%= link_to video.title, video_path(video) %></h3>
-          <p class="video-published">公開日: <%= video.published_at ? video.published_at.to_time.strftime("%B %d, %Y") : "Not available" %></p>
-          <p class="video-views">再生数: <%= number_with_delimiter(video.view_count) %></p>
-          <p class="video-duration">再生時間: <%= video.duration %></p>
-          <p class="video-channel">チャンネル名: <%= video.channel_title %></p>
+          <h3 class="video-title2"><%= link_to video[:title], video_path(video[:video_id]) %></h3>
+          <p class="video-published">公開日: <%= video[:published_at] ? video[:published_at].to_time.strftime("%B %d, %Y") : "Not available" %></p>
+          <p class="video-views">再生数: <%= number_with_delimiter(video[:view_count]) %></p>
+          <p class="video-duration">再生時間: <%= video[:duration] %></p>
+          <p class="video-channel">チャンネル名: <%= video[:channel_title] %></p>
         </div>
       </li>
-    <% end %>
+    <% end %> 
   </ul>
 </div> 
 
@@ -366,3 +366,4 @@
   document.addEventListener('turbo:load', setupDeleteLinks);
   document.addEventListener('DOMContentLoaded', setupDeleteLinks);
 </script>
+

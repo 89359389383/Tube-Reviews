@@ -30,6 +30,16 @@
         <%= link_to '新しい順', search_videos_path(sort: 'newest', search_query: session[:last_search_query]) %>
       </div>
     </div>
+    <div class="results-filter" style="display: flex; justify-content: center;">
+      <span>動画の長さ:</span>
+      <div style="display: flex; align-items: center;">
+        <%= link_to '4分未満', search_videos_path(duration_filter: 'short', search_query: session[:last_search_query]), class: 'time-filter' %>
+        <span class="filter-separator">|</span>
+        <%= link_to '4分〜20分', search_videos_path(duration_filter: 'medium', search_query: session[:last_search_query]), class: 'time-filter' %>
+        <span class="filter-separator">|</span>
+        <%= link_to '20分以上', search_videos_path(duration_filter: 'long', search_query: session[:last_search_query]), class: 'time-filter' %>
+      </div>
+    </div>
   </div>
 
   <!-- フラッシュメッセージ -->
@@ -70,7 +80,7 @@
             </h3>
             <p class="video-published">公開日: <%= video.is_a?(Video) ? video.published_at.strftime("%B %d, %Y") : video[:published_at] %></p>
             <p class="video-views">再生数: <%= number_with_delimiter(video.is_a?(Video) ? video.view_count : video[:view_count]) %></p>
-            <p class="video-duration">再生時間: <%= video.is_a?(Video) ? video.duration : video[:duration] %></p>
+            <p class="video-duration">再生時間: <%= video.is_a?(Video) ? YoutubeService.parse_duration(video.duration) : YoutubeService.parse_duration(video[:duration]) %></p>
             <p class="video-channel">チャンネル名: <%= video.is_a?(Video) ? video.channel_title : video[:channel_title] %></p>
             <p class="video-description">説明: <%= truncate(video.is_a?(Video) ? video.description : video[:description], length: 100) %></p>
           </div>
