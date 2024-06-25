@@ -85,10 +85,6 @@ class VideosController < ApplicationController
     @review = Review.new(video: @video)
   end
 
-  def favorites
-    @favorites = current_user.favorites.includes(:video)
-  end
-
   private
 
   def set_video
