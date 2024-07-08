@@ -18,7 +18,7 @@ RSpec.describe Video, type: :model do
       6.times do |i|
         create(:video, category: category)
       end
-      recommended_videos = Video.recommended(video1)
+      recommended_videos = Video.recommended(video1, 1, 5)
       expect(recommended_videos.size).to be <= 5
     end
   end

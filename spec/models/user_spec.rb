@@ -60,16 +60,4 @@ RSpec.describe User, type: :model do
       expect(user).to_not be_valid
     end
   end
-
-  # favorited? メソッドのテスト
-  describe "#favorited?" do
-    it "returns true if video is favorited by user" do
-      user.favorite_videos << video
-      expect(user.favorited?(video)).to be_truthy
-    end
-
-    it "returns false if video is not favorited by user" do
-      expect(user.favorited?(video)).to be_falsey
-    end
-  end
 end

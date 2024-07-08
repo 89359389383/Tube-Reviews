@@ -1,3 +1,4 @@
+# spec/features/user_login_spec.rb
 require 'rails_helper'
 
 RSpec.feature "UserLogins", type: :feature do
@@ -6,22 +7,22 @@ RSpec.feature "UserLogins", type: :feature do
   scenario "User logs in with valid details" do
     visit new_user_session_path
 
-    fill_in 'Email', with: user.email
-    fill_in 'Password', with: user.password
-    
-    click_button 'Log in'
-    
-    expect(page).to have_content 'Signed in successfully.'
+    fill_in 'メールアドレス', with: user.email
+    fill_in 'パスワード', with: user.password
+
+    click_button 'ログイン'
+
+    expect(page).to have_content 'ユーザーとしてログインしました'
   end
 
   scenario "User tries to log in with invalid details" do
     visit new_user_session_path
     
-    fill_in 'Email', with: user.email
-    fill_in 'Password', with: 'wrongpassword'
-    
-    click_button 'Log in'
-    
-    expect(page).to have_content 'Invalid Email or password.'
+    fill_in 'メールアドレス', with: user.email
+    fill_in 'パスワード', with: 'wrongpassword'
+
+    click_button 'ログイン'
+
+    expect(page).to have_content 'メールアドレスまたはパスワードが正しくありません'
   end
 end

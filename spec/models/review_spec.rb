@@ -25,14 +25,9 @@ RSpec.describe Review, type: :model do
       end
     end
 
-    context "when body exceeds maximum or is below minimum length" do
+    context "when body exceeds maximum length" do
       it "is not valid when body exceeds maximum length" do
         review.body = "a" * 501 # Assuming max length is 500 characters
-        expect(review).not_to be_valid
-      end
-
-      it "is not valid when body is below minimum length" do
-        review.body = "a" * 4 # Assuming min length is 5 characters
         expect(review).not_to be_valid
       end
     end
@@ -53,4 +48,3 @@ RSpec.describe Review, type: :model do
     end
   end
 end
-

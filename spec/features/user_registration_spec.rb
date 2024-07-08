@@ -1,31 +1,30 @@
 require 'rails_helper'
 
 RSpec.feature "UserRegistrations", type: :feature do
-  scenario "User registers with valid details" do
+  scenario "User can register with valid details" do
     visit new_user_registration_path
-    
-    fill_in 'Email', with: 'test@example.com'
-    fill_in 'Name', with: 'Test User'
-    fill_in 'Password', with: 'password123'
-    fill_in 'Password confirmation', with: 'password123'
-    
-    click_button 'Sign up'
-    
-    expect(page).to have_content 'Welcome! You have signed up successfully.'
+
+    fill_in I18n.t('devise.registrations.new.email'), with: 'test@example.com'
+    fill_in I18n.t('devise.registrations.new.name'), with: 'Test User'
+    fill_in I18n.t('devise.registrations.new.password'), with: 'password123'
+    fill_in I18n.t('devise.registrations.new.password_confirmation'), with: 'password123'
+    click_button I18n.t('devise.registrations.new.submit')
+
+    expect(page).to have_content I18n.t('devise.registrations.user.signed_up', default: 'ユーザー登録が完了しました')
+    expect(User.last.email).to eq 'test@example.com'
+    expect(User.last.name).to eq 'Test User'
   end
 
-  scenario "User tries to register with invalid details" do
+  scenario "User cannot register with invalid details" do
     visit new_user_registration_path
-    
-    fill_in 'Email', with: 'test@example'
-    fill_in 'Password', with: 'pass'
-    fill_in 'Password confirmation', with: 'pass'
-    
-    click_button 'Sign up'
-    
-    # 期待するエラーメッセージに合わせて修正
-    expect(page).to have_content 'Password is too short (minimum is 6 characters)'
-    expect(page).to have_content "Name can't be blank"
-    expect(page).to have_content 'Name is too short (minimum is 3 characters)'
+
+    fill_in I18n.t('devise.registrations.new.email'), with: 'invalid-email'
+    fill_in I18n.t('devise.registrations.new.name'), with: ''
+    fill_in I18n.t('devise.registrations.new.password'), with: '123'
+    fill_in I18n.t('devise.registrations.new.password_confirmation'), with: '321'
+    click_button I18n.t('devise.registrations.new.submit')
+
+    expect(page).to have_content I18n.t('errors.messages.not_saved', default: '保存に失敗しました')
+    expect(User.count).to eq 0
   end
 end

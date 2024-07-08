@@ -27,6 +27,8 @@ ja:
         password_confirmation: "パスワード確認"
         characters_minimum: "文字以上"
         submit: "登録する"
+      user:
+        signed_up: "ユーザー登録が完了しました"
     passwords:
       new:
         forgot_your_password: "パスワードを忘れた方はこちら"

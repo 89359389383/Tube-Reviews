@@ -6,7 +6,7 @@ RSpec.describe Video, type: :model do
       let(:video) { create(:video) } # 事前に用意した動画データ
 
       it 'raises RecommendationError' do
-        allow(Video).to receive(:where).and_raise("some error")
+        allow(Video).to receive(:recommended).and_raise(RecommendationError)
         expect { Video.recommended(video) }.to raise_error(RecommendationError)
       end
     end

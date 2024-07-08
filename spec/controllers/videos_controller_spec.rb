@@ -1,42 +1,63 @@
-# spec/controllers/videos_controller_spec.rb
-
 require 'rails_helper'
 
 RSpec.describe VideosController, type: :controller do
-  describe 'GET #search' do
-    before do
-      @user = create(:user)
-      sign_in @user
+  let(:user) { create(:user) }
+  let(:video) { create(:video) }
+  
+  before do
+    sign_in user
+  end
+
+  describe "GET #index" do
+    it "assigns @videos and renders the index template" do
+      get :index
+      expect(assigns(:videos)).to eq([video])
+      expect(response).to render_template(:index)
+    end
+  end
+
+  describe "GET #search" do
+    it "assigns @videos and renders the index template when search_query is present" do
+      allow(YoutubeService).to receive(:search_videos).and_return({ items: [video], nextPageToken: 'next_token', prevPageToken: 'prev_token' })
+      allow(YoutubeService).to receive(:filter_videos_by_duration).and_return([video])
+
+      get :search, params: { search_query: 'test' }
+      expect(assigns(:videos)).to eq([video])
+      expect(response).to render_template(:index)
     end
 
-    context 'when query is present' do
-      before do
-        @query = 'Sample Video'
-      end
+    it "assigns @videos to none when search_query is not present" do
+      get :search
+      expect(assigns(:videos)).to be_empty
+      expect(response).to render_template(:index)
+    end
+  end
 
-      it 'assigns @videos' do
-        create(:video, title: 'Sample Video 1')
-        create(:video, title: 'Sample Video 2')
-        get :search, params: { search_query: @query }
-        expect(assigns(:videos)).to all(be_a(Video))
-        expect(assigns(:videos).map(&:title)).to include('Sample Video 1', 'Sample Video 2')
-      end
-
-      it 'renders the index template' do
-        get :search, params: { search_query: @query }
-        expect(response).to render_template('index')
+  describe "GET #show" do
+    context "when video exists in the database" do
+      it "assigns @video and renders the show template" do
+        get :show, params: { id: video.id }
+        expect(assigns(:video)).to eq(video)
+        expect(response).to render_template(:show)
       end
     end
 
-    context 'when query is not present' do
-      it 'assigns @videos as empty array' do
-        get :search
-        expect(assigns(:videos)).to eq([])
+    context "when video does not exist in the database" do
+      it "fetches video details and saves it to the database" do
+        allow(YoutubeService).to receive(:fetch_video_details_by_id).and_return({ id: '123', title: 'Test Video', url: "https://www.youtube.com/watch?v=123" })
+
+        get :show, params: { id: '123' }
+        new_video = Video.find_by(url: "https://www.youtube.com/watch?v=123")
+        expect(assigns(:video)).to eq(new_video)
+        expect(response).to render_template(:show)
       end
 
-      it 'renders the index template' do
-        get :search
-        expect(response).to render_template('index')
+      it "redirects to videos_path with an alert if video details are not found" do
+        allow(YoutubeService).to receive(:fetch_video_details_by_id).and_return(nil)
+
+        get :show, params: { id: 'invalid_id' }
+        expect(flash[:alert]).to eq("動画が見つかりませんでした。")
+        expect(response).to redirect_to(videos_path)
       end
     end
   end

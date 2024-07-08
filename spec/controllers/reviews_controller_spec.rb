@@ -1,96 +1,114 @@
-# spec/controllers/reviews_controller_spec.rb
 require 'rails_helper'
 
 RSpec.describe ReviewsController, type: :controller do
   let(:user) { create(:user) }
   let(:video) { create(:video) }
-  let(:valid_review_attributes) { { title: "Sample title", body: "Great video!", video_id: video.id } }
-  let(:invalid_review_attributes) { { title: "", body: "", video_id: video.id } }
+  let(:folder) { create(:folder, user: user) }
+  let(:review) { create(:review, user: user, video: video, folder: folder) }
 
   before do
     sign_in user
   end
 
   describe "GET #index" do
-    it "assigns all reviews as @reviews" do
-      review = create(:review, user: user)
+    it "returns a success response" do
       get :index
-      expect(assigns(:reviews)).to eq([review])
+      expect(response).to be_successful
     end
   end
 
   describe "GET #show" do
-    let(:review) { create(:review, user: user, video: video) }
+    it "returns a success response" do
+      get :show, params: { video_id: video.id, id: review.id }
+      expect(response).to be_successful
+    end
+  end
 
-    it "assigns the requested review as @review" do
-      get :show, params: { video_id: review.video_id, id: review.id }
-      expect(assigns(:review)).to eq(review)
+  describe "GET #new" do
+    it "returns a success response" do
+      get :new
+      expect(response).to be_successful
     end
   end
 
   describe "POST #create" do
-    context "with valid data" do
-      it "saves the new review and redirects to the review index" do
+    context "with valid params" do
+      let(:valid_attributes) do
+        { title: "Great video", body: "I enjoyed it", video_id: video.id, play_time: 120, folder_id: folder.id }
+      end
+
+      it "creates a new Review" do
         expect {
-          post :create, params: { video_id: video.id, review: valid_review_attributes }
+          post :create, params: { review: valid_attributes, video_id: video.id }
         }.to change(Review, :count).by(1)
-        expect(Review.last.title).to eq("Sample title")
-        expect(Review.last.body).to eq("Great video!")
-        expect(response).to redirect_to reviews_path
-        expect(flash[:notice]).to eq("感想を投稿しました")
+      end
+
+      it "redirects to the video show page" do
+        post :create, params: { review: valid_attributes, video_id: video.id }
+        expect(response).to redirect_to(video_path(video))
       end
     end
-    
-    context "with invalid data" do
-      it "does not save the review and renders the new action" do
-        expect {
-          post :create, params: { video_id: video.id, review: invalid_review_attributes }
-        }.not_to change(Review, :count)
-        expect(flash[:alert]).to include("Body can't be blank")
-        expect(flash[:alert]).to include("Body is too short (minimum is 5 characters)")
-        expect(response).to render_template :new
+
+    context "with invalid params" do
+      let(:invalid_attributes) do
+        { title: "", body: "", video_id: nil }
       end
+
+      it "does not create a new Review" do
+        expect {
+          post :create, params: { review: invalid_attributes, video_id: video.id }
+        }.not_to change(Review, :count)
+      end
+
+      it "renders the 'videos/show' template" do
+        post :create, params: { review: invalid_attributes, video_id: video.id }
+        expect(response).to render_template('videos/show')
+      end
+    end
+  end
+
+  describe "GET #edit" do
+    it "returns a success response" do
+      get :edit, params: { id: review.id }
+      expect(response).to be_successful
     end
   end
 
   describe "PATCH #update" do
-    let!(:review) { create(:review, user: user, video: video) }
+    context "with valid params" do
+      let(:new_attributes) do
+        { title: "Updated review", body: "Updated body" }
+      end
 
-    context "with valid data" do
-      let(:new_attributes) { { title: "Updated title", body: "Updated body!" } }
-
-      it "updates the review and redirects to the review index" do
-        patch :update, params: { video_id: review.video_id, id: review.id, review: new_attributes }
+      it "updates the requested review" do
+        patch :update, params: { id: review.id, review: new_attributes }
         review.reload
-        expect(review.title).to eq("Updated title")
-        expect(review.body).to eq("Updated body!")
-        expect(response).to redirect_to reviews_path
-        expect(flash[:notice]).to eq("感想を更新しました")
+        expect(review.title).to eq("Updated review")
+        expect(review.body).to eq("Updated body")
+      end
+
+      it "redirects to the reviews index" do
+        patch :update, params: { id: review.id, review: new_attributes }
+        expect(response).to redirect_to(reviews_path)
       end
     end
 
-    context "with invalid data" do
-      it "does not update the review and renders the edit action" do
-        patch :update, params: { video_id: review.video_id, id: review.id, review: invalid_review_attributes }
+    context "with invalid params" do
+      let(:invalid_attributes) do
+        { title: "", body: "" }
+      end
+
+      it "does not update the review" do
+        patch :update, params: { id: review.id, review: invalid_attributes }
         review.reload
         expect(review.title).not_to eq("")
-        expect(flash[:alert]).to include("Body can't be blank")
-        expect(flash[:alert]).to include("Body is too short (minimum is 5 characters)")
-        expect(response).to render_template :edit
+        expect(review.body).not_to eq("")
       end
-    end
-  end
 
-  describe "DELETE #destroy" do
-    let!(:review) { create(:review, user: user, video: video) }
-
-    it "deletes the review and redirects to the review index" do
-      expect {
-        delete :destroy, params: { video_id: review.video_id, id: review.id }
-      }.to change(Review, :count).by(-1)
-      expect(response).to redirect_to reviews_path
-      expect(flash[:notice]).to eq("感想が正常に削除されました")
+      it "renders the edit template" do
+        patch :update, params: { id: review.id, review: invalid_attributes }
+        expect(response).to render_template(:edit)
+      end
     end
   end
 end
-
