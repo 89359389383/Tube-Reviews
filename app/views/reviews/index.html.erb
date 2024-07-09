@@ -229,6 +229,19 @@
           form.submit();
         });
       });
+      
+      // ここにfetchコードを追加
+      fetch('/api/v1/videos')
+        .then(response => response.json())
+        .then(data => {
+          // サムネイルURLが取得できたら、DOMに反映
+          data.videos.forEach(video => {
+            const thumbnailElement = document.querySelector(`#video-${video.id} .thumbnail`);
+            if (thumbnailElement) {
+              thumbnailElement.src = video.thumbnail_url;
+            }
+          });
+        });
     });
   </script>
 </body>
